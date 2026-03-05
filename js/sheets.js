@@ -291,7 +291,9 @@ window.ToramSheets = (function () {
       var loc    = esc(row['Location'] || '');
       var rawDrop = (row['Drop']       || '').trim();
 
-      var isBoss = type.toLowerCase() === 'boss';
+      var typeLower = type.toLowerCase();
+      var isBoss = typeLower === 'boss';
+      var isMiniBoss = typeLower === 'mini boss' || typeLower === 'mini-boss';
       var monIcon = imgURL
         ? '<img src="' + esc(imgURL) + '" alt="' + name + '" style="width:24px;height:24px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:4px" />'
         : (icon || (isBoss ? '🐉' : '👾')) + ' ';
@@ -319,7 +321,7 @@ window.ToramSheets = (function () {
       tr.innerHTML =
         '<td>' + monIcon + name + '</td>' +
         '<td><span class="tag' + (parseInt(level, 10) >= 240 ? ' gold' : '') + '">' + level + '</span></td>' +
-        '<td><span class="tag' + (isBoss ? ' red' : '') + '">' + type + '</span></td>' +
+        '<td><span class="tag' + (isBoss ? ' red' : (isMiniBoss ? ' mini-boss' : '')) + '">' + type + '</span></td>' +
         '<td>' + elem + '</td>' +
         '<td>' + hp + '</td>' +
         '<td>' + loc + '</td>' +
