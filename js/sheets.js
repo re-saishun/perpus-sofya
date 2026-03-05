@@ -52,7 +52,7 @@ window.ToramSheets = (function () {
   var CONFIG = {
     // Replace with your Google Sheets document ID.
     // Leave as 'YOUR_GOOGLE_SHEET_ID' to keep the built-in static data.
-    SHEET_ID: 'YOUR_GOOGLE_SHEET_ID',
+    SHEET_ID: '1Zmk6AHYjoBTo_Ius90Ves6sTb_weTVcBPmc7r4269Zo',
 
     // Sheet tab names (must match the tab names in your Google Sheet).
     SHEETS: {
