@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Toram Online pet database — tame, raise, and evolve your companion pets." />
+  <title>Pets — ToramCodex</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+</head>
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">⚔️</span><span>ToramCodex</span>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="items.html">Items</a></li>
+      <li><a href="monsters.html">Monsters</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="maps.html">Maps</a></li>
+      <li><a href="quests.html">Quests</a></li>
+      <li><a href="pets.html" class="active">Pets</a></li>
+    </ul>
+    <div class="nav-search">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="navSearchInput" class="search-sync" placeholder="Search pets…" aria-label="Search" />
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu" role="menu">
+    <a href="../index.html" role="menuitem">🏠 Home</a>
+    <a href="items.html" role="menuitem">🗡️ Items</a>
+    <a href="monsters.html" role="menuitem">👾 Monsters</a>
+    <a href="skills.html" role="menuitem">✨ Skills</a>
+    <a href="maps.html" role="menuitem">🗺️ Maps</a>
+    <a href="quests.html" role="menuitem">📜 Quests</a>
+    <a href="pets.html" role="menuitem">🐾 Pets</a>
+    <div class="mobile-search">
+      <span class="search-icon">🔍</span>
+      <input type="search" class="search-sync" placeholder="Search pets…" aria-label="Mobile search" />
+    </div>
+  </div>
+
+  <div class="page-hero">
+    <h1>🐾 Pets Database</h1>
+    <p>Tame and raise companion pets in Toram Online</p>
+  </div>
+
+  <main>
+    <div class="section">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="sep">›</span>
+        <span class="current">Pets</span>
+      </nav>
+
+      <div class="filter-bar" role="search" aria-label="Filter pets">
+        <input type="search" id="filterInput" class="search-sync" placeholder="Search pet name…" aria-label="Filter by name" />
+        <select id="filterSelect" aria-label="Filter by element" style="display:none">
+          <option value="">All Elements</option>
+          <option value="fire">Fire</option>
+          <option value="ice">Ice</option>
+          <option value="wind">Wind</option>
+          <option value="earth">Earth</option>
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="water">Water</option>
+          <option value="neutral">Neutral</option>
+        </select>
+      </div>
+
+      <!-- Table view for pets -->
+      <div class="table-wrap">
+        <table id="petsTableWrap">
+          <thead>
+            <tr>
+              <th>Pet</th>
+              <th>Level</th>
+              <th>Spawn At</th>
+            </tr>
+          </thead>
+          <tbody id="petsTable">
+            <tr data-filter="cerberus pup">
+              <td>🐕 Cerberus Pup</td>
+              <td><span class="tag">150</span></td>
+              <td>Volcano Summit</td>
+            </tr>
+            <tr data-filter="frost owl">
+              <td>🦉 Frost Owl</td>
+              <td><span class="tag">130</span></td>
+              <td>Crystal Cave</td>
+            </tr>
+            <tr data-filter="spirit fox">
+              <td>🦊 Spirit Fox</td>
+              <td><span class="tag">120</span></td>
+              <td>Sacred Forest</td>
+            </tr>
+            <tr data-filter="stone golem">
+              <td>🗿 Stone Golem</td>
+              <td><span class="tag">180</span></td>
+              <td>Ancient Ruins</td>
+            </tr>
+            <tr data-filter="shadow bat">
+              <td>🦇 Shadow Bat</td>
+              <td><span class="tag">100</span></td>
+              <td>Shadow Realm</td>
+            </tr>
+            <tr data-filter="wind sprite">
+              <td>🧚 Wind Sprite</td>
+              <td><span class="tag">160</span></td>
+              <td>Sky Plateau</td>
+            </tr>
+            <tr data-filter="crystal turtle">
+              <td>🐢 Crystal Turtle</td>
+              <td><span class="tag">140</span></td>
+              <td>Coral Beach</td>
+            </tr>
+            <tr data-filter="thunder wolf">
+              <td>🐺 Thunder Wolf</td>
+              <td><span class="tag">170</span></td>
+              <td>Frozen Tundra</td>
+            </tr>
+            <tr data-filter="phoenix chick">
+              <td>🐦‍🔥 Phoenix Chick</td>
+              <td><span class="tag">200</span></td>
+              <td>Ember Nest</td>
+            </tr>
+            <tr data-filter="ice dragon">
+              <td>🐲 Ice Dragon</td>
+              <td><span class="tag legendary">250</span></td>
+              <td>Frozen Peak</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" role="navigation" aria-label="Pagination">
+        <button class="page-btn active" aria-current="page">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">…</button>
+        <button class="page-btn">10</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">⚔️ ToramCodex</div>
+        <p class="footer-desc">Fan-made database · Not affiliated with Asobimo, Inc.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Database</h4>
+        <a href="items.html">Items</a>
+        <a href="monsters.html">Monsters</a>
+        <a href="skills.html">Skills</a>
+        <a href="maps.html">Maps</a>
+        <a href="quests.html">Quests</a>
+        <a href="pets.html">Pets</a>
+      </div>
+      <div class="footer-col">
+        <h4>Info</h4>
+        <a href="#">About</a>
+        <a href="#">Contribute</a>
+        <a href="https://github.com/ut053082686/toramcodex.github.io" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 ToramCodex · Fan-made</span>
+      <span>Toram Online™ is a trademark of Asobimo, Inc.</span>
+    </div>
+  </footer>
+
+  <button id="backToTop" aria-label="Back to top" title="Back to top">↑</button>
+  <script src="../js/sheets.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Table filter for pets — same pattern as monsters page.
+    (function () {
+      var filterInput  = document.getElementById('filterInput');
+      var filterSelect = document.getElementById('filterSelect');
+      var tbody        = document.getElementById('petsTable');
+
+      function applyTableFilter() {
+        var q    = filterInput  ? filterInput.value.toLowerCase()  : '';
+        var elem = filterSelect ? filterSelect.value.toLowerCase() : '';
+        tbody.querySelectorAll('tr').forEach(function (row) {
+          var text = (row.dataset.filter   || '').toLowerCase();
+          var cat  = (row.dataset.category || '').toLowerCase();
+          var ok = (!q    || text.includes(q))
+                && (!elem || cat === elem);
+          row.style.display = ok ? '' : 'none';
+        });
+      }
+
+      if (filterInput)  filterInput.addEventListener('input',  applyTableFilter);
+      if (filterSelect) filterSelect.addEventListener('change', applyTableFilter);
+      document.addEventListener('sheetsrendered', applyTableFilter);
+    }());
+
+    ToramSheets.load('pets', 'petsTable');
+  </script>
+</body>
+</html>

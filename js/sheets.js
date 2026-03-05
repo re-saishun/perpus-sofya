@@ -8,23 +8,41 @@
 //  3. Copy the Spreadsheet ID from the URL:
 //     https://docs.google.com/spreadsheets/d/  <SHEET_ID>  /edit
 //  4. Paste it as the value of SHEET_ID below.
-//  5. Rename each sheet tab to match the keys in SHEETS below:
-//     Items | Monsters | Skills | Maps | Quests
+//  5. Create sheet tabs with these names:
+//     Items | ItemDetails | Monsters | Skills | Maps | Quests | Pets | Homepage
 //
 // EXPECTED COLUMN HEADERS (row 1 of each sheet):
+//
 //  Items       : Name, Icon, ImageURL, Type, Level, Stats, Rarity, Source
 //  ItemDetails : Name, Icon, Type, Level, ImageURL, SellSpina, SellOther,
 //                Stats, Obtain, Recipe
-//                (Stats format: "Base DEF:150;Guard Recharge:+18%;...")
-//                (Obtain format: "Drop: Monster Name; Quest: Quest Name")
-//                (Recipe format: "Iron Ore x3; Dragon Heart x1")
+//                (Stats format: "ATK:+350;CRIT Rate:+15%;>With Light Armor:Aspd:+15%")
+//                (Obtain format: "Drop: Monster Name;Quest: Quest Name")
+//                (Recipe format: "Iron Ore x3;Dragon Heart x1")
 //  Monsters    : Name, Icon, ImageURL, Level, Type, Element, HP, Location, Drop
 //  Skills      : Name, Icon, ImageURL, Type, Category, Damage, MP Cost, Description
 //  Maps        : Name, Icon, ImageURL, Zone, LevelRange, Boss, Description
 //  Quests      : Name, Icon, ImageURL, Type, MinLevel, Reward, Description
+//  Pets        : Name, Icon, ImageURL, Element, Level, SpawnAt
+//  Homepage    : Section, Name, Icon, ImageURL, Link, Count, Description,
+//                Type, Level, Rarity, Stats, Source
 //
-//  NOTE: ImageURL is optional for all sheets. If empty, the Icon emoji is used.
-//        If Icon is also empty, a default emoji per category is used.
+// HOMEPAGE — Section values:
+//  'category'  → Category card (Name, Icon, ImageURL, Link, Count)
+//  'featured'  → Spotlight item (Name, Icon, ImageURL, Type, Level, Rarity,
+//                Stats, Description, Link)
+//  'stat'      → Hero counter  (Name = label, Count = number, Icon = suffix e.g. "+")
+//
+// ICON PRIORITY (applies to all sheets):
+//  1. ImageURL column   → shows an <img> tag
+//  2. Icon column       → shows the emoji/text from Sheet
+//  3. Auto-detect       → picks emoji based on Type column
+//                          (e.g. "Bow" → 🏹, "Staff" → 🪄, "Shield" → 🛡️)
+//  4. Fallback          → 🗡️ (default)
+//
+// All Icon / ImageURL columns are OPTIONAL. If left empty, the system
+// automatically selects the best icon. You only need to fill in Name + Type
+// at minimum.
 // ============================================================
 
 window.ToramSheets = (function () {
@@ -43,7 +61,9 @@ window.ToramSheets = (function () {
       monsters:    'Monsters',
       skills:      'Skills',
       maps:        'Maps',
-      quests:      'Quests'
+      quests:      'Quests',
+      pets:        'Pets',
+      homepage:    'Homepage'
     }
   };
 
@@ -362,13 +382,77 @@ window.ToramSheets = (function () {
     });
   }
 
+  function renderPets(rows, tbody) {
+    tbody.innerHTML = '';
+    if (!rows.length) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="4" class="text-muted" style="padding:1rem">No pet data found. Check your Sheet ID and column headers (Name, Icon, ImageURL, Element, Level, SpawnAt).</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+
+    // Auto-detect: show Element column only if ANY row has Element filled
+    var hasElement = rows.some(function (r) { return (r['Element'] || '').trim() !== ''; });
+
+    // Update thead dynamically
+    var table = tbody.closest('table');
+    if (table) {
+      var thead = table.querySelector('thead tr');
+      if (thead) {
+        thead.innerHTML = hasElement
+          ? '<th>Pet</th><th>Element</th><th>Level</th><th>Spawn At</th>'
+          : '<th>Pet</th><th>Level</th><th>Spawn At</th>';
+      }
+    }
+
+    // Show/hide element filter dropdown
+    var filterEl = document.getElementById('filterSelect');
+    if (filterEl) {
+      filterEl.style.display = hasElement ? '' : 'none';
+    }
+
+    rows.forEach(function (row) {
+      var name    = esc(row['Name']     || '');
+      var icon    = esc(row['Icon']     || '');
+      var imgURL  = (row['ImageURL']    || '').trim();
+      var elem    = esc(row['Element']  || '');
+      var level   = esc(row['Level']    || '');
+      var spawnAt = esc(row['SpawnAt']  || '');
+
+      var petIcon = imgURL
+        ? '<img src="' + esc(imgURL) + '" alt="' + name + '" style="width:24px;height:24px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:4px" />'
+        : (icon || '🐾') + ' ';
+      var elemClass = elem ? ' ' + elem.toLowerCase() : '';
+      var highLv = parseInt(level, 10) >= 240;
+
+      var tr = document.createElement('tr');
+      tr.dataset.filter   = (name + ' ' + elem).toLowerCase();
+      tr.dataset.category = elem.toLowerCase();
+
+      if (hasElement) {
+        tr.innerHTML =
+          '<td>' + petIcon + name + '</td>' +
+          '<td>' + (elem ? '<span class="tag' + elemClass + '">' + elem + '</span>' : 'Neutral') + '</td>' +
+          '<td><span class="tag' + (highLv ? ' legendary' : '') + '">' + level + '</span></td>' +
+          '<td>' + spawnAt + '</td>';
+      } else {
+        tr.innerHTML =
+          '<td>' + petIcon + name + '</td>' +
+          '<td><span class="tag' + (highLv ? ' legendary' : '') + '">' + level + '</span></td>' +
+          '<td>' + spawnAt + '</td>';
+      }
+      tbody.appendChild(tr);
+    });
+  }
+
   // ---- RENDERER MAP -------------------------------------------------
   var RENDERERS = {
     items:    renderItems,
     monsters: renderMonsters,
     skills:   renderSkills,
     maps:     renderMaps,
-    quests:   renderQuests
+    quests:   renderQuests,
+    pets:     renderPets
   };
 
   // ---- PUBLIC: load(page, containerId) ------------------------------
@@ -434,13 +518,145 @@ window.ToramSheets = (function () {
       });
   }
 
+  // ---- PUBLIC: loadHomepage() ---------------------------------------
+  // Loads the 'Homepage' sheet and updates categories, featured item,
+  // and hero stats. If Sheet is empty or not configured, keeps static HTML.
+  //
+  // Expected columns in Homepage sheet:
+  //   Section, Name, Icon, ImageURL, Link, Count, Description,
+  //   Type, Level, Rarity, Stats, Source
+  //
+  // Section values:
+  //   'category'  → updates the categories grid
+  //   'featured'  → updates the spotlight/featured card
+  //   'stat'      → updates hero counter stats (Name=label, Count=number)
+  function loadHomepage() {
+    if (CONFIG.SHEET_ID === 'YOUR_GOOGLE_SHEET_ID') { return; }
+    var sheetName = CONFIG.SHEETS.homepage;
+    if (!sheetName) { return; }
+
+    fetchSheet(sheetName)
+      .then(function (csv) {
+        var rows = parseCSV(csv);
+        if (!rows.length) return;
+
+        var categories = [];
+        var featured   = null;
+        var stats      = [];
+
+        rows.forEach(function (row) {
+          var section = (row['Section'] || '').toLowerCase().trim();
+          if (section === 'category')  categories.push(row);
+          else if (section === 'featured') featured = row;
+          else if (section === 'stat')     stats.push(row);
+        });
+
+        // --- Render categories ---
+        if (categories.length) {
+          var grid = document.getElementById('categoriesGrid');
+          if (grid) {
+            grid.innerHTML = '';
+            categories.forEach(function (cat) {
+              var name   = esc(cat['Name']     || '');
+              var icon   = cat['Icon']         || '';
+              var imgURL = (cat['ImageURL']    || '').trim();
+              var link   = cat['Link']         || '#';
+              var count  = esc(cat['Count']    || '');
+
+              var iconContent;
+              if (imgURL) {
+                iconContent = '<img src="' + esc(imgURL) + '" alt="' + esc(name) + '" />';
+              } else {
+                iconContent = icon || '📂';
+              }
+
+              var a = document.createElement('a');
+              a.href = link;
+              a.className = 'cat-card';
+              a.setAttribute('aria-label', name + ' database');
+              a.innerHTML =
+                '<span class="cat-icon">' + iconContent + '</span>' +
+                '<span class="cat-name">' + esc(name) + '</span>' +
+                '<span class="cat-count">' + count + '</span>';
+              grid.appendChild(a);
+            });
+          }
+        }
+
+        // --- Render featured/spotlight ---
+        if (featured) {
+          var spot = document.getElementById('spotlightCard');
+          if (spot) {
+            var fname   = esc(featured['Name']        || '');
+            var ficon   = featured['Icon']             || '🗡️';
+            var fimgURL = (featured['ImageURL']        || '').trim();
+            var ftype   = esc(featured['Type']         || '');
+            var flevel  = esc(featured['Level']        || '');
+            var frarity = esc(featured['Rarity']       || '');
+            var fstats  = esc(featured['Stats']        || '');
+            var fdesc   = esc(featured['Description']  || '');
+            var flink   = featured['Link']             || 'pages/items.html';
+
+            var spotIcon;
+            if (fimgURL) {
+              spotIcon = '<img src="' + esc(fimgURL) + '" alt="' + fname + '" />';
+            } else {
+              spotIcon = ficon;
+            }
+
+            var rc = frarity ? (' ' + frarity.toLowerCase()) : '';
+
+            spot.innerHTML =
+              '<div class="spotlight-icon">' + spotIcon + '</div>' +
+              '<div class="spotlight-info">' +
+                '<p class="title">' + (flevel ? 'Lv.' + flevel + ' ' : '') + fname + '</p>' +
+                '<p class="meta">' +
+                  (frarity ? '<span class="tag' + rc + '">' + frarity + '</span>' : '') +
+                  (ftype   ? '<span class="tag">' + ftype + '</span>' : '') +
+                  (fstats  ? '<span class="tag green">' + fstats + '</span>' : '') +
+                '</p>' +
+                (fdesc ? '<p class="text-muted" style="font-size:.875rem">' + fdesc + '</p>' : '') +
+                '<div class="mt-2">' +
+                  '<a href="' + esc(flink) + '" class="btn btn-outline" style="font-size:.85rem;padding:.45rem 1rem">View Details →</a>' +
+                '</div>' +
+              '</div>';
+          }
+        }
+
+        // --- Render hero stats ---
+        if (stats.length) {
+          var statsContainer = document.getElementById('heroStats');
+          if (statsContainer) {
+            statsContainer.innerHTML = '';
+            stats.forEach(function (s) {
+              var label = esc(s['Name']  || '');
+              var count = parseInt(s['Count'] || '0', 10);
+              var suffix = esc(s['Icon'] || '+');  // reuse Icon col as suffix
+              var div = document.createElement('div');
+              div.className = 'stat';
+              div.innerHTML =
+                '<span class="stat-num" data-count="' + count + '" data-suffix="' + suffix + '">0</span>' +
+                '<span class="stat-label">' + label + '</span>';
+              statsContainer.appendChild(div);
+            });
+            // Re-trigger counter animation
+            if (window.animateCounters) window.animateCounters();
+          }
+        }
+      })
+      .catch(function (err) {
+        console.error('ToramSheets homepage:', err);
+      });
+  }
+
   return {
-    CONFIG      : CONFIG,
-    load        : load,
-    loadLatest  : loadLatest,
-    fetchSheet  : fetchSheet,
-    parseCSV    : parseCSV,
-    esc         : esc,
-    resolveIcon : resolveIcon
+    CONFIG       : CONFIG,
+    load         : load,
+    loadLatest   : loadLatest,
+    loadHomepage : loadHomepage,
+    fetchSheet   : fetchSheet,
+    parseCSV     : parseCSV,
+    esc          : esc,
+    resolveIcon  : resolveIcon
   };
 }());

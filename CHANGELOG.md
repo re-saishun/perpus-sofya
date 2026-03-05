@@ -4,6 +4,39 @@ Semua perubahan penting pada proyek ToramCodex dicatat di sini.
 
 ---
 
+## [0.6.0] — 2026-03-05
+
+### Added
+- **Pets page** — Halaman baru `pages/pets.html` dengan database pet companion Toram Online (format tabel seperti Monsters)
+- 10 sample pets: Cerberus Pup, Frost Owl, Spirit Fox, Stone Golem, Shadow Bat, Wind Sprite, Crystal Turtle, Thunder Wolf, Phoenix Chick, Ice Dragon
+- Kolom tabel default: Pet, Level, Spawn At (3 kolom)
+- **Element auto-toggle** — Kolom Element + filter otomatis muncul jika diisi di Google Sheet, hidden jika kosong
+- `renderPets()` renderer di sheets.js untuk Google Sheet tab `Pets`
+- Sheet tab `Pets` dengan kolom: Name, Icon, ImageURL, Element (opsional), Level, SpawnAt
+- Link navigasi "Pets" ditambahkan ke semua halaman (navbar, mobile menu, footer)
+
+### Changed
+- README.md diperbarui dengan pets.html di struktur proyek dan kolom Pets sheet
+- sheets.js HOW TO SET UP documentation diperbarui dengan Pets tab
+
+---
+
+## [0.5.0] — 2026-03-05
+
+### Added
+- **Homepage Google Sheets integration** — Kategori, featured item, dan hero stats bisa diupdate dari Google Sheet
+- Sheet tab baru: `Homepage` dengan kolom `Section` (category / featured / stat)
+- `loadHomepage()` function di sheets.js — render categories grid, spotlight card, dan hero stats dari Sheet
+- CSS: `.cat-icon img` dan `.spotlight-icon img` styling untuk gambar dari Sheet
+- `window.animateCounters` exposed globally untuk re-trigger counter animation setelah stats di-load
+
+### Changed
+- `categories-grid`, `spotlight-card`, `hero-stats` sekarang punya ID untuk dynamic update
+- main.js: Counter animation di-refactor ke `setupCounters()` function yang bisa dipanggil ulang
+- README.md diperbarui dengan dokumentasi Homepage sheet
+
+---
+
 ## [0.4.0] — 2026-03-05
 
 ### Added

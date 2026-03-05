@@ -18,6 +18,7 @@ Fan-made database untuk game **Toram Online**, dihosting lewat GitHub Pages.
 │   ├── skills.html       # Database skill (aktif, pasif, combo)
 │   ├── maps.html         # Database map / area
 │   ├── quests.html       # Database quest (main story, side, daily, event)
+│   ├── pets.html         # Database pet (tame, raise, evolve companion pets)
 │   └── detail.html       # Item detail fallback (direct link)
 └── CHANGELOG.md          # Catatan perubahan
 ```
@@ -48,7 +49,7 @@ Fan-made database untuk game **Toram Online**, dihosting lewat GitHub Pages.
 
 ## 📊 Google Sheets Setup
 
-1. Buat Google Spreadsheet dengan tab: `Items`, `ItemDetails`, `Monsters`, `Skills`, `Maps`, `Quests`
+1. Buat Google Spreadsheet dengan tab: `Items`, `ItemDetails`, `Monsters`, `Skills`, `Maps`, `Quests`, `Pets`
 2. **File → Share → Publish to web** → format CSV
 3. Copy Sheet ID dari URL
 4. Paste ke `js/sheets.js` → `SHEET_ID`
@@ -63,8 +64,18 @@ Fan-made database untuk game **Toram Online**, dihosting lewat GitHub Pages.
 | **Skills** | Name, Icon, ImageURL, Type, Category, Damage, MP Cost, Description |
 | **Maps** | Name, Icon, ImageURL, Zone, LevelRange, Boss, Description |
 | **Quests** | Name, Icon, ImageURL, Type, MinLevel, Reward, Description |
+| **Pets** | Name, Icon, ImageURL, Element, Level, SpawnAt |
+| **Homepage** | Section, Name, Icon, ImageURL, Link, Count, Description, Type, Level, Rarity, Stats, Source |
 
 > **Note:** `Icon` dan `ImageURL` opsional di semua sheet. Jika kosong, sistem otomatis memilih emoji berdasarkan tipe equipment.
+
+### Homepage Sheet — Section Values
+
+| Section | Fungsi | Kolom yang dipakai |
+|---|---|---|
+| `category` | Card kategori di homepage | Name, Icon, ImageURL, Link, Count |
+| `featured` | Spotlight / featured item | Name, Icon, ImageURL, Type, Level, Rarity, Stats, Description, Link |
+| `stat` | Counter angka di hero section | Name (label), Count (angka), Icon (suffix, misal "+") |
 
 ### Default Icon per Equipment Type
 
@@ -81,6 +92,7 @@ Fan-made database untuk game **Toram Online**, dihosting lewat GitHub Pages.
 | Katana | ⚔️ | | Monster (Normal) | 👾 |
 | Dagger | 🔪 | | Skill | ✨ |
 | Arrow | 🎯 | | Map | 🗺️ |
+| | | | Pet | 🐾 |
 
 ## 🚀 GitHub Pages
 

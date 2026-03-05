@@ -113,19 +113,26 @@
   }
 
   /* ---------- Animate numbers in hero stats ---------- */
-  var statNums = document.querySelectorAll('[data-count]');
-  if (statNums.length) {
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animateCount(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
+  function setupCounters() {
+    var statNums = document.querySelectorAll('[data-count]');
+    if (statNums.length) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animateCount(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
 
-    statNums.forEach(function (el) { observer.observe(el); });
+      statNums.forEach(function (el) { observer.observe(el); });
+    }
   }
+
+  setupCounters();
+
+  // Expose globally so sheets.js can re-trigger after loading stats from Sheet
+  window.animateCounters = setupCounters;
 
   function animateCount(el) {
     var target   = parseInt(el.dataset.count, 10);
