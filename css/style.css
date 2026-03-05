@@ -72,6 +72,7 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
+  overflow-y: scroll;
 }
 
 a { color: var(--accent); text-decoration: none; }
@@ -476,7 +477,7 @@ ul { list-style: none; }
   transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.data-card[data-name] { cursor: pointer; }
+.data-card { cursor: pointer; }
 
 .data-card:hover {
   border-color: var(--border-hover);
@@ -704,8 +705,22 @@ tbody td { padding: .65rem 1rem; }
   transition: all var(--transition);
 }
 
-.page-btn:hover { border-color: var(--accent); color: var(--text-primary); }
-.page-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.page-btn { pointer-events: none; opacity: .5; cursor: not-allowed; }
+.page-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; opacity: 1; }
+
+/* Empty state when filter returns no results */
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: .95rem;
+}
+.empty-state span {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: .75rem;
+}
 
 /* ============================================================
    FOOTER

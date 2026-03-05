@@ -60,7 +60,9 @@
     var cat2  = filterSelect2 ? filterSelect2.value.toLowerCase() : '';
 
     // Query fresh each time so dynamically rendered Sheets content is included.
-    document.querySelectorAll('[data-filter]').forEach(function (card) {
+    var visible = 0;
+    var items = document.querySelectorAll('[data-filter]');
+    items.forEach(function (card) {
       var text  = (card.dataset.filter    || '').toLowerCase();
       var c1    = (card.dataset.category  || '').toLowerCase();
       var c2    = (card.dataset.category2 || '').toLowerCase();
@@ -69,8 +71,35 @@
       var matchCat1 = !cat1  || c1 === cat1;
       var matchCat2 = !cat2  || c2 === cat2;
 
-      card.style.display = (matchText && matchCat1 && matchCat2) ? '' : 'none';
+      var show = matchText && matchCat1 && matchCat2;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
     });
+
+    // Show/hide empty-state message
+    var grid = items.length ? items[0].parentNode : null;
+    if (grid) {
+      var isTable = grid.tagName === 'TBODY';
+      var emptyEl = grid.querySelector('.empty-state');
+      if (visible === 0 && items.length && (query || cat1 || cat2)) {
+        if (!emptyEl) {
+          if (isTable) {
+            emptyEl = document.createElement('tr');
+            emptyEl.className = 'empty-state';
+            var cols = grid.closest('table').querySelectorAll('thead th').length || 4;
+            emptyEl.innerHTML = '<td colspan="' + cols + '" style="text-align:center;padding:2rem;color:var(--text-secondary)">\uD83D\uDD0D No results found. Try different keywords.</td>';
+          } else {
+            emptyEl = document.createElement('div');
+            emptyEl.className = 'empty-state';
+            emptyEl.innerHTML = '<span>\uD83D\uDD0D</span>No results found. Try different keywords.';
+          }
+          grid.appendChild(emptyEl);
+        }
+        emptyEl.style.display = '';
+      } else if (emptyEl) {
+        emptyEl.style.display = 'none';
+      }
+    }
   }
 
   if (filterInput)   filterInput.addEventListener('input', applyFilter);

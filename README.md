@@ -94,6 +94,34 @@ Fan-made database untuk game **Toram Online**, dihosting lewat GitHub Pages.
 | Arrow | 🎯 | | Map | 🗺️ |
 | | | | Pet | 🐾 |
 
+### Rekomendasi Ukuran Gambar (ImageURL)
+
+Semua gambar dari Google Sheet otomatis di-resize. Berikut ukuran yang direkomendasikan:
+
+| Komponen | Display Size | Upload (2×) | Rasio | Maks File |
+|---|---|---|---|---|
+| Monster / Pet table icon | 24×24 px | **48×48 px** | 1:1 | 50 KB |
+| Data card icon (Items, Skills, dll) | 44×44 px | **88×88 px** | 1:1 | 80 KB |
+| Category card (homepage) | 48×48 px | **96×96 px** | 1:1 | 80 KB |
+| Spotlight / featured item | 64×64 px | **128×128 px** | 1:1 | 100 KB |
+| Detail modal image | max 200px | **400×400 px** | 1:1 / bebas | 200 KB |
+
+> **Tips:**
+> - Upload 2× display size supaya tajam di layar retina (MacBook, iPhone, dll)
+> - Format: **WebP** (terkecil) / PNG (transparansi) / JPEG (foto)
+> - Selalu gunakan rasio **1:1 (square)** — gambar non-square akan di-crop atau di-shrink otomatis
+> - Kolom `ImageURL` opsional — jika kosong, sistem otomatis pakai emoji
+
+### Google Sheets Rate Limit
+
+| Limit | Detail |
+|---|---|
+| Per-menit | ~300 request per Sheet |
+| Cache | Google cache CSV ~5 menit (perubahan tidak langsung terlihat) |
+| Bandwidth | Tidak ada hard limit |
+
+> Untuk traffic normal (~ratusan visitor/hari) tidak akan kena limit. Jika traffic tinggi, pertimbangkan cache ke JSON file.
+
 ## 🚀 GitHub Pages
 
 Aktifkan di **Settings → Pages → Deploy from branch `main`** (root `/`).
