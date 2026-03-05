@@ -33,12 +33,19 @@
 //                Stats, Description, Link)
 //  'stat'      → Hero counter  (Name = label, Count = number, Icon = suffix e.g. "+")
 //
-// ICON PRIORITY (applies to all sheets):
-//  1. ImageURL column   → shows an <img> tag
-//  2. Icon column       → shows the emoji/text from Sheet
-//  3. Auto-detect       → picks emoji based on Type column
-//                          (e.g. "Bow" → 🏹, "Staff" → 🪄, "Shield" → 🛡️)
-//  4. Fallback          → 🗡️ (default)
+// ICON vs ImageURL (they serve DIFFERENT purposes):
+//  • Icon column     → small icon on the card/list view (emoji or text).
+//  • ImageURL column → large item image shown in the detail modal popup.
+//
+// CARD ICON PRIORITY:
+//  1. Icon column       → shows the emoji/text from Sheet
+//  2. Auto-detect       → picks icon based on Type column
+//                          (e.g. "Bow" → bow_ico.png, "Staff" → stf_ico.png)
+//  3. Fallback          → 1h_ico.png (default)
+//
+// MODAL IMAGE:
+//  1. ImageURL column   → shows as the large item image
+//  2. If empty          → shows Icon emoji or auto-detect as placeholder
 //
 // All Icon / ImageURL columns are OPTIONAL. If left empty, the system
 // automatically selects the best icon. You only need to fill in Name + Type
@@ -246,9 +253,11 @@ window.ToramSheets = (function () {
       el.dataset.category  = type.toLowerCase();
       el.dataset.category2 = rarity.toLowerCase();
       el.dataset.name      = row['Name'] || '';
+      // Card icon: use Icon column or auto-detect from Type (NOT ImageURL).
+      // ImageURL is reserved for the large image in the detail modal.
       el.innerHTML =
         '<div class="data-card-header">' +
-          '<div class="data-card-icon">' + iconHTML(imgURL, icon, type, name) + '</div>' +
+          '<div class="data-card-icon">' + iconHTML('', icon, type, name) + '</div>' +
           '<div>' +
             '<div class="data-card-title">' + name + '</div>' +
             '<div class="data-card-subtitle">' + type + (level ? ' · Lv.' + level : '') + '</div>' +

@@ -6,8 +6,9 @@ agar data tampil dengan benar di website ToramCodex.
 > **Penting:**
 > - Baris 1 **HARUS** berisi header kolom (persis seperti tabel di bawah).
 > - Data mulai dari baris 2 ke bawah.
-> - Kolom **Icon** dan **ImageURL** bersifat opsional — jika dikosongkan, sistem
->   otomatis memilih emoji berdasarkan kolom Type.
+> - Kolom **Icon** dan **ImageURL** bersifat opsional dan **fungsinya berbeda**:
+>   - **Icon** = ikon kecil di card list (kosongkan = auto dari Type).
+>   - **ImageURL** = gambar besar item yang tampil di popup detail modal.
 > - Setelah mengedit Sheet, data di website otomatis terupdate saat halaman di-refresh
 >   (tidak perlu push code).
 
@@ -44,8 +45,8 @@ Daftar semua item/equipment yang ditampilkan sebagai card di halaman Items.
 | Kolom    | Wajib? | Keterangan                                              |
 |----------|--------|---------------------------------------------------------|
 | Name     | ✅ Ya  | Nama item                                                |
-| Icon     | ❌     | Emoji kustom (misal: ⚔️). Kosongkan = auto dari Type    |
-| ImageURL | ❌     | URL gambar item (misal dari Imgur). Kosongkan = pakai emoji |
+| Icon     | ❌     | Ikon kecil di card list (emoji kustom misal: ⚔️). Kosongkan = auto dari Type |
+| ImageURL | ❌     | Gambar besar item di popup detail modal (URL langsung ke file gambar) |
 | Type     | ✅ Ya  | Jenis item. Menentukan icon otomatis & filter kategori   |
 | Level    | ❌     | Level requirement item                                   |
 | Stats    | ❌     | Stat utama item (misal: ATK+350)                        |
@@ -408,14 +409,25 @@ Angka statistik hero counter di hero section.
 - **Huruf besar/kecil**: Nama header kolom harus persis (misal: `ImageURL` bukan `imageurl`).
 - **Nama tab**: Harus persis (misal: `Items` bukan `items` atau `Item`).
 
-### Icon & Gambar
-- Jika **ImageURL** diisi → tampil sebagai gambar.
-- Jika **ImageURL** kosong tapi **Icon** diisi → tampil emoji/teks dari Icon.
-- Jika **keduanya kosong** → otomatis tampil icon gambar PNG dari `img/icons/` berdasarkan Type.
+### Icon & Gambar (Fungsi Berbeda!)
+
+**Icon** dan **ImageURL** punya fungsi yang **berbeda**:
+
+| Kolom | Fungsi | Tampil Di | Contoh |
+|-------|--------|-----------|--------|
+| Icon | Ikon kecil | Card list (halaman Items) | 🌸, ⚔️ (emoji) |
+| ImageURL | Gambar besar | Popup detail modal (klik item) | URL gambar `.png/.jpg/.webp` |
+
+**Cara kerja Icon (card list):**
+- Jika **Icon** diisi → tampil emoji/teks dari Icon.
+- Jika **Icon** kosong → otomatis tampil icon PNG dari `img/icons/` berdasarkan Type.
 - Jika Type tidak dikenali → fallback ke `img/icons/1h_ico.png`.
 - Material, Consumable, dan Quest Item tetap pakai emoji (⛏️ 🧪 📦).
-- Untuk gambar kustom di kolom ImageURL, gunakan URL langsung ke file gambar
-  (format `.png`, `.jpg`, `.webp`).
+
+**Cara kerja ImageURL (popup modal):**
+- Jika **ImageURL** diisi → tampil sebagai gambar besar di popup detail.
+- Jika **ImageURL** kosong → popup menampilkan icon/emoji sebagai placeholder.
+- Gunakan URL langsung ke file gambar (format `.png`, `.jpg`, `.webp`).
 
 ### Hosting Gambar
 - **Repo sendiri** (rekomendasi): simpan gambar di folder `img/icons/`, push ke GitHub.

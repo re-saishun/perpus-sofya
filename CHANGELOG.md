@@ -4,6 +4,16 @@ Semua perubahan penting pada proyek ToramCodex dicatat di sini.
 
 ---
 
+## [0.7.1] — 2026-03-05
+
+### Changed
+- **Pisahkan fungsi Icon vs ImageURL** — Icon = ikon kecil di card list, ImageURL = gambar besar di popup detail modal
+- Card Items sekarang hanya pakai kolom Icon / auto-detect Type (tidak lagi pakai ImageURL)
+- ImageURL khusus untuk gambar besar di detail modal popup
+- Update dokumentasi SPREADSHEET_GUIDE.md menjelaskan perbedaan Icon vs ImageURL
+
+---
+
 ## [0.7.0] — 2026-03-05
 
 ### Added
