@@ -71,14 +71,6 @@
               <th>Pet</th>
               <th>Level</th>
               <th>Spawn At</th>
-              <th>Normal Magic</th>
-              <th>Support (red)</th>
-              <th>Act 1</th>
-              <th>Act 2</th>
-              <th>Act 3</th>
-              <th>Act 4</th>
-              <th>Act 5</th>
-              <th>Color Info</th>
             </tr>
           </thead>
           <tbody id="petsTable">
@@ -119,6 +111,26 @@
   </footer>
 
   <button id="backToTop" aria-label="Back to top" title="Back to top">↑</button>
+
+  <!-- Pet detail modal -->
+  <div id="petModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-body">
+      <button class="modal-close" id="petModalClose" aria-label="Close">&times;</button>
+      <div class="detail-card">
+        <div class="detail-header" style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+          <span id="pmIcon" style="font-size:2.5rem;line-height:1"></span>
+          <div>
+            <h2 id="pmName" style="font-size:1.3rem;font-weight:700;margin:0"></h2>
+            <span class="text-muted" id="pmSubtitle"></span>
+          </div>
+        </div>
+        <table class="pet-modal-table" style="width:100%;border-collapse:collapse;font-size:.88rem">
+          <tbody id="pmBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <script src="../js/sheets.js"></script>
   <script src="../js/main.js"></script>
   <script>
@@ -146,6 +158,74 @@
     }());
 
     ToramSheets.load('pets', 'petsTable');
+
+    // ---- Pet detail modal ----
+    (function () {
+      var overlay = document.getElementById('petModal');
+      var tbody   = document.getElementById('petsTable');
+
+      function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+      function nMagicHTML(val) {
+        if (!val) return '<span class="text-muted">\u2014</span>';
+        var yes = val.toLowerCase()==='yes' || val==='O' || val==='o' || val==='\u25cb';
+        return yes
+          ? '<span style="color:#16a34a;font-weight:600">\u25cb Yes</span>'
+          : '<span style="color:#dc2626">\u2715 No</span>';
+      }
+
+      function actVal(v) { return v || '<span class="text-muted">\u2014</span>'; }
+
+      function colorHTML(c) {
+        if (!c) return '<span class="text-muted">\u2014</span>';
+        if (/^https?:\/\//i.test(c)) return '<img src="' + esc(c) + '" alt="Color" style="max-width:120px;height:auto;border-radius:4px" />';
+        return esc(c);
+      }
+
+      function openModal(tr) {
+        var d = tr.dataset;
+        document.getElementById('pmIcon').innerHTML = d.petIcon;
+        document.getElementById('pmName').textContent = d.petName;
+        document.getElementById('pmSubtitle').textContent = d.petLevel ? 'Lv. ' + d.petLevel + (d.petSpawn ? ' · ' + d.petSpawn : '') : (d.petSpawn || '');
+
+        var rows = [
+          ['Normal Magic', nMagicHTML(d.petNmagic)],
+          ['Support',      d.petSupport ? '<span style="color:#dc2626;font-weight:600">' + d.petSupport + '</span>' : '<span class="text-muted">\u2014</span>'],
+          ['Act 1', actVal(d.petAct1)],
+          ['Act 2', actVal(d.petAct2)],
+          ['Act 3', actVal(d.petAct3)],
+          ['Act 4', actVal(d.petAct4)],
+          ['Act 5', actVal(d.petAct5)],
+          ['Color Info', colorHTML(d.petColor)]
+        ];
+
+        var html = '';
+        rows.forEach(function (r) {
+          html += '<tr>' +
+            '<td style="padding:.5rem .75rem;font-weight:600;color:var(--text-secondary);white-space:nowrap;border-bottom:1px solid var(--border)">' + r[0] + '</td>' +
+            '<td style="padding:.5rem .75rem;border-bottom:1px solid var(--border)">' + r[1] + '</td>' +
+          '</tr>';
+        });
+        document.getElementById('pmBody').innerHTML = html;
+
+        overlay.classList.add('open');
+        requestAnimationFrame(function () { overlay.classList.add('fade-in'); });
+      }
+
+      function closeModal() {
+        overlay.classList.remove('fade-in');
+        setTimeout(function () { overlay.classList.remove('open'); }, 250);
+      }
+
+      document.getElementById('petModalClose').addEventListener('click', closeModal);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+
+      tbody.addEventListener('click', function (e) {
+        var tr = e.target.closest('tr');
+        if (tr && tr.dataset.petName) openModal(tr);
+      });
+    }());
   </script>
 </body>
 </html>

@@ -661,6 +661,16 @@ tbody td:first-child { white-space: nowrap; }
   gap: 4px;
 }
 
+.pet-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#petsTable tr:hover {
+  background: var(--bg-base);
+}
+
 /* ============================================================
    FILTER BAR
    ============================================================ */
@@ -938,22 +948,7 @@ footer {
 
   /* ---- Pets card grid ---- */
   /* Pet (img+name): full width (from td:first-child rule) */
-  /* Level: full width */
-  #petsTable td:nth-child(2) { grid-column: 1 / -1; }
-  /* Spawn At: full width */
-  #petsTable td:nth-child(3) { grid-column: 1 / -1; }
-  /* Normal Magic & Support: side by side */
-  /* Act1 & Act2: side by side */
-  /* Act3 & Act4: side by side */
-  /* Act5: full width */
-  #petsTable td:nth-child(10) { grid-column: 1 / -1; }
-  /* Color Info: full width */
-  #petsTable td:nth-child(11) {
-    grid-column: 1 / -1;
-    border-top: 1px solid var(--border);
-    padding-top: .4rem;
-    margin-top: .2rem;
-  }
+  /* Level & Spawn At: side by side (auto 1fr 1fr) */
 
   /* Other tables: keep simple */
   table:not(.table-wrap table) { font-size: .8rem; }

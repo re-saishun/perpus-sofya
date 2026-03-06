@@ -537,7 +537,7 @@ window.ToramSheets = (function () {
     tbody.innerHTML = '';
     if (!rows.length) {
       var tr = document.createElement('tr');
-      tr.innerHTML = '<td colspan="11" class="text-muted" style="padding:1rem">No pet data found. Check your Sheet ID and column headers (Name, Icon, ImageURL, Level, SpawnAt, NormalMagic, Support, Act1-Act5, ColorInfo).</td>';
+      tr.innerHTML = '<td colspan="3" class="text-muted" style="padding:1rem">No pet data found. Check your Sheet ID and column headers (Name, Icon, ImageURL, Level, SpawnAt, NormalMagic, Support, Act1-Act5, ColorInfo).</td>';
       tbody.appendChild(tr);
       return;
     }
@@ -547,11 +547,7 @@ window.ToramSheets = (function () {
     if (table) {
       var thead = table.querySelector('thead tr');
       if (thead) {
-        thead.innerHTML =
-          '<th>Pet</th><th>Level</th><th>Spawn At</th>' +
-          '<th>Normal Magic</th><th>Support (red)</th>' +
-          '<th>Act 1</th><th>Act 2</th><th>Act 3</th><th>Act 4</th><th>Act 5</th>' +
-          '<th>Color Info</th>';
+        thead.innerHTML = '<th>Pet</th><th>Level</th><th>Spawn At</th>';
       }
     }
 
@@ -561,61 +557,33 @@ window.ToramSheets = (function () {
       var imgURL  = (row['ImageURL']       || '').trim();
       var level   = esc(row['Level']       || '');
       var spawnAt = esc(row['SpawnAt']     || '');
-      var nMagic  = esc(row['NormalMagic'] || '');
-      var support = esc(row['Support']     || '');
-      var act1    = esc(row['Act1']        || '');
-      var act2    = esc(row['Act2']        || '');
-      var act3    = esc(row['Act3']        || '');
-      var act4    = esc(row['Act4']        || '');
-      var act5    = esc(row['Act5']        || '');
-      var colorInfo = (row['ColorInfo']    || '').trim();
 
       var petIcon = imgURL
         ? '<img src="' + esc(imgURL) + '" alt="' + name + '" style="width:48px;height:48px;object-fit:contain;border-radius:4px;vertical-align:middle;margin-right:6px" />'
         : (icon || '\uD83D\uDC3E') + ' ';
 
-      var nMagicHTML = '';
-      if (nMagic) {
-        var isYes = nMagic.toLowerCase() === 'yes' || nMagic === 'O' || nMagic === 'o' || nMagic === '\u25cb';
-        nMagicHTML = isYes
-          ? '<span style="color:#16a34a;font-weight:600">\u25cb Yes</span>'
-          : '<span style="color:#dc2626">\u2715 No</span>';
-      }
-
-      var supportHTML = support
-        ? '<span style="color:#dc2626;font-weight:600">' + support + '</span>'
-        : '<span class="text-muted">\u2014</span>';
-
-      function actCell(val) {
-        return val ? val : '<span class="text-muted">\u2014</span>';
-      }
-
-      var colorHTML = '';
-      if (colorInfo) {
-        if (colorInfo.match(/^https?:\/\//i)) {
-          colorHTML = '<img src="' + esc(colorInfo) + '" alt="Color" style="max-width:80px;height:auto;border-radius:4px" />';
-        } else {
-          colorHTML = esc(colorInfo);
-        }
-      } else {
-        colorHTML = '<span class="text-muted">\u2014</span>';
-      }
-
       var tr = document.createElement('tr');
       tr.dataset.filter = name.toLowerCase();
+      tr.style.cursor = 'pointer';
+
+      // Store full detail data for modal
+      tr.dataset.petName    = name;
+      tr.dataset.petIcon    = petIcon;
+      tr.dataset.petLevel   = level;
+      tr.dataset.petSpawn   = spawnAt;
+      tr.dataset.petNmagic  = esc(row['NormalMagic'] || '');
+      tr.dataset.petSupport = esc(row['Support']     || '');
+      tr.dataset.petAct1    = esc(row['Act1'] || '');
+      tr.dataset.petAct2    = esc(row['Act2'] || '');
+      tr.dataset.petAct3    = esc(row['Act3'] || '');
+      tr.dataset.petAct4    = esc(row['Act4'] || '');
+      tr.dataset.petAct5    = esc(row['Act5'] || '');
+      tr.dataset.petColor   = (row['ColorInfo'] || '').trim();
 
       tr.innerHTML =
         '<td><span class="pet-name">' + petIcon + name + '</span></td>' +
         '<td data-label="Level"><span class="tag">' + level + '</span></td>' +
-        '<td data-label="Spawn At">' + spawnAt + '</td>' +
-        '<td data-label="Normal Magic">' + nMagicHTML + '</td>' +
-        '<td data-label="Support">' + supportHTML + '</td>' +
-        '<td data-label="Act 1">' + actCell(act1) + '</td>' +
-        '<td data-label="Act 2">' + actCell(act2) + '</td>' +
-        '<td data-label="Act 3">' + actCell(act3) + '</td>' +
-        '<td data-label="Act 4">' + actCell(act4) + '</td>' +
-        '<td data-label="Act 5">' + actCell(act5) + '</td>' +
-        '<td data-label="Color Info">' + colorHTML + '</td>';
+        '<td data-label="Spawn At">' + spawnAt + '</td>';
       tbody.appendChild(tr);
     });
   }
