@@ -352,13 +352,21 @@ window.ToramSheets = (function () {
         var nameCell;
 
         if (hasVariants && idx === 0) {
-          // First row of group: show name + expand toggle with hidden diff labels
+          // First row of group: show name + colored diff badge toggle
           var hiddenDiffs = group.slice(1).map(function (r) {
             return (r['Difficulty'] || '').trim();
           }).filter(Boolean);
-          var toggleLabel = hiddenDiffs.length ? hiddenDiffs.join(', ') : (group.length - 1) + ' variants';
+          var badgesHTML = '';
+          if (hiddenDiffs.length) {
+            hiddenDiffs.forEach(function (d) {
+              var dc = d ? ' diff-' + d.toLowerCase() : '';
+              badgesHTML += '<span class="tag' + dc + '" style="font-size:.65rem;padding:1px 6px;pointer-events:none">' + esc(d) + '</span> ';
+            });
+          } else {
+            badgesHTML = '+' + (group.length - 1);
+          }
           nameCell = monIcon + name +
-            ' <span class="tag mon-group-toggle" style="cursor:pointer;opacity:.7;font-size:.75rem" data-group="' + gid + '">▸ ' + toggleLabel + '</span>';
+            ' <span class="mon-group-toggle" style="cursor:pointer;font-size:.75rem;display:inline-flex;align-items:center;gap:2px" data-group="' + gid + '">▸ ' + badgesHTML + '</span>';
         } else if (hasVariants) {
           // Variant row: indent with marker, hidden by default
           nameCell = '<span style="padding-left:1.2rem;opacity:.85">↳ </span>' + monIcon + name;
@@ -406,11 +414,11 @@ window.ToramSheets = (function () {
         var variantRows = tbody.querySelectorAll('[data-mon-group="' + gid + '"]');
         var isOpen = grpToggle.dataset.open === '1';
         variantRows.forEach(function (r) { r.style.display = isOpen ? 'none' : ''; });
-        if (!grpToggle.dataset.label) grpToggle.dataset.label = grpToggle.textContent.replace('▸ ', '');
+        if (!grpToggle.dataset.badgesHtml) grpToggle.dataset.badgesHtml = grpToggle.innerHTML.replace(/^▸ /, '').replace(/^▾ /, '');
         grpToggle.dataset.open = isOpen ? '0' : '1';
-        grpToggle.textContent = isOpen
-          ? '▸ ' + grpToggle.dataset.label
-          : '▾ hide';
+        grpToggle.innerHTML = isOpen
+          ? '▸ ' + grpToggle.dataset.badgesHtml
+          : '▾ <span style="opacity:.7;font-size:.7rem">hide</span>';
       }
     });
   }
