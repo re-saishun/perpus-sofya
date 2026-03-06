@@ -51,6 +51,27 @@
     });
   }
 
+  /* ---------- Nav search: Enter to search ---------- */
+  var navSearchInput = document.getElementById('navSearchInput');
+  if (navSearchInput) {
+    navSearchInput.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      var q = navSearchInput.value.trim();
+      if (!q) return;
+      // On list pages with a filter input, just apply the filter (search-sync already syncs)
+      if (filterInput) {
+        filterInput.value = q;
+        onFilterChange();
+        return;
+      }
+      // On homepage or other pages, redirect to items search
+      var isHome = !window.location.pathname.match(/pages\//);
+      var base = isHome ? 'pages/' : '';
+      window.location.href = base + 'items.html?q=' + encodeURIComponent(q);
+    });
+  }
+
   /* ---------- Filter bar (for list pages) ---------- */
   var filterInput   = document.getElementById('filterInput');
   var filterSelect  = document.getElementById('filterSelect');
