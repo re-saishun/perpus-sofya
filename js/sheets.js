@@ -382,13 +382,13 @@ window.ToramSheets = (function () {
 
         tr.innerHTML =
           '<td>' + nameCell + '</td>' +
-          '<td><span class="tag' + (parseInt(level, 10) >= 240 ? ' gold' : '') + '">' + level + '</span></td>' +
-          (diff ? '<td><span class="tag' + diffClass + '">' + diff + '</span></td>' : '<td></td>') +
-          '<td><span class="tag' + (isBoss ? ' red' : (isMiniBoss ? ' mini-boss' : '')) + '">' + type + '</span></td>' +
-          '<td>' + elem + '</td>' +
-          '<td>' + hp + '</td>' +
-          '<td>' + loc + '</td>' +
-          '<td>' + dropHTML + '</td>';
+          '<td data-label="Level"><span class="tag' + (parseInt(level, 10) >= 240 ? ' gold' : '') + '">' + level + '</span></td>' +
+          (diff ? '<td data-label="Difficulty"><span class="tag' + diffClass + '">' + diff + '</span></td>' : '<td data-label="Difficulty"></td>') +
+          '<td data-label="Type"><span class="tag' + (isBoss ? ' red' : (isMiniBoss ? ' mini-boss' : '')) + '">' + type + '</span></td>' +
+          '<td data-label="Element">' + elem + '</td>' +
+          '<td data-label="HP">' + hp + '</td>' +
+          '<td data-label="Location">' + loc + '</td>' +
+          '<td data-label="Drop">' + dropHTML + '</td>';
         tbody.appendChild(tr);
       });
     });

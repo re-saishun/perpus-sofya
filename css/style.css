@@ -872,8 +872,60 @@ footer {
 
   .hero h1 { font-size: 1.8rem; }
 
-  table { font-size: .8rem; }
-  thead th, tbody td { padding: .5rem .75rem; }
+  /* ---- Monster table → card layout on mobile ---- */
+  #monstersTable tr { white-space: normal !important; }
+  #monstersTable tr td:first-child { white-space: normal; }
+
+  .table-wrap table thead { display: none; }
+
+  .table-wrap table tbody tr {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: .75rem;
+    margin-bottom: .5rem;
+  }
+
+  .table-wrap table tbody tr[data-mon-group] {
+    margin-left: 1rem;
+    border-left: 3px solid var(--accent);
+  }
+
+  .table-wrap table tbody td {
+    display: flex;
+    align-items: flex-start;
+    gap: .4rem;
+    padding: .2rem 0;
+    border: none;
+    font-size: .82rem;
+  }
+
+  .table-wrap table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 5.5rem;
+    flex-shrink: 0;
+    font-size: .75rem;
+  }
+
+  .table-wrap table tbody td:first-child {
+    font-weight: 600;
+    font-size: .95rem;
+    padding-bottom: .3rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: .2rem;
+  }
+
+  .table-wrap table tbody td:first-child::before {
+    display: none;
+  }
+
+  /* Other tables: keep simple */
+  table:not(.table-wrap table) { font-size: .8rem; }
+  table:not(.table-wrap table) thead th,
+  table:not(.table-wrap table) tbody td { padding: .5rem .75rem; }
 }
 
 /* ============================================================
