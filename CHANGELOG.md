@@ -4,6 +4,20 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
 ---
 
+## [0.15.0] — 2026-03-07
+
+### Changed
+- **Brand icon** — Emoji ⚔️ diganti `brand_ico.png` (mascot biru) di navbar semua halaman
+- **Category grid** (index.html) — Emoji diganti icon PNG: Items, Monsters, Skills, Maps, Equipment
+- **Mobile menu** — Emoji diganti icon PNG untuk Items, Monsters, Skills, Maps
+- **Page hero h1** — Emoji diganti icon PNG di halaman Items, Monsters, Skills, Maps
+
+### Added
+- CSS rules: `.brand-icon img`, `.cat-icon img`, `.menu-icon`, `.hero-icon` untuk sizing icon PNG
+- 6 file icon baru: `brand_ico.png`, `items_ico.png`, `monsters_ico.png`, `skills_ico.png`, `maps_ico.png`, `equip_ico.png`
+
+---
+
 ## [0.14.0] — 2026-03-07
 
 ### Changed
