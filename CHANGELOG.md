@@ -1,6 +1,46 @@
-# Changelog — ToramCodex
+# Changelog — ToramDB
 
-Semua perubahan penting pada proyek ToramCodex dicatat di sini.
+Semua perubahan penting pada proyek ToramDB dicatat di sini.
+
+---
+
+## [0.14.0] — 2026-03-07
+
+### Changed
+- **Rebrand ToramCodex → ToramDB** — Nama brand diganti di semua halaman (navbar, footer, title)
+- **Dual-color brand** — "Toram" warna gold, "DB" warna biru (`--accent-cyan`)
+- **Footer disclamer baru** — "ToramDB is an independent fan-made project. Content is updated gradually..."
+- **Developer credit** — "Developed by No! I'm Failing!" di semua footer
+- Footer link "About" & "Contribute" diganti "Terms & Disclaimer"
+- README.md diupdate ke ToramDB + developer credit
+
+### Added
+- **`pages/terms.html`** — Halaman Terms & Disclaimer dengan 7 section:
+  Disclaimer, No Affiliation, Intellectual Property, Data Accuracy,
+  Limitation of Liability, Fair Use Statement, Contact, Developer
+
+---
+
+## [0.13.0] — 2026-03-07
+
+### Fixed
+- **Category filter broken** — Tambah `typeToCategory()` di sheets.js untuk normalisasi tipe (e.g. "One-Hand Sword" → "sword") agar cocok dengan dropdown filter
+- **Pagination jump** — Reset `currentPage = 1` saat event `sheetsrendered` di main.js
+- **Modal aria-selected** — Tab click di modal.js sekarang update `aria-selected` (accessibility fix)
+- **`rarityClass()`** — Sekarang return class `'non-event'` selain `'event'`
+- **Homepage static cards** — Ganti tag `Rare`/`Epic` yang sudah deprecated ke `Non-Event`
+- **Duplicate `aria-label`** — filterSelect2 di items.html diubah ke "Filter by rarity"
+- **SPREADSHEET_GUIDE URL** — Fix GitHub Pages URL pattern (*.github.io serve dari root)
+- **SPREADSHEET_GUIDE column order** — Fix instruksi salah "urutan kolom harus sesuai" → "boleh ditukar"
+- **SPREADSHEET_GUIDE example** — Fix Rarity `Common` → `Event` di contoh homepage
+
+### Added
+- **localStorage caching** — `fetchSheet()` di sheets.js sekarang cache CSV 5 menit di localStorage
+- **`.tag.gold` CSS** — Rule baru untuk badge level monster ≥240
+- **Pets fallback** — 3 sample pet rows di pets.html (Cerberus Pup, Frost Owl, Spirit Fox)
+- **SPREADSHEET_GUIDE link** — Ditambahkan di README.md
+- **README icon table** — Update tabel icon dengan nama file PNG (sejak v0.7.0)
+- **detail.html** — Ditandai sebagai legacy/fallback di README
 
 ---
 
