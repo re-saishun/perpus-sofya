@@ -125,7 +125,7 @@ ul { list-style: none; }
 #mobileMenu a { display: flex; align-items: center; gap: 6px; }
 
 /* Monster modal info bar */
-.mon-info-bar { display: flex; flex-wrap: wrap; gap: 6px; padding: .5rem 0; }
+.mon-info-bar { display: flex; flex-wrap: wrap; gap: 6px; padding: .5rem 1.25rem; }
 
 .nav-links {
   display: flex;
