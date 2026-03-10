@@ -45,13 +45,14 @@ Developed by **No! I'm Failing!**
 - ✅ Filter real-time (nama + kategori + rarity) tanpa reload
 - ✅ **Popup modal** untuk detail item (tanpa reload halaman)
 - ✅ **Google Sheets integration** — data auto-update dari spreadsheet
-- ✅ **Smart icon system** — ImageURL dari Sheet > Icon emoji dari Sheet > auto-detect dari tipe equipment
+- ✅ **Smart icon system** — ImageURL dari Sheet > Icon emoji dari Sheet > auto-detect dari tipe equipment & material
 - ✅ Animated counter stats di hero
 - ✅ Soft gray-white light theme — zero external CSS dependency
 - ✅ **Detail modal untuk Pets** — klik baris pet untuk lihat detail lengkap (Normal Magic, Support, Act 1–5, Color Info)
 - ✅ **Pet modal Preview** — Gambar besar pet (120×120) dengan label "Preview" di atas, centered
 - ✅ **XSS protection** — Semua data dari Google Sheet di-sanitize sebelum render ke HTML
-- ✅ **Monster grouping** — Skema A collapsible: monster sama dikelompokkan, variant di-toggle
+- ✅ **Monster grouping** — Skema A collapsible: monster sama dikelompokkan, variant (Hard/Nightmare/Ultimate) di-toggle
+- ✅ **Clickable Monster Names** — Klik nama monster di tabel untuk langsung melihat stats (HP/Element) spesifik sesuai *Difficulty*-nya di dalam Popup Modal
 - ✅ **Mobile card layout** — Tabel Monsters & Pets jadi grid card di layar kecil (≤480px)
 - ✅ **Home search category** — Dropdown kategori di hero search
 - ✅ Aksesibilitas: ARIA labels, roles, `aria-expanded`, semantic HTML
@@ -99,14 +100,17 @@ Developed by **No! I'm Failing!**
 | 2-Handed Sword | ⚔️ | `2h_ico.png` | | Armor | 🛡️ | `armor_ico.png` |
 | Bow | 🏹 | `bow_ico.png` | | Ninjutsu Scroll | 📜 | `scroll_ico.png` |
 | Bowgun | 🔫 | `bwg_ico.png` | | Additional | 💍 | `add_ico.png` |
-| Knuckles | 🥊 | `knu_ico.png` | | Special | ⭐ | `special_ico.png` |
-| Magic Device | 🔮 | `md_ico.png` | | Ring | 💍 | `special_ico.png` |
-| Staff | 🪄 | `stf_ico.png` | | Material | ⛏️ | _(emoji)_ |
-| Halberd | 🔱 | `hb_ico.png` | | Monster (Boss) | 🐉 | `boss_ico.png` |
-| Katana | ⚔️ | `ktn_ico.png` | | Monster (Normal) | 👾 | _(emoji)_ |
-| Dagger | 🔪 | `dagger_ico.png` | | Skill | ✨ | _(emoji)_ |
-| Arrow | 🎯 | `arrow_ico.png` | | Map | 🗺️ | _(emoji)_ |
-| | | | | Pet | 🐾 | _(emoji)_ |
+| Knuckles | 🥊 | `knu_ico.png` | | Special / Ring | ⭐ | `special_ico.png` |
+| Magic Device | 🔮 | `md_ico.png` | | Beast | 🐾 | `beast_ico.png` |
+| Staff | 🪄 | `stf_ico.png` | | Cloth | 🎽 | `cloth_ico.png` |
+| Halberd | 🔱 | `hb_ico.png` | | Mana | 💧 | `mana_ico.png` |
+| Katana | ⚔️ | `ktn_ico.png` | | Wood | 🪵 | `wood_ico.png` |
+| Dagger | 🔪 | `dagger_ico.png` | | Metal | ⚙️ | `metal_ico.png` |
+| Arrow | 🎯 | `arrow_ico.png` | | Medicine | 💊 | `medicine_ico.png` |
+| Monster (Boss) | 🐉 | `boss_ico.png`| | Teleport | 🪶 | `tele_ico.png` |
+| Monster (Normal) | 👾 | _(emoji)_ | | Material (Other)| ⛏️ | _(emoji)_ |
+| Skill | ✨ | _(emoji)_ | | Pet | 🐾 | _(emoji)_ |
+| Map | 🗺️ | _(emoji)_ | | | | |
 
 ### Rekomendasi Ukuran Gambar (ImageURL)
 
