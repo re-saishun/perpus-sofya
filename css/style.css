@@ -184,6 +184,7 @@ ul { list-style: none; }
 .drop-link:hover span:first-of-type { color: var(--accent); text-decoration: underline; }
 .drop-arrow { margin-left: auto; color: var(--text-secondary); font-size: .85rem; opacity: .4; transition: opacity .15s; }
 .drop-link:hover .drop-arrow { opacity: 1; color: var(--accent); }
+.drop-tag-link:hover { background: rgba(184,134,11,.18) !important; color: var(--accent) !important; text-decoration: underline; }
 .nav-links {
   display: flex;
   gap: .25rem;

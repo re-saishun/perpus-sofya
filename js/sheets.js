@@ -374,8 +374,9 @@ window.ToramSheets = (function () {
           var drops = rawDrop.split(';').map(function (d) { return d.trim(); }).filter(Boolean);
           var MAX_VISIBLE = 3;
           drops.forEach(function (d, i) {
-            var hidden = i >= MAX_VISIBLE ? ' style="display:none" data-drop-extra' : '';
-            dropHTML += '<span class="tag"' + hidden + '>' + esc(d) + '</span> ';
+            var hiddenStyle = i >= MAX_VISIBLE ? 'display:none;' : '';
+            var hiddenAttr = i >= MAX_VISIBLE ? ' data-drop-extra' : '';
+            dropHTML += '<span class="tag drop-tag-link" data-drop-name="' + esc(d) + '" style="cursor:pointer;' + hiddenStyle + '"' + hiddenAttr + '>' + esc(d) + '</span> ';
           });
           if (drops.length > MAX_VISIBLE) {
             var extra = drops.length - MAX_VISIBLE;
@@ -430,8 +431,19 @@ window.ToramSheets = (function () {
       });
     });
 
-    // Click handler for group toggles and drop toggles
+    // Click handler for group toggles, drop toggles, and drop item links
     tbody.addEventListener('click', function (e) {
+      // Drop item click → open ItemModal
+      var dropLink = e.target.closest('[data-drop-name]');
+      if (dropLink && !e.target.closest('[data-drop-toggle]')) {
+        var itemName = dropLink.getAttribute('data-drop-name');
+        if (itemName && window.ItemModal) {
+          e.stopPropagation();
+          window.ItemModal.open(itemName);
+        }
+        return;
+      }
+
       // Drop expand/collapse
       var dropToggle = e.target.closest('[data-drop-toggle]');
       if (dropToggle) {
