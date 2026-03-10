@@ -126,6 +126,57 @@ ul { list-style: none; }
 
 /* Monster modal info bar */
 .mon-info-bar { display: flex; flex-wrap: wrap; gap: 6px; padding: .5rem 1.25rem; }
+/* Enhancement Path (crysta items) */
+.enhancement-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 1rem 0;
+}
+.enhancement-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .35rem;
+  padding: .75rem 1.5rem;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: var(--bg-card, #f4f6f8);
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+  min-width: 120px;
+}
+.enhancement-step:not(.enhancement-current):hover {
+  border-color: var(--accent-cyan, #2c7be5);
+  box-shadow: 0 2px 8px rgba(44,123,229,.15);
+  transform: translateY(-2px);
+}
+.enhancement-current {
+  border-color: var(--accent-cyan, #2c7be5);
+  box-shadow: 0 0 0 3px rgba(44,123,229,.18);
+  background: rgba(44,123,229,.06);
+}
+.enhancement-icon {
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+}
+.enhancement-icon img { width: 48px; height: 48px; object-fit: contain; }
+.enhancement-name {
+  font-weight: 600; font-size: .9rem;
+  color: var(--text-primary, #1a1a2e);
+  text-align: center;
+}
+.enhancement-badge {
+  font-size: .7rem; font-weight: 700;
+  color: var(--accent-cyan, #2c7be5);
+  background: rgba(44,123,229,.1);
+  padding: 1px 8px; border-radius: 8px;
+}
+.enhancement-arrow {
+  font-size: 1.2rem; color: var(--text-muted, #888);
+  padding: .15rem 0; line-height: 1;
+}
 
 .nav-links {
   display: flex;

@@ -234,9 +234,64 @@ window.ItemModal = (function () {
       obtEl.innerHTML = '<p class="text-muted">No obtain info available.</p>';
     }
 
-    // Recipe
+    // Recipe / Enhancement Path
     var recEl = document.getElementById('modalRecipe');
-    if (rec) {
+    var recTab = document.querySelector('[data-tab="m-recipe"]');
+    var isCrysta = type.toLowerCase().indexOf('crysta') !== -1;
+
+    // Rename tab based on type
+    if (recTab) {
+      recTab.textContent = isCrysta ? 'Enhancement Path' : 'Recipe';
+    }
+
+    if (isCrysta && rec) {
+      // Enhancement Path: vertical flow with clickable crysta names
+      var steps = rec.split(';').map(function (s) { return s.trim(); }).filter(Boolean);
+      var pathHTML = '<div class="enhancement-path">';
+
+      steps.forEach(function (stepName, idx) {
+        var isCurrent = stepName.toLowerCase() === name.toLowerCase();
+        var currentClass = isCurrent ? ' enhancement-current' : '';
+
+        // Resolve icon for this crysta step
+        var stepIcon = '';
+        if (window.ToramSheets) {
+          stepIcon = window.ToramSheets.resolveIcon(type);
+        }
+        var iconHTML;
+        if (stepIcon && stepIcon.indexOf('<img') !== -1) {
+          iconHTML = stepIcon;
+        } else {
+          iconHTML = stepIcon || '💎';
+        }
+
+        pathHTML += '<div class="enhancement-step' + currentClass + '"' +
+          (isCurrent ? '' : ' data-enhance-name="' + esc(stepName) + '"') +
+          ' style="cursor:' + (isCurrent ? 'default' : 'pointer') + '">' +
+          '<div class="enhancement-icon">' + iconHTML + '</div>' +
+          '<div class="enhancement-name">' + esc(stepName) + '</div>' +
+          (isCurrent ? '<div class="enhancement-badge">Current</div>' : '') +
+          '</div>';
+
+        // Arrow between steps
+        if (idx < steps.length - 1) {
+          pathHTML += '<div class="enhancement-arrow">↓</div>';
+        }
+      });
+
+      pathHTML += '</div>';
+      recEl.innerHTML = pathHTML;
+
+      // Bind click on non-current steps
+      recEl.querySelectorAll('[data-enhance-name]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var targetName = this.getAttribute('data-enhance-name');
+          if (targetName) {
+            open(targetName);
+          }
+        });
+      });
+    } else if (rec) {
       var recHtml = '';
       rec.split(';').forEach(function (rp) {
         rp = rp.trim();
@@ -245,7 +300,7 @@ window.ItemModal = (function () {
       });
       recEl.innerHTML = recHtml;
     } else {
-      recEl.innerHTML = '<p class="text-muted">No recipe info available.</p>';
+      recEl.innerHTML = '<p class="text-muted">' + (isCrysta ? 'No enhancement path info available.' : 'No recipe info available.') + '</p>';
     }
 
     // Reset tabs to first

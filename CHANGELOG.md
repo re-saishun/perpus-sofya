@@ -4,6 +4,16 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
 ---
 
+## [0.17.0] — 2026-03-10
+
+### Added
+- **Enhancement Path** — Crysta items: tab "Recipe" berubah jadi "Enhancement Path"
+- Tampilan vertikal: icon → arrow → icon → arrow → icon
+- Item yang sedang dilihat di-highlight biru dengan badge "Current"
+- **Clickable steps** — klik crysta lain langsung buka modal detail tanpa tutup modal
+- CSS: `.enhancement-path`, `.enhancement-step`, `.enhancement-current`, `.enhancement-arrow`, `.enhancement-badge`
+
+---
 ## [0.16.0] — 2026-03-07
 
 ### Added
