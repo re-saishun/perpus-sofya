@@ -203,9 +203,10 @@ window.MonsterModal = (function () {
         if (window.ItemModal && window.ItemModal.getItem && window.ToramSheets) {
           window.ItemModal.getItem(d, function(itemData) {
             if (itemData) {
+              var iImage = itemData['ImageURL'] || '';
               var iIcon = itemData['Icon'] || '';
               var iType = itemData['Type'] || '';
-              var realIconHTML = window.ToramSheets.resolveIcon(iIcon, iType, d);
+              var realIconHTML = window.ToramSheets.iconHTML(iImage, iIcon, iType, d);
               if (realIconHTML) {
                 var iconContainer = dropItemEl.querySelector('.obtain-icon');
                 if (iconContainer) iconContainer.innerHTML = realIconHTML;

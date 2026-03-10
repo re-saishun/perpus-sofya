@@ -944,6 +944,7 @@ window.ToramSheets = (function () {
     fetchSheet   : fetchSheet,
     parseCSV     : parseCSV,
     esc          : esc,
-    resolveIcon  : resolveIcon
+    resolveIcon  : resolveIcon,
+    iconHTML     : iconHTML
   };
 }());

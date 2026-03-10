@@ -4,6 +4,13 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
 ---
 
+## [0.20.1] — 2026-03-10
+
+### Fixed
+- **Monster Modal Drop Icons** — Memperbaiki bug tampilan text *pathname* (`/img/icons/...`) yang bocor ke daftar material drop dikarenakan kesalahan render HTML. Sekarang memunculkan gambar icon yang semestinya.
+
+---
+
 ## [0.20.0] — 2026-03-10
 
 ### Added
