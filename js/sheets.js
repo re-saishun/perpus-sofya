@@ -289,7 +289,6 @@ window.ToramSheets = (function () {
       var stats  = esc(row['Stats']    || '');
       var rarity = esc(row['Rarity']   || '');
       var source = esc(row['Source']   || '');
-      var rc     = rarityClass(rarity);
 
       var el       = document.createElement('article');
       el.className = 'data-card';
@@ -300,6 +299,18 @@ window.ToramSheets = (function () {
       el.dataset.name      = row['Name'] || '';
       // Card icon: use Icon column or auto-detect from Type (NOT ImageURL).
       // ImageURL is reserved for the large image in the detail modal.
+      var rarityHTML = '';
+      if (rarity) {
+        rarity.split(';').forEach(function(rp) {
+          rp = rp.trim();
+          if (rp) {
+            var rc = rarityClass(rp);
+            var tagClass = rc ? 'tag ' + rc : 'tag';
+            rarityHTML += '<span class="' + tagClass + '">' + esc(rp) + '</span> ';
+          }
+        });
+      }
+
       el.innerHTML =
         '<div class="data-card-header">' +
           '<div class="data-card-icon">' + iconHTML('', icon, type, name) + '</div>' +
@@ -310,7 +321,7 @@ window.ToramSheets = (function () {
         '</div>' +
         '<div class="data-card-body">' +
           (stats  ? '<span class="tag">Base: '   + stats  + '</span>' : '') +
-          (rarity ? '<span class="tag ' + rc + '">' + rarity + '</span>' : '') +
+          rarityHTML +
           (source ? '<p class="mt-1">Source: ' + source + '</p>' : '') +
         '</div>';
       container.appendChild(el);
@@ -812,14 +823,24 @@ window.ToramSheets = (function () {
               spotIcon = ficon;
             }
 
-            var rc = frarity ? (' ' + frarity.toLowerCase()) : '';
+            var frarityHTML = '';
+            if (frarity) {
+              frarity.split(';').forEach(function(rp) {
+                rp = rp.trim();
+                if (rp) {
+                  var rc = rarityClass(rp);
+                  var tagClass = rc ? 'tag ' + rc : 'tag';
+                  frarityHTML += '<span class="' + tagClass + '">' + esc(rp) + '</span> ';
+                }
+              });
+            }
 
             spot.innerHTML =
               '<div class="spotlight-icon">' + spotIcon + '</div>' +
               '<div class="spotlight-info">' +
                 '<p class="title">' + (flevel ? 'Lv.' + flevel + ' ' : '') + fname + '</p>' +
                 '<p class="meta">' +
-                  (frarity ? '<span class="tag' + rc + '">' + frarity + '</span>' : '') +
+                  frarityHTML +
                   (ftype   ? '<span class="tag">' + ftype + '</span>' : '') +
                   (fstats  ? '<span class="tag green">' + fstats + '</span>' : '') +
                 '</p>' +

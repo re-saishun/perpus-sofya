@@ -4,6 +4,15 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
 ---
 
+## [0.19.0] — 2026-03-10
+
+### Added
+- **Multi-Badge Rarity** — Kolom Rarity di Sheet Items sekarang mendukung pemisahan menggunakan titik koma (`;`). 
+  - Contoh: `Event;Drop` akan dirender menjadi dua badge terpisah (`<span class="tag event">Event</span> <span class="tag">Drop</span>`).
+  - Berlaku untuk tampilan grid Items biasa maupun Featured/Spotlight item.
+
+---
+
 ## [0.18.0] — 2026-03-10
 
 ### Added
