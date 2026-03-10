@@ -4,6 +4,13 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
 ---
 
+## [0.21.2] — 2026-03-10
+
+### Fixed
+- **Monsters Table UI** — Memperbaiki bug visual dimana ikon monster, panah varian (↳), dan teks nama monster tidak sejajar secara vertikal setelah update tautan nama yang bisa diklik.
+
+---
+
 ## [0.21.1] — 2026-03-10
 
 ### Removed
