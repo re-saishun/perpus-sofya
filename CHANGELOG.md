@@ -4,6 +4,13 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
 ---
 
+## [0.21.1] — 2026-03-10
+
+### Removed
+- **Item Modal UI** — Menghapus tombol "Favorite" (☆) yang tidak terpakai dari modal item, yang sebelumnya menyebabkan tumpang tindih visual (bertabrakan) dengan letak tombol "Close" (×).
+
+---
+
 ## [0.21.0] — 2026-03-10
 
 ### Added

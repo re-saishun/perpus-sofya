@@ -86,7 +86,6 @@ window.ItemModal = (function () {
               '<h2 id="modalName" style="font-size:1.3rem;font-weight:700;margin:0">Loading…</h2>' +
               '<span class="detail-type" id="modalType"></span>' +
             '</div>' +
-            '<button class="detail-fav" id="modalFav" aria-label="Favorite">☆</button>' +
           '</div>' +
           '<div class="detail-image" id="modalImage">' +
             '<span class="placeholder-icon" id="modalIcon">🗡️</span>' +
@@ -130,12 +129,6 @@ window.ItemModal = (function () {
       });
     });
 
-    // Bind fav
-    var favBtn = document.getElementById('modalFav');
-    favBtn.addEventListener('click', function () {
-      this.classList.toggle('active');
-      this.textContent = this.classList.contains('active') ? '★' : '☆';
-    });
   }
 
   // ---------- Populate modal with item data -------------------------
