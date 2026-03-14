@@ -133,6 +133,13 @@ window.ItemModal = (function () {
 
   // ---------- Populate modal with item data -------------------------
   function populate(item) {
+    // Reset panels and title to avoid "ghost data"
+    document.getElementById('modalName').innerHTML = 'Loading…';
+    document.getElementById('modalType').textContent = '';
+    document.getElementById('modalStats').innerHTML = '<div class="skeleton" style="height:140px"></div>';
+    document.getElementById('modalObtain').innerHTML = '<p class="text-muted">Loading…</p>';
+    document.getElementById('modalRecipe').innerHTML = '<p class="text-muted">Loading…</p>';
+
     if (!item) {
       document.getElementById('modalName').textContent = 'Item Not Found';
       document.getElementById('modalStats').innerHTML = '<p class="text-muted">Item not found in database.</p>';
@@ -169,7 +176,6 @@ window.ItemModal = (function () {
         open(name, variants[0]._index);
       });
     }
-    var type  = item['Type']      || '';
     var icon  = item['Icon']      || (window.ToramSheets ? window.ToramSheets.resolveIcon(type) : '🗡️');
     var level = item['Level']     || '';
     var lvl   = level && level !== '0' ? ' Lv.' + level : '';
@@ -492,9 +498,10 @@ window.ItemModal = (function () {
   }
 
   function findInCache(name) {
-    if (!sheetsCache) return null;
+    if (!sheetsCache || !name) return null;
+    var search = name.trim().toLowerCase();
     for (var i = 0; i < sheetsCache.length; i++) {
-      if ((sheetsCache[i]['Name'] || '').toLowerCase() === name.toLowerCase()) {
+      if ((sheetsCache[i]['Name'] || '').trim().toLowerCase() === search) {
         return sheetsCache[i];
       }
     }
