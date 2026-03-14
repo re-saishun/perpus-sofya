@@ -180,7 +180,6 @@ window.ItemModal = (function () {
     var obt   = item['Obtain']    || '';
     var rec   = item['Recipe']    || '';
 
-    document.getElementById('modalName').textContent = name;
     document.getElementById('modalType').textContent = '[' + type + ']' + lvl;
 
     // Image
@@ -461,7 +460,7 @@ window.ItemModal = (function () {
       if (sheetsCache) {
         var found;
         var idx = parseInt(rowIndex, 10);
-        if (!isNaN(idx) && sheetsCache[idx]) {
+        if (!isNaN(idx) && sheetsCache[idx] && (sheetsCache[idx]['Name'] || '').trim().toLowerCase() === (itemName || '').trim().toLowerCase()) {
           found = sheetsCache[idx];
         } else {
           found = findInCache(itemName);
@@ -476,7 +475,7 @@ window.ItemModal = (function () {
             
             var found;
             var idx2 = parseInt(rowIndex, 10);
-            if (!isNaN(idx2) && sheetsCache[idx2]) {
+            if (!isNaN(idx2) && sheetsCache[idx2] && (sheetsCache[idx2]['Name'] || '').trim().toLowerCase() === (itemName || '').trim().toLowerCase()) {
               found = sheetsCache[idx2];
             } else {
               found = findInCache(itemName);
