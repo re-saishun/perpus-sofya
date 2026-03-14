@@ -263,10 +263,18 @@ window.ItemModal = (function () {
 
     // Recipe / Enhancement Path
     var recEl = document.getElementById('modalRecipe');
-    var recTab = document.querySelector('[data-tab="m-recipe"]');
+    var statsTab = document.querySelector('[data-tab="m-stats"]');
+    var obtainTab = document.querySelector('[data-tab="m-obtain"]');
+    var recTab   = document.querySelector('[data-tab="m-recipe"]');
     var isCrysta = type.toLowerCase().indexOf('crysta') !== -1;
+    
+    // Material types that need custom labels
+    var materialTypes = ['beast', 'cloth', 'mana', 'wood', 'metal', 'medicine', 'teleport'];
+    var isMaterial = materialTypes.indexOf(type.toLowerCase()) !== -1;
 
-    // Rename tab based on type
+    // Update tab labels based on type
+    if (statsTab) statsTab.textContent = isMaterial ? 'Details' : 'Stats/Effects';
+    if (obtainTab) obtainTab.textContent = isMaterial ? 'Used For' : 'Obtain';
     if (recTab) {
       recTab.textContent = isCrysta ? 'Enhancement Path' : 'Recipe';
     }
