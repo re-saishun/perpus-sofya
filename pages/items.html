@@ -260,7 +260,7 @@
     // Make item cards clickable → popup modal
     document.getElementById('itemsGrid').addEventListener('click', function (e) {
       var card = e.target.closest('[data-name]');
-      if (card) ItemModal.open(card.dataset.name);
+      if (card) ItemModal.open(card.dataset.name, card.dataset.itemIndex);
     });
   </script>
 </body>

@@ -357,7 +357,7 @@
     // Make Latest Items cards clickable → popup modal
     document.getElementById('latestItemsGrid').addEventListener('click', function (e) {
       var card = e.target.closest('[data-name]');
-      if (card) ItemModal.open(card.dataset.name);
+      if (card) ItemModal.open(card.dataset.name, card.dataset.itemIndex);
     });
 
     // Make Popular Monsters cards clickable → monster popup modal

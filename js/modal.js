@@ -141,6 +141,33 @@ window.ItemModal = (function () {
 
     var name  = item['Name']      || '';
     var type  = item['Type']      || '';
+
+    // Variant Detector: Find other items with same name but different index
+    var variants = [];
+    if (sheetsCache) {
+      sheetsCache.forEach(function(row, idx) {
+        if (row['Name'] === name && row._index !== item._index) {
+          variants.push(row);
+        }
+      });
+    }
+
+    var nameHTML = esc(name);
+    if (variants.length > 0) {
+      // Add a small badge or text if variants exist
+      nameHTML += ' <span style="font-size:0.7rem;font-weight:normal;opacity:0.6;background:rgba(0,0,0,0.05);padding:2px 6px;border-radius:4px;vertical-align:middle;margin-left:8px;cursor:pointer" id="variantTrigger">Other Version Available</span>';
+    }
+    document.getElementById('modalName').innerHTML = nameHTML;
+
+    // Bind variant trigger
+    var vt = document.getElementById('variantTrigger');
+    if (vt) {
+      vt.addEventListener('click', function() {
+        // Toggle to the next variant (simplest approach)
+        open(name, variants[0]._index);
+      });
+    }
+    var type  = item['Type']      || '';
     var icon  = item['Icon']      || (window.ToramSheets ? window.ToramSheets.resolveIcon(type) : '🗡️');
     var level = item['Level']     || '';
     var lvl   = level && level !== '0' ? ' Lv.' + level : '';
@@ -389,7 +416,7 @@ window.ItemModal = (function () {
   }
 
   // ---------- Open / Close ------------------------------------------
-  function open(itemName) {
+  function open(itemName, rowIndex) {
     var overlay = document.getElementById('itemModal');
     if (!overlay) return;
     if (!overlay.querySelector('.modal-body')) buildModalHTML();
@@ -405,14 +432,27 @@ window.ItemModal = (function () {
     // Try Sheets first, then sample
     if (window.ToramSheets && window.ToramSheets.CONFIG.SHEET_ID !== 'YOUR_GOOGLE_SHEET_ID') {
       if (sheetsCache) {
-        var found = findInCache(itemName);
+        var found;
+        if (rowIndex !== undefined && rowIndex !== null && sheetsCache[rowIndex]) {
+          found = sheetsCache[rowIndex];
+        } else {
+          found = findInCache(itemName);
+        }
         populate(found);
       } else {
         var sheetName = window.ToramSheets.CONFIG.SHEETS.itemdetails || 'ItemDetails';
         window.ToramSheets.fetchSheet(sheetName)
           .then(function (csv) {
             sheetsCache = window.ToramSheets.parseCSV(csv);
-            populate(findInCache(itemName));
+            sheetsCache.forEach(function(r, i) { r._index = i; }); // Ensure indexes are attached
+            
+            var found;
+            if (rowIndex !== undefined && rowIndex !== null && sheetsCache[rowIndex]) {
+              found = sheetsCache[rowIndex];
+            } else {
+              found = findInCache(itemName);
+            }
+            populate(found);
           })
           .catch(function () {
             populate(SAMPLE_ITEMS[itemName] || null);

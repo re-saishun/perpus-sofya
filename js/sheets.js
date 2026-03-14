@@ -306,6 +306,7 @@ window.ToramSheets = (function () {
       el.dataset.category  = typeToCategory(type);
       el.dataset.category2 = rarity.toLowerCase();
       el.dataset.name      = row['Name'] || '';
+      if (row._index !== undefined) el.dataset.itemIndex = row._index;
       // Card icon: use Icon column or auto-detect from Type (NOT ImageURL).
       // ImageURL is reserved for the large image in the detail modal.
       var rarityHTML = '';
@@ -721,6 +722,8 @@ window.ToramSheets = (function () {
     fetchSheet(sheetName)
       .then(function (csv) {
         var rows = parseCSV(csv);
+        // Attach original sheet index (absolute) before potentially filtering or reversing
+        rows.forEach(function (r, i) { r._index = i; });
         rows.reverse();
         renderer(rows, container);
         // Signal to main.js that new filterable elements are ready.
@@ -756,6 +759,8 @@ window.ToramSheets = (function () {
     fetchSheet(sheetName)
       .then(function (csv) {
         var rows = parseCSV(csv);
+        // Attach original sheet index (absolute)
+        rows.forEach(function (r, i) { r._index = i; });
         rows.reverse();
         rows = rows.slice(0, max || 3);
         if (rows.length) {

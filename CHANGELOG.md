@@ -4,6 +4,17 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
 ---
 
+## [0.21.7] — 2026-03-14
+
+### Added
+- **Ambiguous Item Logic (Unique ID)** — Sistem untuk membedakan item dengan nama yang sama (misal: "Colon Met" versi Craft vs Drop).
+  - Modal kini membuka baris data yang tepat berdasarkan index unik di spreadsheet, bukan lagi sekadar mencocokkan nama.
+  - Menjamin statistik yang ditampilkan akurat sesuai kartu yang diklik.
+- **Variant Detector (Other Versions)** — Menambahkan indikator "Other Version Available" di dalam modal jika ditemukan item lain dengan nama yang sama.
+  - Memungkinkan user berpindah antar versi item (Craft/Drop/Event) langsung dari dalam modal.
+
+---
+
 ## [0.21.6] — 2026-03-14
 
 ### Added
