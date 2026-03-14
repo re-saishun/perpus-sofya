@@ -197,10 +197,11 @@
 
       function openModal(tr) {
         var d = tr.dataset;
+        var errHandler = 'onerror="this.onerror=null;this.src=\'../img/icons/no_image.png\';this.style.opacity=\'0.6\';"';
         // Render large pet image (or emoji fallback)
         var imgEl = document.getElementById('pmImage');
         if (d.petImg) {
-          imgEl.innerHTML = '<img src="' + esc(d.petImg) + '" alt="' + esc(d.petName) + '" style="width:120px;height:120px;object-fit:contain;border-radius:8px;margin:0 auto" />';
+          imgEl.innerHTML = '<img src="' + esc(d.petImg) + '" alt="' + esc(d.petName) + '" ' + errHandler + ' style="width:120px;height:120px;object-fit:contain;border-radius:8px;margin:0 auto" />';
         } else {
           imgEl.innerHTML = '<span style="font-size:4rem">' + esc(d.petEmoji) + '</span>';
         }

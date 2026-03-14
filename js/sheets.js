@@ -223,16 +223,19 @@ window.ToramSheets = (function () {
   //   - If icon is provided → emoji/text from Sheet
   //   - Otherwise → auto-detect from TYPE_ICONS (supports emoji OR image URL)
   function iconHTML(imageURL, icon, type, altText) {
+    var fallbackImg = ICON_BASE + 'no_image.png';
+    var errHandler = 'onerror="this.onerror=null;this.src=\'' + fallbackImg + '\';this.style.opacity=\'0.6\';"';
+
     if (imageURL) {
-      return '<img src="' + esc(imageURL) + '" alt="' + esc(altText) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" />';
+      return '<img src="' + esc(imageURL) + '" alt="' + esc(altText) + '" ' + errHandler + ' style="width:100%;height:100%;object-fit:cover;border-radius:inherit" />';
     }
-    if (icon) { return icon; }
+    if (icon) { return esc(icon); }
     var resolved = resolveIcon(type);
     // If the default icon is an image path or URL, render as <img>
     if (resolved.indexOf('http') === 0 || resolved.indexOf('../img/') === 0 || resolved.indexOf('img/') === 0) {
-      return '<img src="' + esc(resolved) + '" alt="' + esc(altText || type) + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" />';
+      return '<img src="' + esc(resolved) + '" alt="' + esc(altText || type) + '" ' + errHandler + ' style="width:100%;height:100%;object-fit:cover;border-radius:inherit" />';
     }
-    return resolved;
+    return esc(resolved);
   }
 
   // ---- LOADING STATE ------------------------------------------------
@@ -383,9 +386,10 @@ window.ToramSheets = (function () {
         var defaultIcon = isBoss
           ? '<img src="' + ICON_BASE + 'boss_ico.png" alt="Boss" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px" />'
           : '👾 ';
+        var errHandler = 'onerror="this.onerror=null;this.src=\'' + (ICON_BASE + 'no_image.png') + '\';this.style.opacity=\'0.6\';"';
         var monIcon = imgURL
-          ? '<img src="' + esc(imgURL) + '" alt="' + name + '" style="width:24px;height:24px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:4px" />'
-          : (icon ? icon + ' ' : defaultIcon);
+          ? '<img src="' + esc(imgURL) + '" alt="' + name + '" ' + errHandler + ' style="width:24px;height:24px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:4px" />'
+          : (icon ? esc(icon) + ' ' : defaultIcon);
 
         // Drop tags with collapsible overflow
         var dropHTML = '';
@@ -796,11 +800,12 @@ window.ToramSheets = (function () {
               var link   = cat['Link']         || '#';
               var count  = esc(cat['Count']    || '');
 
+              var errHandler = 'onerror="this.onerror=null;this.src=\'' + (ICON_BASE + 'no_image.png') + '\';this.style.opacity=\'0.6\';"';
               var iconContent;
               if (imgURL) {
-                iconContent = '<img src="' + esc(imgURL) + '" alt="' + esc(name) + '" />';
+                iconContent = '<img src="' + esc(imgURL) + '" alt="' + esc(name) + '" ' + errHandler + ' />';
               } else {
-                iconContent = icon || '📂';
+                iconContent = esc(icon) || '📂';
               }
 
               var a = document.createElement('a');
@@ -830,11 +835,12 @@ window.ToramSheets = (function () {
             var fdesc   = esc(featured['Description']  || '');
             var flink   = featured['Link']             || 'pages/items.html';
 
+            var errHandler = 'onerror="this.onerror=null;this.src=\'' + (ICON_BASE + 'no_image.png') + '\';this.style.opacity=\'0.6\';"';
             var spotIcon;
             if (fimgURL) {
-              spotIcon = '<img src="' + esc(fimgURL) + '" alt="' + fname + '" />';
+              spotIcon = '<img src="' + esc(fimgURL) + '" alt="' + fname + '" ' + errHandler + ' />';
             } else {
-              spotIcon = ficon;
+              spotIcon = esc(ficon);
             }
 
             var frarityHTML = '';
@@ -902,12 +908,13 @@ window.ToramSheets = (function () {
               var mhp    = esc(m['Source']       || '');  // Source col = HP
               var mdesc  = esc(m['Description']  || '');
 
+              var errHandler = 'onerror="this.onerror=null;this.src=\'' + (ICON_BASE + 'no_image.png') + '\';this.style.opacity=\'0.6\';"';
               // Icon: ImageURL > Icon emoji > default
               var monIconHTML;
               if (mimgURL) {
-                monIconHTML = '<img src="' + esc(mimgURL) + '" alt="' + mname + '" style="width:40px;height:40px;object-fit:cover;border-radius:6px" />';
+                monIconHTML = '<img src="' + esc(mimgURL) + '" alt="' + mname + '" ' + errHandler + ' style="width:40px;height:40px;object-fit:cover;border-radius:6px" />';
               } else {
-                monIconHTML = micon || '<img src="img/icons/monsters_ico.png" alt="" style="width:40px;height:40px;object-fit:contain" />';
+                monIconHTML = esc(micon) || '<img src="img/icons/monsters_ico.png" alt="" ' + errHandler + ' style="width:40px;height:40px;object-fit:contain" />';
               }
 
               // Element tag color

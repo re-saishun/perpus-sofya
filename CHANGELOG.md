@@ -4,6 +4,19 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
 ---
 
+## [0.21.3] — 2026-03-14
+
+### Added
+- **Image Fallback System** — Menambahkan sistem penanganan gambar rusak (broken image). Jika link gambar di Google Sheets mati atau salah ketik, website otomatis menampilkan ikon placeholder `no_image.png` yang rapi daripada ikon gambar retak bawaan browser.
+- **Security Audit (Anti-XSS)** — Memperkuat keamanan seluruh jalur render data dari Google Sheets.
+  - Seluruh data teks (Nama, Icon, Stats) sekarang melalui proses *escaping* yang ketat sebelum dimasukkan ke dalam HTML.
+  - Menutup celah keamanan di mana kolom `Icon` sebelumnya bisa disalahgunakan untuk menjalankan script berbahaya.
+
+### Fixed
+- **Pet Modal Safety** — Merombak total logika inline script pada `pets.html` agar data dari atribut `dataset` selalu disaring dengan aman sebelum ditampilkan di modal.
+
+---
+
 ## [0.21.2] — 2026-03-10
 
 ### Fixed

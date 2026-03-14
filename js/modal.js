@@ -156,10 +156,11 @@ window.ItemModal = (function () {
 
     // Image
     var imageEl = document.getElementById('modalImage');
+    var errHandler = 'onerror="this.onerror=null;this.src=\'img/icons/no_image.png\';this.style.opacity=\'0.6\';"';
     if (img) {
-      imageEl.innerHTML = '<img src="' + esc(img) + '" alt="' + esc(name) + '" />';
+      imageEl.innerHTML = '<img src="' + esc(img) + '" alt="' + esc(name) + '" ' + errHandler + ' />';
     } else {
-      imageEl.innerHTML = '<span class="placeholder-icon">' + icon + '</span>';
+      imageEl.innerHTML = '<span class="placeholder-icon">' + esc(icon) + '</span>';
     }
 
     // Prices
@@ -283,11 +284,13 @@ window.ItemModal = (function () {
         if (!stepIcon) {
           iconHTML = '💎';
         } else if (stepIcon.indexOf('<img') !== -1) {
+          // If it's already an <img> tag (from ToramSheets.iconHTML), it likely has an errHandler already
           iconHTML = stepIcon;
         } else if (stepIcon.match(/\.(png|jpg|gif|svg|webp)/i)) {
-          iconHTML = '<img src="' + esc(stepIcon) + '" alt="' + esc(stepName) + '" />';
+          var errHandler = 'onerror="this.onerror=null;this.src=\'img/icons/no_image.png\';this.style.opacity=\'0.6\';"';
+          iconHTML = '<img src="' + esc(stepIcon) + '" alt="' + esc(stepName) + '" ' + errHandler + ' />';
         } else {
-          iconHTML = stepIcon;
+          iconHTML = esc(stepIcon);
         }
 
         pathHTML += '<div class="enhancement-step' + currentClass + '"' +

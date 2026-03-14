@@ -149,8 +149,9 @@ window.MonsterModal = (function () {
 
     // Image
     var imageEl = document.getElementById('monModalImage');
+    var errHandler = 'onerror="this.onerror=null;this.src=\'img/icons/no_image.png\';this.style.opacity=\'0.6\';"';
     if (img) {
-      imageEl.innerHTML = '<img src="' + esc(img) + '" alt="' + esc(name) + '" style="max-width:100%;border-radius:8px" />';
+      imageEl.innerHTML = '<img src="' + esc(img) + '" alt="' + esc(name) + '" ' + errHandler + ' style="max-width:100%;border-radius:8px" />';
     } else {
       imageEl.innerHTML = '<span class="placeholder-icon" style="font-size:3rem">👾</span>';
     }
