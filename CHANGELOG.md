@@ -2,7 +2,17 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.23.1] — 2026-03-16
+### Fixed
+- **Item Source Logic** — Memperbaiki sistem filter sumber agar lebih akurat:
+  - **Multi-Tag Support**: Satu item kini bisa dideteksi memiliki lebih dari satu sumber (misal: Drop sekaligus Craft). Menghilangkan konflik yang membuat item hilang di salah satu filter.
+  - **Keyword Flexibility**: Memperbaiki deteksi untuk format data gabungan seperti `Non Event | Drop`.
+  - **Craft NPC Detection**: Memperluas deteksi kata kunci untuk include "Smith" dan "NPC" secara otomatis.
+
+---
+
 ## [0.23.0] — 2026-03-14
+
 ### Added
 - **Advanced Item Filtering** — Filter item di menu Items kini jauh lebih detail:
   - **Granular Categories**: Katana, Bowgun, Dagger, Halberd, Ninjutsu Scroll, dan berbagai tipe Crysta kini memiliki kategori sendiri-sendiri.

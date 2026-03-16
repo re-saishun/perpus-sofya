@@ -322,13 +322,14 @@ window.ToramSheets = (function () {
       var stats  = esc(row['Stats']    || '');
       var rarity = esc(row['Rarity']   || '');
       var source = esc(row['Source']   || '');
-      var srcLower = source.toLowerCase();
-      var sourceCat = '';
-      if (srcLower.indexOf('drop') !== -1) sourceCat = 'drop';
-      else if (srcLower.indexOf('craft') !== -1) {
-        if (srcLower.indexOf('player') !== -1) sourceCat = 'craft-player';
-        else sourceCat = 'craft-npc';
+      var srcLower = (row['Source'] || '').toLowerCase();
+      var tags = [];
+      if (srcLower.indexOf('drop') !== -1) tags.push('drop');
+      if (srcLower.indexOf('smith') !== -1 || srcLower.indexOf('npc') !== -1 || (srcLower.indexOf('craft') !== -1 && srcLower.indexOf('player') === -1)) {
+        tags.push('craft-npc');
       }
+      if (srcLower.indexOf('player') !== -1) tags.push('craft-player');
+      var sourceCat = tags.join(';');
 
       var el       = document.createElement('article');
       el.className = 'data-card';

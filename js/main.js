@@ -110,7 +110,11 @@
         matchCat2 = c2Parts.indexOf(cat2) !== -1;
       }
 
-      var matchCat3 = !cat3 || c3 === cat3;
+      var matchCat3 = !cat3;
+      if (cat3 && c3) {
+        var c3Parts = c3.split(';').map(function(s) { return s.trim(); });
+        matchCat3 = c3Parts.indexOf(cat3) !== -1;
+      }
 
       var show = matchText && matchCat1 && matchCat2 && matchCat3;
       card.style.display = show ? '' : 'none';
