@@ -1137,6 +1137,7 @@ footer {
 }
 
 .price-tag.spina { border-color: var(--accent); color: var(--accent); }
+.price-tag.material { border-color: var(--el-wind); color: var(--el-wind); }
 
 /* Detail Tabs */
 .detail-tabs {

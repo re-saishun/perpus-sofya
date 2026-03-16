@@ -5,7 +5,8 @@ Semua perubahan penting pada proyek ToramDB dicatat di sini.
 ## [0.26.0] — 2026-03-16
 ### Added
 - **Material Processing Display**: Peningkatan tampilan pada kolom *SellOther* di Modal Item.
-  - Data seperti `3 Mana` atau `Mana: 3` kini otomatis ditampilkan sebagai **Process : 3** lengkap dengan ikon material yang sesuai (Drop, Metal, Mana, dsb).
+  - Data seperti `3 Mana` atau `Mana: 3` kini otomatis ditampilkan sebagai **Process : 3** lengkap dengan ikon kustom.
+  - **Premium Styling**: Badge *Process* kini menggunakan tema warna **Hijau (Green)** untuk membedakannya secara visual dari harga jual Spina (Emas).
   - Mendukung berbagai varian format input dari Google Sheet.
 
 ---
