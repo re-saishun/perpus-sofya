@@ -67,14 +67,14 @@ window.ToramSheets = (function () {
     // To find the GID: Open the sheet in your browser and look at the URL.
     // It should end with something like "#gid=123456789". That number is the GID.
     SHEETS: {
-      items:       { name: 'Items',       gid: '' },
-      itemdetails: { name: 'ItemDetails', gid: '' },
-      monsters:    { name: 'Monsters',    gid: '' },
-      skills:      { name: 'Skills',      gid: '' },
-      maps:        { name: 'Maps',        gid: '' },
-      quests:      { name: 'Quests',      gid: '' },
-      pets:        { name: 'Pets',        gid: '' }, // Recommended: Fill GID here for literal > < preservation
-      homepage:    { name: 'Homepage',    gid: '' }
+      items:       { name: 'Items',       gid: '0' },
+      itemdetails: { name: 'ItemDetails', gid: '544142354' },
+      monsters:    { name: 'Monsters',    gid: '197383360' },
+      skills:      { name: 'Skills',      gid: '1864718894' },
+      maps:        { name: 'Maps',        gid: '600238184' },
+      quests:      { name: 'Quests',      gid: '2017598944' },
+      pets:        { name: 'Pets',        gid: '1949299875' }, 
+      homepage:    { name: 'Homepage',    gid: '28274370' }
     }
   };
 
