@@ -189,7 +189,14 @@ window.ItemModal = (function () {
     var obt   = item['Obtain']    || '';
     var rec   = item['Recipe']    || '';
 
-    document.getElementById('modalType').textContent = '[' + type + ']' + lvl;
+    var msg = (item ? '[' + type + ']' + lvl : itemNotFoundMsg);
+    document.getElementById('modalType').textContent = (item ? '[' + type + ']' + lvl : '');
+
+    var modalIconBase = (function () {
+      var path = window.location.pathname;
+      if (path.indexOf('/pages/') !== -1) return '../img/icons/';
+      return 'img/icons/';
+    }());
 
     // Image
     var imageEl = document.getElementById('modalImage');
@@ -252,11 +259,6 @@ window.ItemModal = (function () {
     var obtEl = document.getElementById('modalObtain');
     if (obt) {
       var obtHtml = '';
-      var modalIconBase = (function () {
-        var path = window.location.pathname;
-        if (path.indexOf('/pages/') !== -1) return '../img/icons/';
-        return 'img/icons/';
-      }());
 
       obt.split(';').forEach(function (op) {
         op = op.trim();
@@ -396,16 +398,27 @@ window.ItemModal = (function () {
         var usedHtml = '';
         usedIn.forEach(function (match) {
           // Smart Icon Lookup for Used For
-          var matchItem = findInCache(match.itemName);
-          var mIcon = matchItem ? (window.ToramSheets ? window.ToramSheets.resolveIcon(matchItem['Type']) : '⚒️') : '⚒️';
-          if (matchItem && matchItem['Icon']) mIcon = matchItem['Icon'];
+          var mLow = match.itemName.toLowerCase();
+          var mIcon = '⚒️';
+          var mUseImg = false;
 
-          var iconDisplay = '⚒️';
-          if (typeof mIcon === 'string' && (mIcon.indexOf('/') !== -1 || mIcon.indexOf('.png') !== -1)) {
-             iconDisplay = '<img src="' + esc(mIcon) + '" ' + errHandler + ' style="width:18px;height:18px;object-fit:contain;vertical-align:middle" />';
-          } else {
-             iconDisplay = esc(mIcon);
+          if (mLow === 'metal')      { mIcon = modalIconBase + 'metal_ico.png'; mUseImg = true; }
+          else if (mLow === 'wood')  { mIcon = modalIconBase + 'wood_ico.png'; mUseImg = true; }
+          else if (mLow === 'cloth') { mIcon = modalIconBase + 'cloth_ico.png'; mUseImg = true; }
+          else if (mLow === 'mana')  { mIcon = modalIconBase + 'mana_ico.png'; mUseImg = true; }
+          else if (mLow === 'beast') { mIcon = modalIconBase + 'beast_ico.png'; mUseImg = true; }
+          else if (mLow === 'medicine') { mIcon = modalIconBase + 'medicine_ico.png'; mUseImg = true; }
+          else if (mLow === 'fee')   { mIcon = '💰'; }
+          else {
+             var matchItem = findInCache(match.itemName);
+             mIcon = matchItem ? (window.ToramSheets ? window.ToramSheets.resolveIcon(matchItem['Type']) : '⚒️') : '⚒️';
+             if (matchItem && matchItem['Icon']) mIcon = matchItem['Icon'];
+             if (typeof mIcon === 'string' && (mIcon.indexOf('/') !== -1 || mIcon.indexOf('.png') !== -1)) mUseImg = true;
           }
+
+          var iconDisplay = mUseImg 
+            ? '<img src="' + esc(mIcon) + '" ' + errHandler + ' style="width:18px;height:18px;object-fit:contain;vertical-align:middle" />'
+            : esc(mIcon);
 
           usedHtml += '<div class="recipe-item drop-link" data-recipe-item="' + esc(match.itemName) + '" style="cursor:pointer">' +
             '<div class="recipe-icon">' + iconDisplay + '</div>' +
@@ -432,16 +445,27 @@ window.ItemModal = (function () {
         var itemName = rp.replace(/\s+x\d+$/i, '').trim();
         
         // Smart Icon Lookup for Ingredients
-        var ingItem = findInCache(itemName);
-        var iIcon = ingItem ? (window.ToramSheets ? window.ToramSheets.resolveIcon(ingItem['Type']) : '🧪') : '🧪';
-        if (ingItem && ingItem['Icon']) iIcon = ingItem['Icon'];
-
-        var iDisplay = '🧪';
-        if (typeof iIcon === 'string' && (iIcon.indexOf('/') !== -1 || iIcon.indexOf('.png') !== -1)) {
-           iDisplay = '<img src="' + esc(iIcon) + '" ' + errHandler + ' style="width:18px;height:18px;object-fit:contain;vertical-align:middle" />';
-        } else {
-           iDisplay = esc(iIcon);
+        var iLow = itemName.toLowerCase();
+        var iIcon = '🧪';
+        var iUseImg = false;
+        
+        if (iLow === 'metal')      { iIcon = modalIconBase + 'metal_ico.png'; iUseImg = true; }
+        else if (iLow === 'wood')  { iIcon = modalIconBase + 'wood_ico.png'; iUseImg = true; }
+        else if (iLow === 'cloth') { iIcon = modalIconBase + 'cloth_ico.png'; iUseImg = true; }
+        else if (iLow === 'mana')  { iIcon = modalIconBase + 'mana_ico.png'; iUseImg = true; }
+        else if (iLow === 'beast') { iIcon = modalIconBase + 'beast_ico.png'; iUseImg = true; }
+        else if (iLow === 'medicine') { iIcon = modalIconBase + 'medicine_ico.png'; iUseImg = true; }
+        else if (iLow === 'fee')   { iIcon = '💰'; }
+        else {
+          var ingItem = findInCache(itemName);
+          iIcon = ingItem ? (window.ToramSheets ? window.ToramSheets.resolveIcon(ingItem['Type']) : '🧪') : '🧪';
+          if (ingItem && ingItem['Icon']) iIcon = ingItem['Icon'];
+          if (typeof iIcon === 'string' && (iIcon.indexOf('/') !== -1 || iIcon.indexOf('.png') !== -1)) iUseImg = true;
         }
+
+        var iDisplay = iUseImg
+          ? '<img src="' + esc(iIcon) + '" ' + errHandler + ' style="width:18px;height:18px;object-fit:contain;vertical-align:middle" />'
+          : esc(iIcon);
 
         recHtml += '<div class="recipe-item drop-link" data-recipe-item="' + esc(itemName) + '" style="cursor:pointer">' +
           '<div class="recipe-icon">' + iDisplay + '</div>' +
