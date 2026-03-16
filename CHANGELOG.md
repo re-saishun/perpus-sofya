@@ -2,14 +2,16 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
-## [0.24.5] — 2026-03-16
+## [0.24.7] — 2026-03-16
 ### Fixed
-- **Missing Symbols Fix (CRITICAL)**: Berpindah dari Google Visualization API ke direct CSV Export. Ini memperbaiki masalah Google yang menghapus simbol `>` dan `<` secara otomatis (security stripping) pada data Pet Acts.
-- **Column Shift Fix**: Dengan kembalinya data simbol, pergeseran kolom (shift) pada Modal Pet kini sudah normal kembali.
+- **Zero-Stripping Solution**: Berpindah ke endpoint `/pub?output=csv` (Literal CSV) untuk menghentikan mesin Query Google yang menghapus simbol `>` dan `<` secara otomatis. Ini adalah format paling mentah (raw) yang tersedia.
+- **Improved CSV Parser**: Mengaktifkan kembali parser CSV internal yang lebih tangguh untuk menangani data literal.
 ### Changed
-- **Raw Data Fetch**: Sekarang data ditarik secara literal untuk memastikan keaslian format dari Google Sheets.
+- **Cache v3**: Menggunakan cache baru untuk memastikan data lama yang "kotor" tidak mengganggu hasil.
 
 ---
+
+## [0.24.5] — 2026-03-16
 
 ## [0.24.2] — 2026-03-16
 
