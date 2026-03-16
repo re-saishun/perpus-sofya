@@ -322,13 +322,27 @@ window.ToramSheets = (function () {
       var stats  = esc(row['Stats']    || '');
       var rarity = esc(row['Rarity']   || '');
       var source = esc(row['Source']   || '');
-      var srcLower = (row['Source'] || '').toLowerCase();
+      
+      // Deep Search: Combine Rarity and Source for keyword detection
+      var combinedData = (rarity + ' ' + source).toLowerCase();
+      
+      // 1. Detect Rarity (Event / Non-Event)
+      var rarityCat = '';
+      if (combinedData.indexOf('non event') !== -1 || combinedData.indexOf('non-event') !== -1) {
+        rarityCat = 'non-event';
+      } else if (combinedData.indexOf('event') !== -1) {
+        rarityCat = 'event';
+      } else {
+        rarityCat = rarity.toLowerCase().replace(/\s+/g, '-');
+      }
+
+      // 2. Detect Source Tags (Drop / Craft)
       var tags = [];
-      if (srcLower.indexOf('drop') !== -1) tags.push('drop');
-      if (srcLower.indexOf('smith') !== -1 || srcLower.indexOf('npc') !== -1 || (srcLower.indexOf('craft') !== -1 && srcLower.indexOf('player') === -1)) {
+      if (combinedData.indexOf('drop') !== -1) tags.push('drop');
+      if (combinedData.indexOf('smith') !== -1 || combinedData.indexOf('npc') !== -1 || (combinedData.indexOf('craft') !== -1 && combinedData.indexOf('player') === -1)) {
         tags.push('craft-npc');
       }
-      if (srcLower.indexOf('player') !== -1) tags.push('craft-player');
+      if (combinedData.indexOf('player') !== -1) tags.push('craft-player');
       var sourceCat = tags.join(';');
 
       var el       = document.createElement('article');
@@ -336,7 +350,7 @@ window.ToramSheets = (function () {
       el.style.cursor = 'pointer';
       el.dataset.filter    = (name + ' ' + type + ' ' + rarity + ' ' + source).toLowerCase();
       el.dataset.category  = typeToCategory(type);
-      el.dataset.category2 = rarity.toLowerCase();
+      el.dataset.category2 = rarityCat;
       el.dataset.category3 = sourceCat;
       el.dataset.name      = row['Name'] || '';
       if (row._index !== undefined) el.dataset.itemIndex = row._index;

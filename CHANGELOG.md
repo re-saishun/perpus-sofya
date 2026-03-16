@@ -2,7 +2,17 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.23.2] — 2026-03-16
+### Fixed
+- **Filter Logic v2 (Deep Search)** — Memperbaiki sistem filter agar lebih toleran terhadap format pengisian data:
+  - **Hybrid Search**: Kata kunci pencarian (Drop, Craft, Event, dsb) kini dicari di **kedua kolom sekaligus** (Rarity & Source).
+  - **Smart Normalization**: Otomatis menyelaraskan perbedaan spasi/strip (misal: `Non Event` di Sheet akan tetap cocok dengan filter `Non-Event` di web).
+  - **Robustness**: Menangani kasus di mana info cara mendapatkan item diletakkan di kolom Rarity.
+
+---
+
 ## [0.23.1] — 2026-03-16
+
 ### Fixed
 - **Item Source Logic** — Memperbaiki sistem filter sumber agar lebih akurat:
   - **Multi-Tag Support**: Satu item kini bisa dideteksi memiliki lebih dari satu sumber (misal: Drop sekaligus Craft). Menghilangkan konflik yang membuat item hilang di salah satu filter.
