@@ -80,61 +80,57 @@ window.ToramSheets = (function () {
   var CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   function fetchSheet(sheetName) {
-    var cacheKey = 'tcs_v2_' + sheetName;
+    var cacheKey = 'tcs_v3_' + sheetName;
     var tsKey    = cacheKey + '_ts';
     try {
       var cached = localStorage.getItem(cacheKey);
       var ts     = parseInt(localStorage.getItem(tsKey) || '0', 10);
       if (cached && (Date.now() - ts) < CACHE_TTL) {
-        return Promise.resolve(JSON.parse(cached));
+        return Promise.resolve(cached);
       }
     } catch (e) { /* x */ }
 
+    // Using the 'pub' endpoint as it is the most literal and preserves > and <
     var url =
       'https://docs.google.com/spreadsheets/d/' + CONFIG.SHEET_ID +
-      '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName);
+      '/pub?output=csv&sheet=' + encodeURIComponent(sheetName);
     
     return fetch(url).then(function (res) {
-      if (!res.ok) { throw new Error('HTTP ' + res.status); }
+      if (!res.ok) { 
+        // Fallback to /export if pub fails
+        url = 'https://docs.google.com/spreadsheets/d/' + CONFIG.SHEET_ID + '/export?format=csv&sheet=' + encodeURIComponent(sheetName);
+        return fetch(url);
+      }
+      return res;
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.text();
     }).then(function (text) {
-      // JSON is wrapped in google.visualization.Query.setResponse(...)
-      var start = text.indexOf('{');
-      var end   = text.lastIndexOf('}');
-      if (start === -1 || end === -1) throw new Error('Invalid JSON format');
-      var json = JSON.parse(text.substring(start, end + 1));
-      
-      var cols = json.table.cols;
-      var rows = json.table.rows.map(function(r) {
-        var obj = {};
-        r.c.forEach(function(cell, idx) {
-          if (!cols[idx]) return;
-          var key = (cols[idx].label || cols[idx].id || '').trim();
-          if (!key) return;
-          // Use .f (formatted) if .v (raw) is null/empty but .f exists
-          // This preserves symbols like > and < which are stripped from .v
-          var val = (cell && cell.v !== null) ? cell.v : '';
-          if (cell && cell.f && (val === '' || typeof val === 'number')) {
-            val = cell.f;
-          }
-          obj[key] = String(val).trim();
-        });
-        return obj;
-      });
-
+      // Diagnostic log
+      if (sheetName === 'Pets') {
+        console.log('DEBUG Raw Pets CSV snippet:', text.substring(0, 500));
+      }
       try {
-        localStorage.setItem(cacheKey, JSON.stringify(rows));
+        localStorage.setItem(cacheKey, text);
         localStorage.setItem(tsKey, String(Date.now()));
       } catch (e) { /* x */ }
-      return rows;
+      return text;
     });
   }
 
   // ---- CSV PARSER ---------------------------------------------------
   // Handles quoted fields (including embedded commas and escaped quotes).
   function parseCSV(text) {
-    // Keeping for legacy/compatibility if needed, but fetchSheet now returns objects
-    return []; 
+    var lines   = text.trim().split('\n');
+    var headers = splitRow(lines[0]);
+    return lines.slice(1).filter(Boolean).map(function (line) {
+      var vals = splitRow(line);
+      var obj  = {};
+      headers.forEach(function (h, i) {
+        obj[h.trim()] = (vals[i] || '').trim();
+      });
+      return obj;
+    });
   }
 
   function splitRow(row) {
@@ -802,7 +798,8 @@ window.ToramSheets = (function () {
     if (page !== 'monsters') { showLoading(container); }
 
     fetchSheet(sheetName)
-      .then(function (rows) {
+      .then(function (csv) {
+        var rows = parseCSV(csv);
         // Attach original sheet index (absolute) before potentially filtering or reversing
         rows.forEach(function (r, i) { r._index = i; });
         var data = rows.slice().reverse(); // Don't mutate cache, reverse for "Latest" feel
@@ -838,7 +835,8 @@ window.ToramSheets = (function () {
     if (!sheetName || !renderer || !container) { return; }
 
     fetchSheet(sheetName)
-      .then(function (rows) {
+      .then(function (csv) {
+        var rows = parseCSV(csv);
         // Attach original sheet index (absolute)
         rows.forEach(function (r, i) { r._index = i; });
         var data = rows.slice().reverse(); // Don't mutate cache
@@ -872,7 +870,8 @@ window.ToramSheets = (function () {
     if (!sheetName) { return; }
 
     fetchSheet(sheetName)
-      .then(function (rows) {
+      .then(function (csv) {
+        var rows = parseCSV(csv);
         if (!rows || !rows.length) return;
 
         var categories = [];
