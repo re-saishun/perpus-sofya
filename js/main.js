@@ -99,11 +99,11 @@
       var desc    = (row['Description'] || '').toLowerCase();
       var chapter = (row['Chapter'] || '').toLowerCase();
       
-      var combined = (name + ' ' + type + ' ' + rarity + ' ' + source + ' ' + stats + ' ' + reward + ' ' + desc + ' ' + chapter);
+      var combined = name + ' ' + type + ' ' + rarity + ' ' + source + ' ' + stats + ' ' + reward + ' ' + desc + ' ' + chapter;
       var matchText = !query || combined.indexOf(query) !== -1;
 
       // 2. Category 1 (Type)
-      var c1 = typeToCategory(type).toLowerCase();
+      var c1 = typeToCategory(type);
       var matchCat1 = !cat1 || c1 === cat1;
 
       // 3. Category 2 (Rarity / Event) - Match semicolon parts
@@ -135,9 +135,7 @@
       return matchText && matchCat1 && matchCat2 && matchCat3;
     });
 
-    console.log('[ToramDB] Filtering complete. Items shown:', filteredData.length, 'Total data:', fullData.length);
-
-    // Refresh display
+    console.log('[ToramDB] Filtering complete. Items shown:', filteredData.length);
     renderCurrentView();
   }
 
@@ -183,16 +181,40 @@
     if (t.includes('daily')) return 'daily';
     if (t.includes('event')) return 'event';
 
-    // --- Item Categories ---
-    if (t.includes('sword') || t.includes('blade')) return 'sword';
-    if (t.includes('bow') || t.includes('gun')) return 'bow';
-    if (t.includes('staff') || t.includes('magic')) return 'staff';
-    if (t.includes('armor') || t.includes('garb')) return 'armor';
-    if (t.includes('add') || t.includes('hat') || t.includes('wing')) return 'additional';
-    if (t.includes('ring') || t.includes('charm') || t.includes('spec')) return 'special';
-    if (t.includes('crysta')) return 'crysta';
+    // --- Item Categories (from sheets.js) ---
+    // Weapons
+    if (t.includes('1h sword') || t === '1h') return '1h-sword';
+    if (t.includes('2h sword') || t === '2h') return '2h-sword';
+    if (t === 'katana') return 'katana';
+    if (t === 'bow') return 'bow';
+    if (t === 'bowgun') return 'bowgun';
+    if (t === 'staff' || t === 'stf') return 'staff';
+    if (t === 'magic device' || t === 'md') return 'md';
+    if (t === 'knuckles') return 'knuckles';
+    if (t === 'halberd') return 'halberd';
+    if (t === 'dagger') return 'dagger';
+    if (t === 'arrow') return 'arrow';
+    // Defense
+    if (t === 'armor' || t.includes('armor') || t.includes('garb')) return 'armor';
+    if (t === 'shield') return 'shield';
+    // Accessories
+    if (t === 'additional' || t.includes('hat') || t.includes('wing')) return 'additional';
+    if (t === 'special' || t === 'ring' || t.includes('charm') || t.includes('spec')) return 'special';
+    if (t === 'ninjutsu scroll' || t === 'scroll') return 'scroll';
+    // Crystas
+    if (t.includes('crysta')) {
+      if (t.includes('weapon')) return 'crysta-weapon';
+      if (t.includes('armor')) return 'crysta-armor';
+      if (t.includes('additional') || t.includes('add ')) return 'crysta-add';
+      if (t.includes('ring') || t.includes('special')) return 'crysta-special';
+      return 'crysta-normal';
+    }
+    // Materials
+    if (t === 'material') return 'material';
+    if (t === 'consumable') return 'consumable';
+    if (t === 'quest item' || t === 'quest') return 'quest';
     
-    return 'other';
+    return t.replace(/\s+/g, '-');
   }
 
   if (filterInput)   filterInput.addEventListener('input', onFilterChange);
@@ -216,19 +238,22 @@
     if (!paginationEl) return;
 
     var totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
-    
-    // Hide pagination if not enough items or data empty
+    console.log(`[ToramDB] Paginating: ${filteredData.length} items, Page ${currentPage}/${totalPages}`);
+
+    // Hide pagination if not enough items
     if (totalPages <= 1) {
       paginationEl.innerHTML = '';
       paginationEl.style.display = 'none';
-      // Render everything (0 or up to 20 items)
-      if (window.ToramSheets.dataState.containerId) {
-        window.ToramSheets.renderData(window.ToramSheets.dataState.pageType, filteredData, window.ToramSheets.dataState.containerId);
-      }
+      // Only render the filtered items (all of them)
+      window.ToramSheets.renderData(window.ToramSheets.dataState.pageType, filteredData, window.ToramSheets.dataState.containerId);
       return;
     }
 
-    paginationEl.style.display = 'flex'; // Ensure visible as flex
+    // Clamp current page
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    paginationEl.style.display = '';
 
     // Slice and Render ONLY the 20 items for this page
     var start = (currentPage - 1) * PAGE_SIZE;

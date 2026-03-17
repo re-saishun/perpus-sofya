@@ -2,6 +2,14 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.34.0] - 2026-03-17
+### Fixed
+- **UI Revert**: Restored the light theme (v0.32.1) for Quests and Items pages as requested by the user.
+- **Items Filter Stability**: Refactored `main.js` filtering logic to resolve errors on the Items page, ensuring accurate category matching.
+- **Robust Data Loading**: Improved synchronization between `sheets.js` and `main.js` using a custom event signal for reliable rendering.
+- **Quest Chronology Fix**: Maintained the chronological quest order (CH1 to CH15) despite the UI revert.
+- **Compatibility**: Replaced modern `.includes()` with broader-supported `.indexOf()` for better script reliability.
+
 ## [0.33.0] - 2026-03-17
 ### Added
 - **Premium UI Redesign**: Completely overhauled the Quests and Items pages with a modern, glassmorphism-inspired "Hero Search" section and enhanced cards.

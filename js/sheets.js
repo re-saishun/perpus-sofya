@@ -689,37 +689,36 @@ window.ToramSheets = (function () {
       var desc    = esc(row['Description'] || '');
       
       // Heuristic for MQ to show calculator link
-      var isMQ = type.toLowerCase().includes('main') || type.toLowerCase().includes('mq');
-      var category = (type.toLowerCase().includes('main') ? 'main' : 
-                      (type.toLowerCase().includes('side') ? 'side' : 
-                      (type.toLowerCase().includes('daily') ? 'daily' : 
-                      (type.toLowerCase().includes('event') ? 'event' : type.toLowerCase().replace(/\s+/g, '-')))));
+      var isMQ = type.toLowerCase().indexOf('main') !== -1 || type.toLowerCase().indexOf('mq') !== -1;
 
       var el = document.createElement('article');
-      el.className = 'data-card quest-card';
+      el.className = 'data-card';
+      // Ensure all searchable text is in data-filter for any legacy selectors, 
+      // though main.js now filters the raw data object directly.
       el.dataset.filter = (name + ' ' + type + ' ' + ch + ' ' + reward + ' ' + desc).toLowerCase();
-      el.dataset.category = category;
+      el.dataset.category = (type.toLowerCase().indexOf('main') !== -1 ? 'main' : 
+                            (type.toLowerCase().indexOf('side') !== -1 ? 'side' : 
+                            (type.toLowerCase().indexOf('daily') !== -1 ? 'daily' : 
+                            (type.toLowerCase().indexOf('event') !== -1 ? 'event' : type.toLowerCase().replace(/\s+/g, '-')))));
       
       el.innerHTML =
         '<div class="data-card-header">' +
           '<div class="data-card-icon">' + iconHTML(imgURL, icon, 'quest icon', name) + '</div>' +
           '<div>' +
-            (ch ? '<span class="quest-card-ep">Chapter ' + ch + '</span>' : '') +
-            '<div class="data-card-title">' + name + '</div>' +
+            '<div class="data-card-title">' + 
+               (ch ? '<span class="tag-ch">Ch.' + ch + '</span>' : '') + name + 
+            '</div>' +
             '<div class="data-card-subtitle">' + type + (minlv ? ' · Lv.' + minlv + '+' : '') + '</div>' +
           '</div>' +
         '</div>' +
         '<div class="data-card-body">' +
-          (desc ? '<p class="mt-1 text-muted">' + desc.replace(/\n/g, '<br>') + '</p>' : '') +
+          (desc ? '<p class="mt-1 text-muted">' + desc + '</p>' : '') +
           (reward ? 
             '<div class="reward-box">' +
-              '<strong>Quest Reward</strong><span class="reward-value">' + reward + '</span>' +
+              '<strong>Reward:</strong> <span class="reward-value">' + reward + '</span>' +
             '</div>' : ''
           ) +
-          '<div class="mt-2" style="display:flex; justify-content:space-between; align-items:center;">' +
-            (isMQ ? '<a href="calculator.html" class="btn-tiny">🧮 Use Calculator</a>' : '<span></span>') +
-            '<span class="tag ' + (category === 'main' ? 'legendary' : (category === 'side' ? 'info' : '')) + '">' + type + '</span>' +
-          '</div>' +
+          (isMQ ? '<a href="calculator.html" class="btn-tiny">🧮 Use Calculator</a>' : '') +
         '</div>';
       container.appendChild(el);
     });
