@@ -2,6 +2,11 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.37.0] - 2026-03-18
+### Fixed
+- **Quest Card Consistency**: Implemented Flexbox layout for all quest cards to ensure uniform heights in the grid and consistent alignment for titles and rewards.
+- **Loading UI Polish**: Standardized skeleton placeholder heights in `quests.html` to eliminate layout shifting during data fetch.
+
 ## [0.36.0] - 2026-03-18
 ### Fixed
 - **Quest Page Display**: Resolved the issue where the Quest list was stuck in a loading state (skeletons) by replacing incompatible `.includes()` calls with `.indexOf()` in `main.js`.

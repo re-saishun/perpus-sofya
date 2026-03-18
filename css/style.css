@@ -603,8 +603,11 @@ ul { list-style: none; }
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 1rem;
+  padding: 1.25rem;
   transition: border-color var(--transition), box-shadow var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .data-card { cursor: pointer; }
@@ -644,7 +647,13 @@ ul { list-style: none; }
 .data-card-title { font-weight: 600; font-size: .95rem; }
 .data-card-subtitle { font-size: .78rem; color: var(--text-secondary); }
 
-.data-card-body { font-size: .85rem; color: var(--text-secondary); }
+.data-card-body { 
+  font-size: .85rem; 
+  color: var(--text-secondary);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 .tag {
   display: inline-block;
@@ -677,13 +686,14 @@ ul { list-style: none; }
 }
 
 .reward-box {
-  margin-top: 0.75rem;
+  margin-top: auto;
   padding: 0.75rem;
   background: #fffbef;
   border-radius: 8px;
   border: 1px dashed rgba(184, 134, 11, 0.3);
   font-size: 0.82rem;
   position: relative;
+  margin-bottom: 0.75rem;
 }
 
 .reward-box strong { color: #92400e; display: block; margin-bottom: 2px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.02em; }
