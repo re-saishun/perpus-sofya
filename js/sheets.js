@@ -483,7 +483,7 @@ window.ToramSheets = (function () {
       var drops = rawDrop.split(';').map(function(d) { return d.trim(); }).filter(Boolean);
       var dropsHTML = '';
       drops.slice(0, 3).forEach(function(d) {
-        dropsHTML += '<div class="m-drop-item" data-drop-name="' + esc(d) + '"><span>📦</span> ' + esc(d) + '</div>';
+        dropsHTML += '<div class="m-drop-item" data-drop-name="' + esc(d) + '">' + esc(d) + '</div>';
       });
 
       var card = document.createElement('article');
@@ -502,13 +502,13 @@ window.ToramSheets = (function () {
         '</div>' +
         '<div class="monster-card-badges">' +
           '<span class="m-badge lv">Lv.' + level + '</span>' +
-          '<span class="m-badge diff">👁️ ' + diff + '</span>' +
-          '<span class="m-badge hp">❤️ HP ' + hp + '</span>' +
-          (elem ? '<span class="tag ' + elemLower + '" style="border-radius:10px">' + elemEmoji + ' ' + elem + '</span>' : '') +
+          '<span class="m-badge diff">' + diff + '</span>' +
+          '<span class="m-badge hp">HP ' + hp + '</span>' +
+          (elem ? '<span class="tag ' + elemLower + '" style="border-radius:10px">' + elem + '</span>' : '') +
         '</div>' +
-        '<div class="m-location">📍 ' + loc + '</div>' +
+        '<div class="m-location">Location: ' + loc + '</div>' +
         '<div class="m-drops-section">' +
-          '<div class="m-drops-title">🗑️ Top Drops:</div>' +
+          '<div class="m-drops-title">Drop list:</div>' +
           '<div class="m-drop-list">' + dropsHTML + '</div>' +
           (drops.length > 3 ? '<div class="m-more-drops">+' + (drops.length - 3) + ' more &gt;</div>' : '') +
         '</div>' +

@@ -14,19 +14,11 @@ window.MonsterModal = (function () {
   var currentGroup = [];
   var currentVariant = null;
 
-  function esc(s) {
-    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
+  var DIFFICULTY_ORDER = { 'easy': 0, 'normal': 1, 'hard': 2, 'nightmare': 3, 'ultimate': 4 };
 
   function elemIcon(el) {
-    var e = (el || '').toLowerCase();
-    if (e === 'fire') return '🔥';
-    if (e === 'ice' || e === 'water') return '💧';
-    if (e === 'wind') return '🌪️';
-    if (e === 'dark') return '🌑';
-    if (e === 'light') return '✨';
-    if (e === 'earth') return '🧱';
-    return '⚪';
+    // Icons removed as per user request
+    return '';
   }
 
   function buildModalHTML() {
@@ -52,7 +44,7 @@ window.MonsterModal = (function () {
         '<div id="panel-info" class="detail-panel active" style="padding: 1rem 1.25rem;">' +
            '<div id="monModalInfoRows"></div>' +
            '<div class="m-drops-section" style="margin-top:1rem;">' +
-             '<div class="m-drops-title">🗑️ Top Drops:</div>' +
+             '<div class="m-drops-title">Drop list:</div>' +
              '<div id="monModalDrops" class="m-drop-list"></div>' +
            '</div>' +
         '</div>' +
@@ -103,11 +95,24 @@ window.MonsterModal = (function () {
     var el = mon['Element'] || '';
     badges.innerHTML = 
       '<span class="m-badge lv">Lv.' + esc(mon['Level']) + '</span> ' +
-      '<span class="m-badge" style="background:#e0f2fe; color:#0369a1;">' + elemIcon(el) + ' ' + esc(el) + '</span> ' +
-      '<span class="m-badge hp">❤️ ' + esc(mon['HP']) + '</span>';
+      '<span class="m-badge" style="background:#e0f2fe; color:#0369a1;">' + esc(el) + '</span> ' +
+      '<span class="m-badge hp">HP ' + esc(mon['HP']) + '</span>';
+
+    // Image / Icon
+    var imageEl = document.getElementById('monModalImage');
+    if (imageEl) {
+      if (window.ToramSheets) {
+        var imgURL = (mon['ImageURL'] || '').trim();
+        var icon = mon['Icon'] || '';
+        var type = mon['Type'] || '';
+        imageEl.innerHTML = window.ToramSheets.iconHTML(imgURL, icon, type, name);
+      } else {
+        imageEl.innerHTML = '<span style="font-size:3rem; opacity:0.3;">👾</span>';
+      }
+    }
 
     // Location
-    document.getElementById('monModalLocation').innerHTML = '📍 ' + esc(mon['Location']);
+    document.getElementById('monModalLocation').innerHTML = 'Location: ' + esc(mon['Location']);
 
     // Info Rows
     var infoRows = document.getElementById('monModalInfoRows');
@@ -123,25 +128,48 @@ window.MonsterModal = (function () {
     drops.forEach(function(d) {
       var item = document.createElement('div');
       item.className = 'm-drop-item';
-      item.innerHTML = '<span>📦</span> ' + esc(d);
+      item.innerHTML = '<div class="m-drop-icon" id="drop-icon-' + btoa(d).replace(/=/g, '') + '">📦</div> <span class="m-drop-text">' + esc(d) + '</span> <span class="m-drop-arrow">→</span>';
+      
+      // Fetch real icon if ItemModal is available
+      if (window.ItemModal && window.ItemModal.getItem) {
+        window.ItemModal.getItem(d, function(itemData) {
+          if (itemData) {
+            var iconDiv = document.getElementById('drop-icon-' + btoa(d).replace(/=/g, ''));
+            if (iconDiv && window.ToramSheets) {
+              var iURL = (itemData['ImageURL'] || '').trim();
+              var iIcon = itemData['Icon'] || '';
+              var iType = itemData['Type'] || '';
+              iconDiv.innerHTML = window.ToramSheets.iconHTML(iURL, iIcon, iType, d);
+              iconDiv.style.background = 'transparent';
+            }
+          }
+        });
+      }
+
       item.onclick = function() {
         if(window.ItemModal) { close(); setTimeout(function(){ window.ItemModal.open(d); }, 200); }
       };
       dropEl.appendChild(item);
     });
 
-    // Compare Tab
+    // Compare Tab (Sorted Order)
     var compareRows = document.getElementById('monModalCompareRows');
     compareRows.innerHTML = '';
-    group.forEach(function(v) {
+    
+    // Sort group by difficulty
+    var sortedGroup = group.slice().sort(function(a, b) {
+      var da = (a['Difficulty'] || 'Normal').toLowerCase().trim();
+      var db = (b['Difficulty'] || 'Normal').toLowerCase().trim();
+      return (DIFFICULTY_ORDER[da] || 0) - (DIFFICULTY_ORDER[db] || 0);
+    });
+
+    sortedGroup.forEach(function(v) {
       var d = (v['Difficulty'] || 'Normal').trim();
-      var isCurrent = d === difficulty;
+      var isCurrent = (v === currentVariant);
       var row = document.createElement('div');
       row.className = 'compare-row' + (isCurrent ? ' current' : '');
       row.innerHTML = 
-        '<div class="compare-diff-info">' + 
-          (isCurrent ? '🔆' : '🪙') + ' ' + d + 
-        '</div>' +
+        '<div class="compare-diff-info">' + d + '</div>' +
         '<div class="compare-hp">' + esc(v['HP']) + '</div>';
       compareRows.appendChild(row);
     });
