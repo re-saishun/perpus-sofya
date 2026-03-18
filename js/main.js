@@ -4,6 +4,18 @@
 
 (function () {
   'use strict';
+  
+  // Helper: debounce
+  function debounce(func, wait) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
 
   /* ---------- Hamburger / Mobile Menu ---------- */
   const hamburger   = document.getElementById('hamburger');
@@ -216,7 +228,11 @@
     return t.replace(/\s+/g, '-');
   }
 
-  if (filterInput)   filterInput.addEventListener('input', onFilterChange);
+  if (filterInput) {
+    // Debounce the text input to improve performance with large datasets
+    var debouncedFilter = debounce(onFilterChange, 300);
+    filterInput.addEventListener('input', debouncedFilter);
+  }
   if (filterSelect)  filterSelect.addEventListener('change', onFilterChange);
   if (filterSelect2) filterSelect2.addEventListener('change', onFilterChange);
   if (filterSelect3) filterSelect3.addEventListener('change', onFilterChange);
