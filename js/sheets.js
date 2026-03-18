@@ -410,16 +410,14 @@ window.ToramSheets = (function () {
     });
   }
 
-  function renderMonsters(rows, tbody) {
-    tbody.innerHTML = '';
+  function renderMonsters(rows, grid) {
+    grid.innerHTML = '';
     if (!rows.length) {
-      var tr = document.createElement('tr');
-      tr.innerHTML = '<td colspan="8" class="text-muted" style="padding:1rem">No monster data found. Check your Sheet ID and column headers (Name, Icon, Level, Difficulty, Type, Element, HP, Location, Drop).</td>';
-      tbody.appendChild(tr);
+      showError(grid, 'No monster data found. Check your Sheet ID and tab name (Monsters).');
       return;
     }
 
-    // Group rows by Name (case-insensitive), preserve first-seen order
+    // Group rows by Name (case-insensitive)
     var groups = [];
     var groupMap = {};
     rows.forEach(function (row) {
@@ -431,7 +429,7 @@ window.ToramSheets = (function () {
       groupMap[key].push(row);
     });
 
-    // Sort each group by difficulty order: Easy → Normal → Hard → Nightmare → Ultimate
+    // Sort each group: Easy → Normal → Hard → Nightmare → Ultimate
     var diffOrder = { easy: 0, normal: 1, hard: 2, nightmare: 3, ultimate: 4 };
     groups.forEach(function (group) {
       group.sort(function (a, b) {
@@ -442,160 +440,107 @@ window.ToramSheets = (function () {
       });
     });
 
-    var groupId = 0;
     groups.forEach(function (group) {
-      var gid = 'mon-grp-' + (groupId++);
-      var hasVariants = group.length > 1;
+      // Per User Request: Index only shows "Normal" variant if available, else first one
+      var normalVariant = group.find(function(r) { return (r['Difficulty'] || '').toLowerCase() === 'normal'; }) || group[0];
+      
+      var name    = esc(normalVariant['Name']       || '');
+      var icon    = esc(normalVariant['Icon']       || '');
+      var imgURL  = (normalVariant['ImageURL']      || '').trim();
+      var level   = esc(normalVariant['Level']      || '');
+      var diff    = esc(normalVariant['Difficulty'] || 'Normal');
+      var type    = esc(normalVariant['Type']       || '');
+      var elem    = esc(normalVariant['Element']    || '');
+      var hp      = esc(normalVariant['HP']         || '');
+      var loc     = esc(normalVariant['Location']   || '');
+      var rawDrop = (normalVariant['Drop']         || '').trim();
 
-      group.forEach(function (row, idx) {
-        var name   = esc(row['Name']       || '');
-        var icon   = esc(row['Icon']       || '');
-        var imgURL = (row['ImageURL']      || '').trim();
-        var level  = esc(row['Level']      || '');
-        var diff   = esc(row['Difficulty'] || '');
-        var type   = esc(row['Type']       || '');
-        var elem   = esc(row['Element']    || '');
-        var hp     = esc(row['HP']         || '');
-        var loc    = esc(row['Location']   || '');
-        var rawDrop = (row['Drop']         || '').trim();
-
-        var typeLower = type.toLowerCase();
-        var isBoss = typeLower === 'boss';
-        var isMiniBoss = typeLower === 'mini boss' || typeLower === 'mini-boss';
-        var defaultIcon = isBoss
-          ? '<img src="' + ICON_BASE + 'boss_ico.png" alt="Boss" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px" />'
-          : '👾 ';
-        var errHandler = 'onerror="this.onerror=null;this.src=\'' + (ICON_BASE + 'no_image.png') + '\';this.style.opacity=\'0.6\';"';
-        var monIcon;
-        if (imgURL) {
-          monIcon = '<img src="' + esc(imgURL) + '" alt="' + name + '" ' + errHandler + ' style="width:24px;height:24px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:4px" />';
-        } else if (icon) {
-          // If icon is a path/URL, render as img
-          if (typeof icon === 'string' && (icon.indexOf('/') !== -1 || icon.indexOf('.png') !== -1)) {
-            monIcon = '<img src="' + esc(icon) + '" alt="' + name + '" ' + errHandler + ' style="width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:4px" />';
-          } else {
-            monIcon = esc(icon) + ' ';
-          }
+      var errHandler = 'onerror="this.onerror=null;this.src=\'' + (ICON_BASE + 'no_image.png') + '\';this.style.opacity=\'0.6\';"';
+      var monIconHTML;
+      if (imgURL) {
+        monIconHTML = '<img src="' + esc(imgURL) + '" alt="' + name + '" ' + errHandler + ' />';
+      } else if (icon) {
+        if (typeof icon === 'string' && (icon.indexOf('/') !== -1 || icon.indexOf('.png') !== -1)) {
+          monIconHTML = '<img src="' + esc(icon) + '" alt="' + name + '" ' + errHandler + ' />';
         } else {
-          monIcon = defaultIcon;
+          monIconHTML = '<span style="font-size:1.5rem">' + esc(icon) + '</span>';
         }
+      } else {
+        monIconHTML = '<img src="' + ICON_BASE + 'monsters_ico.png" alt="" ' + errHandler + ' />';
+      }
 
-        // Drop tags with collapsible overflow
-        var dropHTML = '';
-        if (rawDrop) {
-          var drops = rawDrop.split(';').map(function (d) { return d.trim(); }).filter(Boolean);
-          var MAX_VISIBLE = 3;
-          drops.forEach(function (d, i) {
-            var hiddenStyle = i >= MAX_VISIBLE ? 'display:none;' : '';
-            var hiddenAttr = i >= MAX_VISIBLE ? ' data-drop-extra' : '';
-            dropHTML += '<span class="tag drop-tag-link" data-drop-name="' + esc(d) + '" style="cursor:pointer;' + hiddenStyle + '"' + hiddenAttr + '>' + esc(d) + '</span> ';
-          });
-          if (drops.length > MAX_VISIBLE) {
-            var extra = drops.length - MAX_VISIBLE;
-            dropHTML += '<span class="tag drop-toggle" style="cursor:pointer;opacity:.7" data-drop-toggle>+' + extra + ' more</span>';
-          }
-        }
+      // Element tag color
+      var elemLower = elem.toLowerCase();
+      var elemEmoji = '⚪'; // Default neutral
+      if (elemLower === 'fire')  elemEmoji = '🔥';
+      else if (elemLower === 'water' || elemLower === 'ice') elemEmoji = '💧';
+      else if (elemLower === 'wind')  elemEmoji = '🌪️';
+      else if (elemLower === 'earth') elemEmoji = '🧱';
+      else if (elemLower === 'dark')  elemEmoji = '🌑';
+      else if (elemLower === 'light') elemEmoji = '✨';
 
-        var tr = document.createElement('tr');
-        tr.dataset.filter    = (name + ' ' + type + ' ' + elem).toLowerCase();
-        tr.dataset.category  = type.toLowerCase().replace(/\s+/g, '-');
-        tr.dataset.category2 = elem.toLowerCase();
-
-        var diffClass = diff ? ' diff-' + diff.toLowerCase() : '';
-        var modalAttrs = ' data-mon-modal="' + esc(name) + '" data-mon-diff="' + esc(diff || '') + '" ';
-        var linkStyle = 'style="cursor:pointer;text-decoration:none;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'"';
-
-        var nameCell;
-
-        if (hasVariants && idx === 0) {
-          // First row of group: show name + colored diff badge toggle
-          var hiddenDiffs = group.slice(1).map(function (r) {
-            return (r['Difficulty'] || '').trim();
-          }).filter(Boolean);
-          var badgesHTML = '';
-          if (hiddenDiffs.length) {
-            hiddenDiffs.forEach(function (d) {
-              var dc = d ? ' diff-' + d.toLowerCase() : '';
-              badgesHTML += '<span class="tag' + dc + '" style="font-size:.65rem;padding:1px 6px;pointer-events:none">' + esc(d) + '</span> ';
-            });
-          } else {
-            badgesHTML = '+' + (group.length - 1);
-          }
-          nameCell = '<span class="mon-name mon-link"' + modalAttrs + linkStyle + '>' + monIcon + name + '</span>' +
-            '<br><span class="mon-group-toggle" style="cursor:pointer;font-size:.75rem;display:inline-flex;align-items:center;gap:2px;margin-top:2px" data-group="' + gid + '">▸ ' + badgesHTML + '</span>';
-        } else if (hasVariants) {
-          // Variant row: indent with marker, hidden by default
-          nameCell = '<span style="padding-left:1.2rem;opacity:.85;pointer-events:none">↳ </span><span class="mon-name mon-link"' + modalAttrs + linkStyle + '>' + monIcon + name + '</span>';
-          tr.dataset.monGroup = gid;
-          tr.style.display = 'none';
-          tr.style.background = 'var(--bg-card-hover, rgba(0,0,0,.02))';
-        } else {
-          nameCell = '<span class="mon-name mon-link"' + modalAttrs + linkStyle + '>' + monIcon + name + '</span>';
-        }
-
-        tr.innerHTML =
-          '<td>' + nameCell + '</td>' +
-          '<td data-label="Level"><span class="tag' + (parseInt(level, 10) >= 240 ? ' gold' : '') + '">' + level + '</span></td>' +
-          (diff ? '<td data-label="Difficulty"><span class="tag' + diffClass + '">' + diff + '</span></td>' : '<td data-label="Difficulty"></td>') +
-          '<td data-label="Type"><span class="tag' + (isBoss ? ' red' : (isMiniBoss ? ' mini-boss' : '')) + '">' + type + '</span></td>' +
-          '<td data-label="Element">' + elem + '</td>' +
-          '<td data-label="HP">' + hp + '</td>' +
-          '<td data-label="Location">' + loc + '</td>' +
-          '<td data-label="Drop">' + dropHTML + '</td>';
-        tbody.appendChild(tr);
+      // Drop list (Top 3)
+      var drops = rawDrop.split(';').map(function(d) { return d.trim(); }).filter(Boolean);
+      var dropsHTML = '';
+      drops.slice(0, 3).forEach(function(d) {
+        dropsHTML += '<div class="m-drop-item" data-drop-name="' + esc(d) + '"><span>📦</span> ' + esc(d) + '</div>';
       });
+
+      var card = document.createElement('article');
+      card.className = 'monster-card';
+      card.dataset.filter    = (name + ' ' + type + ' ' + elem).toLowerCase();
+      card.dataset.category  = type.toLowerCase().replace(/\s+/g, '-');
+      card.dataset.category2 = elem.toLowerCase();
+      // Store full group data for modal
+      card.dataset.monsterName = normalVariant['Name'];
+      card.dataset.variants    = JSON.stringify(group);
+
+      card.innerHTML = 
+        '<div class="monster-card-header">' +
+          '<div class="monster-card-icon">' + monIconHTML + '</div>' +
+          '<div class="monster-card-name">' + name + '</div>' +
+        '</div>' +
+        '<div class="monster-card-badges">' +
+          '<span class="m-badge lv">Lv.' + level + '</span>' +
+          '<span class="m-badge diff">👁️ ' + diff + '</span>' +
+          '<span class="m-badge hp">❤️ HP ' + hp + '</span>' +
+          (elem ? '<span class="tag ' + elemLower + '" style="border-radius:10px">' + elemEmoji + ' ' + elem + '</span>' : '') +
+        '</div>' +
+        '<div class="m-location">📍 ' + loc + '</div>' +
+        '<div class="m-drops-section">' +
+          '<div class="m-drops-title">🗑️ Top Drops:</div>' +
+          '<div class="m-drop-list">' + dropsHTML + '</div>' +
+          (drops.length > 3 ? '<div class="m-more-drops">+' + (drops.length - 3) + ' more &gt;</div>' : '') +
+        '</div>' +
+        '<div class="m-card-actions">' +
+          '<button class="m-btn m-btn-details" data-action="details">🔍 Details</button>' +
+          '<button class="m-btn m-btn-compare" data-action="compare">🔄 Compare</button>' +
+        '</div>';
+      
+      grid.appendChild(card);
     });
 
-    // Click handler for group toggles, drop toggles, and drop item links
-    tbody.addEventListener('click', function (e) {
-      // Monster Modal Open
-      var monLink = e.target.closest('[data-mon-modal]');
-      if (monLink) {
-        var mName = monLink.getAttribute('data-mon-modal');
-        var mDiff = monLink.getAttribute('data-mon-diff');
-        if (window.MonsterModal) {
-          e.stopPropagation();
-          window.MonsterModal.open(mName, mDiff);
-        }
-        return;
-      }
-      // Drop item click → open ItemModal
-      var dropLink = e.target.closest('[data-drop-name]');
-      if (dropLink && !e.target.closest('[data-drop-toggle]')) {
-        var itemName = dropLink.getAttribute('data-drop-name');
-        if (itemName && window.ItemModal) {
-          e.stopPropagation();
-          window.ItemModal.open(itemName);
-        }
+    // Click handler for grid
+    grid.addEventListener('click', function (e) {
+      var card = e.target.closest('.monster-card');
+      if (!card) return;
+
+      var mName = card.dataset.monsterName;
+      var variants = JSON.parse(card.dataset.variants || '[]');
+
+      // Details or Card body click -> Modal open
+      var isCompare = e.target.closest('[data-action="compare"]');
+      var isDrop    = e.target.closest('[data-drop-name]');
+      
+      if (isDrop) {
+        var itemName = e.target.closest('[data-drop-name]').dataset.dropName;
+        if (window.ItemModal) window.ItemModal.open(itemName);
         return;
       }
 
-      // Drop expand/collapse
-      var dropToggle = e.target.closest('[data-drop-toggle]');
-      if (dropToggle) {
-        var td = dropToggle.closest('td');
-        if (!td) return;
-        var extras = td.querySelectorAll('[data-drop-extra]');
-        var showing = dropToggle.dataset.expanded === '1';
-        extras.forEach(function (el) { el.style.display = showing ? 'none' : ''; });
-        if (!dropToggle.dataset.label) dropToggle.dataset.label = dropToggle.textContent;
-        dropToggle.dataset.expanded = showing ? '0' : '1';
-        dropToggle.textContent = showing ? dropToggle.dataset.label : 'show less';
-        return;
-      }
-
-      // Monster group expand/collapse
-      var grpToggle = e.target.closest('[data-group]');
-      if (grpToggle) {
-        var gid = grpToggle.dataset.group;
-        var variantRows = tbody.querySelectorAll('[data-mon-group="' + gid + '"]');
-        var isOpen = grpToggle.dataset.open === '1';
-        variantRows.forEach(function (r) { r.style.display = isOpen ? 'none' : ''; });
-        if (!grpToggle.dataset.badgesHtml) grpToggle.dataset.badgesHtml = grpToggle.innerHTML.replace(/^▸ /, '').replace(/^▾ /, '');
-        grpToggle.dataset.open = isOpen ? '0' : '1';
-        grpToggle.innerHTML = isOpen
-          ? '▸ ' + grpToggle.dataset.badgesHtml
-          : '▾ <span style="opacity:.7;font-size:.7rem">hide</span>';
+      if (window.MonsterModal) {
+        // If Compare button clicked, open modal with Compare tab active
+        window.MonsterModal.open(mName, null, isCompare ? 'compare' : 'info');
       }
     });
   }

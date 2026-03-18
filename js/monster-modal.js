@@ -1,330 +1,207 @@
-// ============================================================
-// ToramDB — monster-modal.js
-// Popup detail card for Popular Monsters on homepage.
-// Include this script + add <div id="monsterModal"></div> to page.
-// ============================================================
-
 window.MonsterModal = (function () {
   'use strict';
 
-  // ---------- Sample data (when Sheets not configured) ---------------
   var SAMPLE_MONSTERS = {
-    'Ifrit Rex': {
-      Name: 'Ifrit Rex', Type: 'Boss', Level: '250',
-      Element: 'Fire', HP: '2.4M', Location: 'Volcano Summit',
-      ImageURL: '',
-      Drop: 'Ifrit Fang x1;Fire Crystal x3;Flame Essence x2;Volcanic Rock x5',
-      Description: 'A fearsome dragon boss residing deep within the Volcano Summit. Known for devastating fire attacks and high HP.'
-    },
-    'Crystal Spider Queen': {
-      Name: 'Crystal Spider Queen', Type: 'Boss', Level: '235',
-      Element: 'Ice', HP: '1.8M', Location: 'Crystal Cave',
-      ImageURL: '',
-      Drop: 'Spider Silk x5;Ice Crystal x3;Crystal Thread x2;Frozen Fang x1',
-      Description: 'An enormous spider boss lurking in the Crystal Cave. Her ice-based attacks can freeze adventurers solid.'
-    },
-    'Fenrir Shadow': {
-      Name: 'Fenrir Shadow', Type: 'Mini-Boss', Level: '210',
-      Element: 'Dark', HP: '900K', Location: 'Frozen Tundra',
-      ImageURL: '',
-      Drop: 'Shadow Claw x2;Dark Fur x3;Frozen Bone x4',
-      Description: 'A swift and deadly wolf that haunts the Frozen Tundra. Its dark element attacks bypass most physical defenses.'
-    }
+    'Biskyva': [
+      { Name: 'Biskyva', Difficulty: 'Normal', Level: '293', Element: 'Water', HP: '9.3M', Location: 'Aquastida Central', Drop: 'Abyssal Greatsword;Biskyva Spine;Biskyva Horn;Biskyva Web', Type: 'Boss' },
+      { Name: 'Biskyva', Difficulty: 'Hard', Level: '293', Element: 'Water', HP: '18.7M', Location: 'Aquastida Central', Drop: 'Abyssal Greatsword;Biskyva Spine;Biskyva Horn;Corroded Green Crystal', Type: 'Boss' },
+      { Name: 'Biskyva', Difficulty: 'Nightmare', Level: '293', Element: 'Water', HP: '25M', Location: 'Aquastida Central', Drop: 'Abyssal Greatsword;Biskyva Spine;Biskyva Horn;Abyssal Katana', Type: 'Boss' },
+      { Name: 'Biskyva', Difficulty: 'Ultimate', Level: '293', Element: 'Water', HP: '32M', Location: 'Aquastida Central', Drop: 'Abyssal Greatsword;Biskyva Spine;Biskyva Horn;Biskyva Armor', Type: 'Boss' }
+    ]
   };
 
-  // ---------- Cache for Sheets data ---------------------------------
   var sheetsCache = null;
+  var currentGroup = [];
+  var currentVariant = null;
 
-  // ---------- HTML escape -------------------------------------------
   function esc(s) {
-    return String(s || '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // ---------- Element color class -----------------------------------
-  function elemClass(el) {
+  function elemIcon(el) {
     var e = (el || '').toLowerCase();
-    if (e === 'fire') return 'red';
-    if (e === 'ice' || e === 'water') return 'ice';
-    if (e === 'wind') return 'wind';
-    if (e === 'dark') return 'dark';
-    if (e === 'light') return 'light';
-    if (e === 'earth') return 'earth';
-    return '';
+    if (e === 'fire') return '🔥';
+    if (e === 'ice' || e === 'water') return '💧';
+    if (e === 'wind') return '🌪️';
+    if (e === 'dark') return '🌑';
+    if (e === 'light') return '✨';
+    if (e === 'earth') return '🧱';
+    return '⚪';
   }
 
-  // ---------- Build modal HTML --------------------------------------
   function buildModalHTML() {
     var container = document.getElementById('monsterModal');
     if (!container) return;
     container.className = 'modal-overlay';
-    container.setAttribute('role', 'dialog');
-    container.setAttribute('aria-modal', 'true');
     container.innerHTML =
-      '<div class="modal-body">' +
-        '<button class="modal-close" aria-label="Close" id="monModalClose">&times;</button>' +
-        '<div class="detail-card">' +
-          '<div class="detail-header">' +
-            '<div>' +
-              '<h2 id="monModalName" style="font-size:1.3rem;font-weight:700;margin:0">Loading…</h2>' +
-              '<span class="detail-type" id="monModalType"></span>' +
-            '</div>' +
-          '</div>' +
-          '<div class="detail-image" id="monModalImage">' +
-            '<span class="placeholder-icon">👾</span>' +
-          '</div>' +
-          '<div class="mon-info-bar" id="monModalInfoBar"></div>' +
-          '<div class="detail-tabs" role="tablist">' +
-            '<button class="detail-tab active" data-tab="mon-info" role="tab">Info</button>' +
-            '<button class="detail-tab" data-tab="mon-drops" role="tab">Drops</button>' +
-          '</div>' +
-          '<div class="detail-panel active" id="panel-mon-info" role="tabpanel">' +
-            '<div id="monModalInfo"><div class="skeleton" style="height:100px"></div></div>' +
-          '</div>' +
-          '<div class="detail-panel" id="panel-mon-drops" role="tabpanel">' +
-            '<div id="monModalDrops"><p class="text-muted">No drop info.</p></div>' +
-          '</div>' +
+      '<div class="modal-body" style="background: white; max-width: 400px;">' +
+        '<button class="modal-close" id="monModalClose">&times;</button>' +
+        '<div style="padding: 1.25rem 1.25rem 0.5rem;">' +
+          '<h2 id="monModalName" style="font-size:1.4rem;font-weight:800;margin:0">Loading...</h2>' +
         '</div>' +
+        '<div class="modal-diff-tabs" id="monModalDiffTabs"></div>' +
+        '<div class="detail-image" id="monModalImage" style="height:180px; margin: 0.75rem 1.25rem; background:#f8fafc; border-radius:12px; display:flex; align-items:center; justify-content:center;">' +
+          '<span style="font-size:3rem; opacity:0.3;">👾</span>' +
+        '</div>' +
+        '<div id="monModalMainBadges" style="padding: 0 1.25rem; display:flex; gap:0.5rem; flex-wrap:wrap;"></div>' +
+        '<div id="monModalLocation" style="padding: 0.75rem 1.25rem; font-weight:600; color:#d97706; display:flex; align-items:center; gap:6px;"></div>' +
+        '<div class="modal-nav-tabs">' +
+          '<div class="modal-nav-tab active" data-tab="info">Info</div>' +
+          '<div class="modal-nav-tab" data-tab="compare">Compare</div>' +
+        '</div>' +
+        '<div id="panel-info" class="detail-panel active" style="padding: 1rem 1.25rem;">' +
+           '<div id="monModalInfoRows"></div>' +
+           '<div class="m-drops-section" style="margin-top:1rem;">' +
+             '<div class="m-drops-title">🗑️ Top Drops:</div>' +
+             '<div id="monModalDrops" class="m-drop-list"></div>' +
+           '</div>' +
+        '</div>' +
+        '<div id="panel-compare" class="detail-panel" style="padding: 1rem 1.25rem;">' +
+          '<div id="monModalCompareRows"></div>' +
+        '</div>' +
+        '<div style="height:1.5rem"></div>' +
       '</div>';
 
-    // Bind close
-    document.getElementById('monModalClose').addEventListener('click', close);
-    container.addEventListener('click', function (e) {
-      if (e.target === container) close();
-    });
+    document.getElementById('monModalClose').onclick = close;
+    container.onclick = function(e) { if(e.target === container) close(); };
 
-    // Bind tabs
-    container.querySelectorAll('.detail-tab').forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        container.querySelectorAll('.detail-tab').forEach(function (t) {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        container.querySelectorAll('.detail-panel').forEach(function (p) { p.classList.remove('active'); });
+    container.querySelectorAll('.modal-nav-tab').forEach(function(tab) {
+      tab.onclick = function() {
+        container.querySelectorAll('.modal-nav-tab').forEach(function(t) { t.classList.remove('active'); });
+        container.querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('active'); });
         tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        var panel = document.getElementById('panel-' + tab.dataset.tab);
-        if (panel) panel.classList.add('active');
-      });
+        document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+      };
     });
   }
 
-  // ---------- Populate modal with monster data ----------------------
-  function populate(mon) {
-    if (!mon) {
-      document.getElementById('monModalName').textContent = 'Monster Not Found';
-      document.getElementById('monModalType').innerHTML = '';
-      document.getElementById('monModalImage').innerHTML = '<span class="placeholder-icon" style="font-size:3rem">❓</span>';
-      document.getElementById('monModalInfoBar').innerHTML = '';
-      document.getElementById('monModalInfo').innerHTML = '<p class="text-muted" style="text-align:center; padding:1rem;">Monster not found in database.</p>';
-      var dropEl = document.getElementById('monModalDrops');
-      if (dropEl) dropEl.innerHTML = '<p class="text-muted" style="text-align:center; padding:1rem;">No drop info available.</p>';
-      return;
-    }
+  function populate(group, selectedVariant, startTab) {
+    if (!group || !group.length) return;
+    currentGroup = group;
+    currentVariant = selectedVariant || group[0];
 
-    var name    = mon['Name']        || '';
-    var type    = mon['Type']        || '';
-    var level   = mon['Level']       || '';
-    var img     = mon['ImageURL']    || '';
-    var drop    = mon['Drop']        || '';
+    var mon = currentVariant;
+    var name = esc(mon['Name']);
+    var difficulty = (mon['Difficulty'] || 'Normal').trim();
 
-    // Column mapping: Monsters sheet vs Homepage sheet
-    // Monsters sheet: Element, HP, Location, Drop (direct columns)
-    // Homepage sheet: Stats=Element, Source=HP, Description=Location (reused columns)
-    var element = mon['Element']  || mon['Stats']       || '';
-    var hp      = mon['HP']       || mon['Source']      || '';
-    var loc     = mon['Location'] || '';
-    var desc    = '';
-
-    // Homepage sheet: Description = Location (no separate Location column)
-    if (!loc && mon['Description']) {
-      loc = mon['Description'];
-    } else if (loc && mon['Description']) {
-      desc = mon['Description'];
-    }
-
-    // Header
     document.getElementById('monModalName').textContent = name;
-    var typeLower = type.toLowerCase();
-    var typeClass = typeLower === 'boss' ? 'tag red' : typeLower.indexOf('mini') !== -1 ? 'tag gold' : 'tag';
-    document.getElementById('monModalType').innerHTML =
-      '<span class="' + typeClass + '" style="font-size:.75rem">' + esc(type) + '</span>' +
-      (level ? ' <span class="tag legendary" style="font-size:.75rem">Lv.' + esc(level) + '</span>' : '');
 
-    // Image
-    var imageEl = document.getElementById('monModalImage');
-    var errHandler = 'onerror="this.onerror=null;this.src=\'img/icons/no_image.png\';this.style.opacity=\'0.6\';"';
-    var icon = mon['Icon'] || '';
-    if (img) {
-      imageEl.innerHTML = '<img src="' + esc(img) + '" alt="' + esc(name) + '" ' + errHandler + ' style="max-width:100%;border-radius:8px" />';
-    } else if (icon && (icon.indexOf('/') !== -1 || icon.indexOf('.png') !== -1)) {
-      imageEl.innerHTML = '<img src="' + esc(icon) + '" alt="' + esc(name) + '" ' + errHandler + ' style="max-width:120px;margin:0 auto;display:block;opacity:0.8" />';
-    } else {
-      imageEl.innerHTML = '<span class="placeholder-icon" style="font-size:3rem">' + (esc(icon) || '👾') + '</span>';
-    }
+    // Difficulty Tabs
+    var diffTabs = document.getElementById('monModalDiffTabs');
+    diffTabs.innerHTML = '';
+    group.forEach(function(v) {
+      var d = (v['Difficulty'] || 'Normal').trim();
+      var btn = document.createElement('div');
+      btn.className = 'modal-diff-tab' + (d === difficulty ? ' active' : '');
+      btn.textContent = d;
+      btn.onclick = function() { populate(group, v, startTab); };
+      diffTabs.appendChild(btn);
+    });
 
-    // Info bar (Element + HP)
-    var infoBar = document.getElementById('monModalInfoBar');
-    var ec = elemClass(element);
-    infoBar.innerHTML =
-      (element ? '<span class="tag ' + ec + '">' + esc(element) + '</span>' : '') +
-      (hp      ? '<span class="tag">HP ' + esc(hp) + '</span>' : '') +
-      (level   ? '<span class="tag legendary">Lv.' + esc(level) + '</span>' : '');
+    // Main Badges (Lv, Elem, HP)
+    var badges = document.getElementById('monModalMainBadges');
+    var el = mon['Element'] || '';
+    badges.innerHTML = 
+      '<span class="m-badge lv">Lv.' + esc(mon['Level']) + '</span> ' +
+      '<span class="m-badge" style="background:#e0f2fe; color:#0369a1;">' + elemIcon(el) + ' ' + esc(el) + '</span> ' +
+      '<span class="m-badge hp">❤️ ' + esc(mon['HP']) + '</span>';
 
-    // Info tab
-    var infoEl = document.getElementById('monModalInfo');
-    var infoHTML = '';
+    // Location
+    document.getElementById('monModalLocation').innerHTML = '📍 ' + esc(mon['Location']);
 
-    // Stats table
-    infoHTML += '<div class="stat-row"><span class="stat-name">Element</span><span class="stat-value">' + (esc(element) || '—') + '</span></div>';
-    infoHTML += '<div class="stat-row"><span class="stat-name">HP</span><span class="stat-value">' + (esc(hp) || '—') + '</span></div>';
-    infoHTML += '<div class="stat-row"><span class="stat-name">Level</span><span class="stat-value">' + (esc(level) || '—') + '</span></div>';
-    infoHTML += '<div class="stat-row"><span class="stat-name">Type</span><span class="stat-value">' + (esc(type) || '—') + '</span></div>';
-    infoHTML += '<div class="stat-row"><span class="stat-name">Location</span><span class="stat-value">' + (esc(loc) || '—') + '</span></div>';
+    // Info Rows
+    var infoRows = document.getElementById('monModalInfoRows');
+    infoRows.innerHTML = 
+      '<div class="stat-row"><span class="stat-name">Element</span><span class="stat-value">' + (esc(el) || '—') + '</span></div>' +
+      '<div class="stat-row"><span class="stat-name">HP</span><span class="stat-value">' + (esc(mon['HP']) || '—') + '</span></div>' +
+      '<div class="stat-row"><span class="stat-name">Type</span><span class="stat-value">' + (esc(mon['Type']) || '—') + '</span></div>';
 
-    if (desc) {
-      infoHTML += '<div style="margin-top:.75rem;padding:.75rem;background:var(--bg-card);border-radius:8px;font-size:.9rem;color:var(--text-secondary)">' + esc(desc) + '</div>';
-    }
-
-    infoEl.innerHTML = infoHTML;
-
-    // Drops tab
+    // Drops
+    var drops = (mon['Drop'] || '').split(';').map(function(d) { return d.trim(); }).filter(Boolean);
     var dropEl = document.getElementById('monModalDrops');
-    if (drop) {
-      dropEl.innerHTML = '';
-      drop.split(';').forEach(function (d) {
-        d = d.trim();
-        if (!d) return;
+    dropEl.innerHTML = '';
+    drops.forEach(function(d) {
+      var item = document.createElement('div');
+      item.className = 'm-drop-item';
+      item.innerHTML = '<span>📦</span> ' + esc(d);
+      item.onclick = function() {
+        if(window.ItemModal) { close(); setTimeout(function(){ window.ItemModal.open(d); }, 200); }
+      };
+      dropEl.appendChild(item);
+    });
 
-        var dropItemEl = document.createElement('div');
-        dropItemEl.className = 'obtain-item drop-link';
-        dropItemEl.dataset.dropName = d;
-        dropItemEl.style.cursor = 'pointer';
-        dropItemEl.innerHTML = 
-          '<div class="obtain-icon">🎁</div>' +
-          '<span>' + esc(d) + '</span>' +
-          '<span class="drop-arrow">→</span>';
-        
-        dropEl.appendChild(dropItemEl);
+    // Compare Tab
+    var compareRows = document.getElementById('monModalCompareRows');
+    compareRows.innerHTML = '';
+    group.forEach(function(v) {
+      var d = (v['Difficulty'] || 'Normal').trim();
+      var isCurrent = d === difficulty;
+      var row = document.createElement('div');
+      row.className = 'compare-row' + (isCurrent ? ' current' : '');
+      row.innerHTML = 
+        '<div class="compare-diff-info">' + 
+          (isCurrent ? '🔆' : '🪙') + ' ' + d + 
+        '</div>' +
+        '<div class="compare-hp">' + esc(v['HP']) + '</div>';
+      compareRows.appendChild(row);
+    });
 
-        // Asynchronously fetch real icon
-        if (window.ItemModal && window.ItemModal.getItem && window.ToramSheets) {
-          window.ItemModal.getItem(d, function(itemData) {
-            if (itemData) {
-              var iImage = itemData['ImageURL'] || '';
-              var iIcon = itemData['Icon'] || '';
-              var iType = itemData['Type'] || '';
-              var realIconHTML = window.ToramSheets.iconHTML(iImage, iIcon, iType, d);
-              if (realIconHTML) {
-                var iconContainer = dropItemEl.querySelector('.obtain-icon');
-                if (iconContainer) iconContainer.innerHTML = realIconHTML;
-              }
-            }
-          });
-        }
-      });
-
-      // Bind click on drop items → open ItemModal
-      dropEl.querySelectorAll('[data-drop-name]').forEach(function (el) {
-        el.addEventListener('click', function () {
-          var itemName = this.getAttribute('data-drop-name');
-          if (itemName && window.ItemModal) {
-            close();
-            setTimeout(function () {
-              window.ItemModal.open(itemName);
-            }, 250);
-          }
-        });
-      });
-    } else {
-      dropEl.innerHTML = '<p class="text-muted">No drop info available for this monster.</p>';
+    // Switch Tab if requested
+    if (startTab) {
+      var tabBtn = document.querySelector('.modal-nav-tab[data-tab="' + startTab + '"]');
+      if (tabBtn) tabBtn.click();
     }
-
-    // Reset tabs
-    var container = document.getElementById('monsterModal');
-    container.querySelectorAll('.detail-tab').forEach(function (t, i) {
-      t.classList.toggle('active', i === 0);
-    });
-    container.querySelectorAll('.detail-panel').forEach(function (p, i) {
-      p.classList.toggle('active', i === 0);
-    });
   }
 
-  // ---------- Open / Close ------------------------------------------
-  function open(monsterName, difficulty) {
+  function open(monsterName, difficulty, startTab) {
     var overlay = document.getElementById('monsterModal');
     if (!overlay) return;
-    if (!overlay.querySelector('.modal-body')) buildModalHTML();
-
+    buildModalHTML();
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    requestAnimationFrame(function () { overlay.classList.add('fade-in'); });
 
-    document.addEventListener('keydown', escHandler);
+    var group = [];
+    if (window.ToramSheets && window.ToramSheets.dataState && window.ToramSheets.dataState.fullData) {
+      // Find all variants in sheets data
+      var data = window.ToramSheets.dataState.fullData;
+      group = data.filter(function(r) { return (r['Name'] || '').toLowerCase() === monsterName.toLowerCase(); });
+    }
+    
+    // Fallback to sample if not found
+    if (!group.length && SAMPLE_MONSTERS[monsterName]) {
+      group = SAMPLE_MONSTERS[monsterName];
+    } else if (!group.length) {
+       // Manual find in sheets cache if fullData is not synced (e.g. called from external link)
+       if (sheetsCache) {
+          group = sheetsCache.filter(function(r) { return (r['Name'] || '').toLowerCase() === monsterName.toLowerCase(); });
+       }
+    }
 
-    // Try Sheets Monsters tab first, then sample
-    if (window.ToramSheets && window.ToramSheets.CONFIG.SHEET_ID !== 'YOUR_GOOGLE_SHEET_ID') {
-      if (sheetsCache) {
-        var found = findInCache(monsterName, difficulty);
-        populate(found || SAMPLE_MONSTERS[monsterName] || null);
-      } else {
-        var sheetName = window.ToramSheets.CONFIG.SHEETS.monsters || 'Monsters';
-        window.ToramSheets.fetchSheet(sheetName)
-          .then(function (csv) {
-            sheetsCache = window.ToramSheets.parseCSV(csv);
-            var found = findInCache(monsterName, difficulty);
-            populate(found || SAMPLE_MONSTERS[monsterName] || null);
-          })
-          .catch(function () {
-            populate(SAMPLE_MONSTERS[monsterName] || null);
+    if (!group.length) {
+      // Last attempt: fetch sheet if logic allows
+      var sheetName = (window.ToramSheets && window.ToramSheets.CONFIG.SHEETS.monsters.name) || 'Monsters';
+      if (window.ToramSheets && window.ToramSheets.fetchSheet) {
+          window.ToramSheets.fetchSheet(sheetName).then(function(csv){
+              sheetsCache = window.ToramSheets.parseCSV(csv);
+              open(monsterName, difficulty, startTab); // Recursive once cache is filled
           });
-      }
-    } else {
-      populate(SAMPLE_MONSTERS[monsterName] || null);
-    }
-  }
-
-  function findInCache(name, diff) {
-    if (!sheetsCache) return null;
-    diff = diff || '';
-
-    // Pass 1: Try to find exact match for both Name and Difficulty
-    for (var i = 0; i < sheetsCache.length; i++) {
-      var cName = (sheetsCache[i]['Name'] || '').toLowerCase();
-      var cDiff = (sheetsCache[i]['Difficulty'] || '').toLowerCase();
-      if (cName === name.toLowerCase() && (!diff || cDiff === diff.toLowerCase())) {
-        return sheetsCache[i];
+          return;
       }
     }
 
-    // Pass 2: Fallback to just Name (e.g. from Drops link without difficulty)
-    for (var i = 0; i < sheetsCache.length; i++) {
-      if ((sheetsCache[i]['Name'] || '').toLowerCase() === name.toLowerCase()) {
-        return sheetsCache[i];
-      }
+    var selected = null;
+    if (difficulty) {
+      selected = group.find(function(v) { return (v['Difficulty'] || '').toLowerCase() === difficulty.toLowerCase(); });
     }
-    return null;
+    populate(group, selected, startTab);
   }
 
   function close() {
     var overlay = document.getElementById('monsterModal');
-    if (!overlay) return;
-    overlay.classList.remove('fade-in');
-    setTimeout(function () {
+    if (overlay) {
       overlay.classList.remove('open');
       document.body.style.overflow = '';
-    }, 200);
-    document.removeEventListener('keydown', escHandler);
-  }
-
-  function escHandler(e) {
-    if (e.key === 'Escape') close();
-  }
-
-  // ---------- Init ---------------------------------------------------
-  if (document.getElementById('monsterModal')) {
-    buildModalHTML();
+    }
   }
 
   return { open: open, close: close };

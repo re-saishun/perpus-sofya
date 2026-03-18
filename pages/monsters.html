@@ -87,104 +87,9 @@
         </select>
       </div>
 
-      <!-- Table view for monsters -->
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Monster</th>
-              <th>Level</th>
-              <th>Difficulty</th>
-              <th>Type</th>
-              <th>Element</th>
-              <th>HP</th>
-              <th>Location</th>
-              <th>Main Drop</th>
-            </tr>
-          </thead>
-          <tbody id="monstersTable">
-            <tr data-filter="ifrit rex boss fire" data-category="boss" data-category2="fire">
-              <td>🐉 Ifrit Rex</td>
-              <td><span class="tag legendary">250</span></td>
-              <td><span class="tag diff-ultimate">Ultimate</span></td>
-              <td><span class="tag red">Boss</span></td>
-              <td><span class="tag fire">Fire</span></td>
-              <td>2,400,000</td>
-              <td>Volcano Summit</td>
-              <td>Sword of Eternal Flame</td>
-            </tr>
-            <tr data-filter="crystal spider queen boss ice" data-category="boss" data-category2="ice">
-              <td>🕷️ Crystal Spider Queen</td>
-              <td><span class="tag legendary">235</span></td>
-              <td><span class="tag diff-nightmare">Nightmare</span></td>
-              <td><span class="tag red">Boss</span></td>
-              <td><span class="tag ice">Ice</span></td>
-              <td>1,800,000</td>
-              <td>Crystal Cave</td>
-              <td>Crystal Thread, Ice Core</td>
-            </tr>
-            <tr data-filter="fenrir shadow mini-boss dark" data-category="mini-boss" data-category2="dark">
-              <td>🐺 Fenrir Shadow</td>
-              <td><span class="tag">210</span></td>
-              <td><span class="tag diff-hard">Hard</span></td>
-              <td><span class="tag">Mini-Boss</span></td>
-              <td><span class="tag dark">Dark</span></td>
-              <td>900,000</td>
-              <td>Frozen Tundra</td>
-              <td>Shadow Fang, Dark Essence</td>
-            </tr>
-            <tr data-filter="stone golem mini-boss earth" data-category="mini-boss" data-category2="earth">
-              <td>🪨 Stone Golem</td>
-              <td><span class="tag">180</span></td>
-              <td><span class="tag diff-normal">Normal</span></td>
-              <td><span class="tag">Mini-Boss</span></td>
-              <td><span class="tag earth">Earth</span></td>
-              <td>600,000</td>
-              <td>Ancient Ruins</td>
-              <td>Golem Core, Rock Fragment</td>
-            </tr>
-            <tr data-filter="goblin mob common" data-category="mob">
-              <td>👺 Goblin Raider</td>
-              <td><span class="tag">25</span></td>
-              <td><span class="tag diff-easy">Easy</span></td>
-              <td>Mob</td>
-              <td>None</td>
-              <td>1,200</td>
-              <td>Beginner Forest</td>
-              <td>Goblin Ear, Copper Coin</td>
-            </tr>
-            <tr data-filter="slime mob common" data-category="mob">
-              <td>🫧 Blue Slime</td>
-              <td><span class="tag">10</span></td>
-              <td><span class="tag diff-easy">Easy</span></td>
-              <td>Mob</td>
-              <td><span class="tag water">Water</span></td>
-              <td>450</td>
-              <td>Starter Plains</td>
-              <td>Slime Gel, Small Crystal</td>
-            </tr>
-            <tr data-filter="dark dragon boss dark legendary" data-category="boss" data-category2="dark">
-              <td>🐲 Dark Dragon</td>
-              <td><span class="tag legendary">260</span></td>
-              <td><span class="tag diff-ultimate">Ultimate</span></td>
-              <td><span class="tag red">Boss</span></td>
-              <td><span class="tag dark">Dark</span></td>
-              <td>3,200,000</td>
-              <td>Shadow Realm</td>
-              <td>Dragon Heart, Dark Scale</td>
-            </tr>
-            <tr data-filter="tempest eagle mini-boss wind" data-category="mini-boss" data-category2="wind">
-              <td>🦅 Tempest Eagle</td>
-              <td><span class="tag">195</span></td>
-              <td><span class="tag diff-hard">Hard</span></td>
-              <td><span class="tag">Mini-Boss</span></td>
-              <td><span class="tag wind">Wind</span></td>
-              <td>750,000</td>
-              <td>Sky Plateau</td>
-              <td>Eagle Feather, Wind Stone</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Grid view for monsters -->
+      <div id="monsterGrid" class="monster-grid">
+        <!-- Data rendered by ToramSheets.load -->
       </div>
 
       <div class="pagination" role="navigation" aria-label="Pagination"></div>
@@ -219,7 +124,7 @@
   </footer>
 
   <div id="itemModal"></div>
-  <!-- Monster modal (for obtain Drop links from ItemModal) -->
+  <!-- Monster modal -->
   <div id="monsterModal"></div>
 
   <button id="backToTop" aria-label="Back to top" title="Back to top">↑</button>
@@ -228,43 +133,37 @@
   <script src="../js/sheets.js"></script>
   <script src="../js/main.js"></script>
   <script>
-    // Table filter — queries rows fresh each call so Sheets data is included.
     (function () {
       var filterInput   = document.getElementById('filterInput');
       var filterSelect  = document.getElementById('filterSelect');
       var filterSelect2 = document.getElementById('filterSelect2');
-      var tbody         = document.getElementById('monstersTable');
+      var grid          = document.getElementById('monsterGrid');
 
-      function applyTableFilter() {
+      function applyGridFilter() {
         var q    = filterInput   ? filterInput.value.toLowerCase()   : '';
         var type = filterSelect  ? filterSelect.value.toLowerCase()  : '';
         var elem = filterSelect2 ? filterSelect2.value.toLowerCase() : '';
-        tbody.querySelectorAll('tr').forEach(function (row) {
-          // Skip variant rows that are collapsed (hidden by group toggle)
-          if (row.dataset.monGroup) {
-            var gid = row.dataset.monGroup;
-            var toggle = tbody.querySelector('[data-group="' + gid + '"]');
-            var groupOpen = toggle && toggle.dataset.open === '1';
-            if (!groupOpen) { row.style.display = 'none'; return; }
-          }
-          var text = (row.dataset.filter    || '').toLowerCase();
-          var cat1 = (row.dataset.category  || '').toLowerCase();
-          var cat2 = (row.dataset.category2 || '').toLowerCase();
+        
+        grid.querySelectorAll('.monster-card').forEach(function (card) {
+          var text = (card.dataset.filter    || '').toLowerCase();
+          var cat1 = (card.dataset.category  || '').toLowerCase();
+          var cat2 = (card.dataset.category2 || '').toLowerCase();
+          
           var ok = (!q    || text.includes(q))
                 && (!type || cat1 === type)
                 && (!elem || cat2 === elem);
-          row.style.display = ok ? '' : 'none';
+          card.style.display = ok ? '' : 'none';
         });
       }
 
-      if (filterInput)   filterInput.addEventListener('input',   applyTableFilter);
-      if (filterSelect)  filterSelect.addEventListener('change',  applyTableFilter);
-      if (filterSelect2) filterSelect2.addEventListener('change', applyTableFilter);
-      // Re-apply after Sheets data renders.
-      document.addEventListener('sheetsrendered', applyTableFilter);
+      if (filterInput)   filterInput.addEventListener('input',   applyGridFilter);
+      if (filterSelect)  filterSelect.addEventListener('change',  applyGridFilter);
+      if (filterSelect2) filterSelect2.addEventListener('change', applyGridFilter);
+      
+      document.addEventListener('sheetsrendered', applyGridFilter);
     }());
 
-    ToramSheets.load('monsters', 'monstersTable');
+    ToramSheets.load('monsters', 'monsterGrid');
   </script>
 </body>
 </html>
