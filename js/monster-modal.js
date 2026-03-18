@@ -156,15 +156,22 @@ window.MonsterModal = (function () {
       // Fetch real icon if ItemModal is available
       if (window.ItemModal && window.ItemModal.getItem) {
         window.ItemModal.getItem(d, function(itemData) {
+          var iconDiv = document.getElementById('drop-icon-' + safeId);
+          if (!iconDiv) return;
+
           if (itemData) {
-            var iconDiv = document.getElementById('drop-icon-' + safeId);
-            if (iconDiv && window.ToramSheets) {
+            if (window.ToramSheets) {
               var iURL = (itemData['ImageURL'] || '').trim();
               var iIcon = itemData['Icon'] || '';
               var iType = itemData['Type'] || '';
               iconDiv.innerHTML = window.ToramSheets.iconHTML(iURL, iIcon, iType, d, 'contain');
               iconDiv.style.background = 'transparent';
             }
+          } else {
+             // If not found in ItemDetails, try to guess icon based on name or type
+             if (window.ToramSheets) {
+                iconDiv.innerHTML = window.ToramSheets.iconHTML('', '', '', d, 'contain');
+             }
           }
         });
       }

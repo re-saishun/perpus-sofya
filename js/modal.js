@@ -660,6 +660,11 @@ window.ItemModal = (function () {
         } else {
           cb();
         }
+      })
+      .catch(function (err) {
+        console.error('ItemModal Details Fetch Error:', err);
+        pendingItemDetailsFetch = null;
+        cb();
       });
   }
 
