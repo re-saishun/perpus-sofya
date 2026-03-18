@@ -42,19 +42,17 @@ Developed by **No! I'm Failing!**
 
 - ✅ Fully responsive (mobile, tablet, desktop)
 - ✅ Search bar tersinkron di navbar, mobile drawer, dan hero
-- ✅ Filter real-time (nama + kategori + rarity) tanpa reload
-- ✅ **Popup modal** untuk detail item (tanpa reload halaman)
+- ✅ **Popup modal** untuk detail item & monster (tanpa reload halaman)
 - ✅ **Google Sheets integration** — data auto-update dari spreadsheet
-- ✅ **Smart icon system** — ImageURL dari Sheet > Icon emoji dari Sheet > auto-detect dari tipe equipment & material
+- ✅ **Smart icon system** — Mencari ikon spesifik dari `ItemDetails`, auto-detect tipe equipment, dan fallback premium (`items_ico.png`, `monsters_ico.png`)
+- ✅ **Search Debouncing** — Pencarian responsif tanpa lag (jeda 300ms) untuk database besar
+- ✅ **Monster Compare** — Tabel perbandingan stats (HP/Element) untuk semua tingkat kesulitan di dalam satu popup
+- ✅ **Linked Drops** — Item drop di modal monster bisa diklik untuk langsung melihat detail item tersebut
 - ✅ Animated counter stats di hero
 - ✅ Soft gray-white light theme — zero external CSS dependency
 - ✅ **Detail modal untuk Pets** — klik baris pet untuk lihat detail lengkap (Normal Magic, Support, Act 1–5, Color Info)
-- ✅ **Pet modal Preview** — Gambar besar pet (120×120) dengan label "Preview" di atas, centered
+- ✅ **Monster grouping** — Monster dengan nama sama dikelompokkan secara otomatis, variant (Hard/Nightmare/Ultimate) di-toggle
 - ✅ **XSS protection** — Semua data dari Google Sheet di-sanitize sebelum render ke HTML
-- ✅ **Monster grouping** — Skema A collapsible: monster sama dikelompokkan, variant (Hard/Nightmare/Ultimate) di-toggle
-- ✅ **Clickable Monster Names** — Klik nama monster di tabel untuk langsung melihat stats (HP/Element) spesifik sesuai *Difficulty*-nya di dalam Popup Modal
-- ✅ **Mobile card layout** — Tabel Monsters & Pets jadi grid card di layar kecil (≤480px)
-- ✅ **Home search category** — Dropdown kategori di hero search
 - ✅ Aksesibilitas: ARIA labels, roles, `aria-expanded`, semantic HTML
 
 ## 📊 Google Sheets Setup

@@ -98,6 +98,7 @@
     var cat2  = filterSelect2 ? filterSelect2.value.toLowerCase() : '';
     var cat3  = filterSelect3 ? filterSelect3.value.toLowerCase() : '';
 
+    var fullData = (window.ToramSheets && window.ToramSheets.dataState.fullData) || [];
     var pageType = (window.ToramSheets && window.ToramSheets.dataState.pageType) || '';
 
     filteredData = fullData.filter(function (row) {

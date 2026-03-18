@@ -175,28 +175,32 @@ Daftar monster yang ditampilkan sebagai tabel di halaman Monsters.
 
 | Kolom      | Wajib? | Keterangan                                              |
 |------------|--------|---------------------------------------------------------|
-| Name       | ✅ Ya  | Nama monster                                             |
-| Icon       | ❌     | Emoji kustom. Kosongkan = 👾 (normal) atau 🐉 (boss)    |
-| ImageURL   | ❌     | URL gambar monster                                       |
-| Level      | ✅ Ya  | Level monster (≥240 otomatis gold badge)                 |
-| Difficulty | ❌     | Tingkat kesulitan: Easy, Normal, Hard, Nightmare, Ultimate |
-| Type       | ✅ Ya  | Mob, Mini Boss, Boss (Boss merah, Mini Boss oranye)      |
-| Element    | ❌     | Elemen: Fire, Water, Wind, Earth, Light, Dark, Neutral   |
-| HP         | ❌     | Jumlah HP                                                |
-| Location   | ❌     | Lokasi spawn                                             |
-| Drop       | ❌     | Item drop utama (pisahkan dengan `;` jika banyak)        |
+| Name       | ✅ Ya  | Nama monster. Monster dengan nama sama akan **dikelompokkan otomatis** di website. |
+| Icon       | ❌     | Emoji kustom (misal: 👹). Kosongkan = auto dari Type (`monsters_ico.png`). |
+| ImageURL   | ❌     | URL gambar monster untuk tampilan besar di modal.        |
+| Level      | ✅ Ya  | Level monster.                                           |
+| Difficulty | ✅ Ya  | **PENTING**: Isi dengan `Easy`, `Normal`, `Hard`, `Nightmare`, atau `Ultimate`. |
+| Type       | ✅ Ya  | `Mob`, `Mini Boss`, atau `Boss`.                         |
+| Element    | ✅ Ya  | `Fire`, `Water`, `Wind`, `Earth`, `Light`, `Dark`, `Neutral`. |
+| HP         | ❌     | Jumlah HP (mendukung format teks misal: `2.4M`).         |
+| Location   | ❌     | Lokasi spawn.                                            |
+| Drop       | ❌     | Daftar drop dipisah `;`. Contoh: `Iron Ore; Long Sword`.  |
 
-### Contoh Data
+### Mekanisme Grouping & Modal
+1. **Grouping**: Jika Anda memasukkan 5 baris dengan nama "Minotaur" (Easy s/d Ultimate), website hanya akan menampilkan **satu kartu** berlabel "Difficulty: Normal" (default).
+2. **Toggle Details**: Klik ikon panah (↳) pada kartu untuk melihat list versi lain dari monster tersebut.
+3. **Compare Modal**: Klik nama monster atau kartu untuk membuka Popup Modal. Di dalamnya terdapat tab **Compare** yang menampilkan perbandingan HP & Element untuk semua tingkat kesulitan yang Anda masukkan di Sheet.
+4. **Smart Drop Icons**: Ikon untuk item di kolom `Drop` akan otomatis dicari di tab **ItemDetails**. Jika tidak ditemukan, sistem akan memakai ikon default sesuai kategori item.
 
-| Name             | Icon | ImageURL | Level | Difficulty | Type      | Element | HP        | Location            | Drop                                    |
-|------------------|------|----------|-------|------------|-----------|---------|-----------|---------------------|-----------------------------------------|
-| Pom-Pom Pom      |      |          | 1     | Easy       | Mob       | Neutral | 50        | Sofya City Outskirts| Pom Pom Fur                             |
-| Colon            |      |          | 5     | Easy       | Mob       | Water   | 200       | Ruined Temple       | Colon Jelly                             |
-| Venena Coenubia  |      |          | 230   | Ultimate   | Boss      | Dark    | 5000000   | El Scaro            | Gale Arch Bow; Dark Fragment            |
-| Gravicep         |      |          | 250   | Ultimate   | Boss      | Earth   | 12000000  | Ultimea Palace      | Titan's Fist; Earth Core; Boss Crystal  |
-| Shadow Puppet    |      |          | 180   | Hard       | Mini Boss | Dark    | 800000    | Dark Castle         | Shadow Gem; Dark Essence                |
-| Fire Willow      |      |          | 120   | Normal     | Mob       | Fire    | 50000     | Lava Valley         | Fire Crystal                            |
-| Crystal Golem    |      |          | 210   | Nightmare  | Boss      | Earth   | 3000000   | Crystal Cave        | Crystal Shield; Golem Core              |
+### Contoh Data (Grouping)
+
+| Name             | Level | Difficulty | Type      | Element | HP        | Location            | Drop                                    |
+|------------------|-------|------------|-----------|---------|-----------|---------------------|-----------------------------------------|
+| Venena Coenubia  | 210   | Normal     | Boss      | Dark    | 5M        | El Scaro            | Gale Arch Bow; Dark Fragment            |
+| Venena Coenubia  | 220   | Hard       | Boss      | Dark    | 12M       | El Scaro            | Gale Arch Bow; Dark Fragment            |
+| Venena Coenubia  | 230   | Ultimate   | Boss      | Dark    | 50M       | El Scaro            | Gale Arch Bow; Dark Fragment            |
+
+> **Tips**: Selalu pastikan kolom **Name** sama persis ejaannya agar sistem bisa mengelompokkan varian monster dengan benar.
 
 ---
 

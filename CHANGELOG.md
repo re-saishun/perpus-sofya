@@ -2,6 +2,18 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.43.0] - 2026-03-19
+### Added
+- **Monster Modal Overhaul**: Completely redesigned the monster detail modal with a Compare tab for difficulty variants (Easy, Normal, Hard, Nightmare, Ultimate).
+- **Smart Drop Icon Mapping**: Drop items in the monster modal now automatically fetch their specific icons from the `ItemDetails` sheet, with a fall-back to category-specific `items_ico.png`.
+- **Search Debouncing**: Implemented 300ms debouncing for all search inputs to optimize performance and prevent lag on large datasets.
+- **Unified Monster Element Filter**: Fixed the element filter logic to correctly target the `Element` column for monsters and standardizing the elements to the canonical 7 Toram elements.
+
+### Fixed
+- **Monster Modal Sync**: Resolved race conditions where drop icons would intermittently fail to load or show placeholders when data was cached.
+- **Image Scaling**: Standardized `object-fit: contain` for monster images to prevent awkward zooming/cropping.
+- **Error Feedback**: Improved the "No Data" message in `sheets.js` to distinguish between a missing database and an empty filter result.
+
 ## [0.42.2] - 2026-03-18
 ### Fixed
 - **Monster Variant Grouping**: Fixed a critical visual bug on the Monsters page where monster variants (Normal, Hard, Nightmare, Ultimate) were being split across different pages. The `paginate()` logic now intelligently groups rows by monster name before pagination, guaranteeing that all variants of a monster stay harmoniously together on the same page.
