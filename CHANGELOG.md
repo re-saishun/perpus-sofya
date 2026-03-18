@@ -2,6 +2,11 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.41.0] - 2026-03-18
+### Added
+- **Multi-Boss Support**: Quest cards now support multiple bosses (e.g., "Boss A & Boss B"). Each name is automatically split and turned into an independent clickable link that opens the monster detail modal.
+- **Smart Link Delimiters**: Supports various separators like `&`, `,`, and `and` to ensure clean lookups in the monster database.
+
 ## [0.40.3] - 2026-03-18
 ### Fixed
 - **Modal Data Persistence**: Explicitly clearing all modal fields when a monster is not found, preventing stale data from the previous monster from being displayed.
