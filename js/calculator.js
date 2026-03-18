@@ -26,7 +26,7 @@
   const addXP = function (begin, beginPercentage, extraXP) {
     let remainingXP = extraXP;
     let lv, lvPercentage;
-    let XPRequiredNextLv = Math.floor((1 - beginPercentage / 100) * getXP(begin));
+    let XPRequiredNextLv = (1 - beginPercentage / 100) * getXP(begin);
 
     if (extraXP < XPRequiredNextLv) {
       let currentXP = (beginPercentage / 100) * getXP(begin) + extraXP;
@@ -135,7 +135,10 @@
           }
           let total = parseInt((val || '0').toString().replace(/,/g, ''));
           const name = (q['Name'] || q['name'] || '').toLowerCase();
-          if (name.includes('venena meta coenubia') && !skipVenena) total += 12500000;
+          const boss = (q['Boss'] || q['boss'] || '').toLowerCase();
+          if ((name.includes('the battle to recapture eldenbaum') || boss.includes('venena meta coenubia')) && !skipVenena) {
+            total += 12500000;
+          }
           return total;
         };
 
@@ -211,8 +214,7 @@
 
       if (questXP >= xpNeededNow) {
         // Partial run: simulate quest by quest
-        let tLv = curLv;
-        let tPct = curPct;
+        let stackedXP = 0;
         let lastQName = '';
         
         for (let i = mqBeginIndex; i <= mqEndIndex; i++) {
@@ -224,16 +226,24 @@
           }
           let exp = parseInt((val || '0').toString().replace(/,/g, ''));
           const name = (q['Name'] || q['name'] || '').toLowerCase();
-          if (name.includes('venena meta coenubia') && !skipVenena) exp += 12500000;
+          const boss = (q['Boss'] || q['boss'] || '').toLowerCase();
+          if ((name.includes('the battle to recapture eldenbaum') || boss.includes('venena meta coenubia')) && !skipVenena) {
+            exp += 12500000;
+          }
           
-          [tLv, tPct] = addXP(tLv, tPct, exp);
-          const qName = q['Name'] || q['name'];
-          const qCh = q['Chapter'] || q['chapter'] || '';
-          lastQName = (qCh ? 'CH' + qCh + ' - ' : '') + qName;
-          if (tLv >= targetLvl) break;
+          stackedXP += exp;
+          
+          if (stackedXP >= xpNeededNow) {
+            const [tLv, tPct] = addXP(curLv, curPct, stackedXP);
+            curLv = tLv;
+            curPct = tPct;
+            
+            const qName = q['Name'] || q['name'];
+            const qCh = q['Chapter'] || q['chapter'] || '';
+            lastQName = (qCh ? 'CH' + qCh + ' - ' : '') + qName;
+            break;
+          }
         }
-        curLv = tLv;
-        curPct = tPct;
         
         const row = document.createElement('tr');
         row.innerHTML = `<td>${runs}</td><td>${lastQName}</td><td>${curLv} (${curLv >= LV_CAP ? 0 : curPct}%)</td>`;

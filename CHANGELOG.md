@@ -2,6 +2,16 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.42.0] - 2026-03-18
+### Fixed
+- **EXP Calculator Precision**: Fixed a mathematical discrepancy in `calculator.js` where fractional percentages were truncated during simulated runs, ensuring 100% alignment with ToramTools logic.
+- **Venena Boss XP Detection**: Corrected the logic that grants 12.5M bonus XP for the "Venena Meta Coenubia" fight. The system now accurately checks both the Boss Name and Quest Name variables.
+
+## [0.41.1] - 2026-03-18
+### Added
+- **Quest Data Recovery**: Restored `Quests_Import.csv` using live Google Sheets data as a reliable offline backup.
+- **Unified Monster Schema**: Developed a technical proposal to map Monster data into the Item/ItemDetail format, paving the way for universal search and a standardized UI.
+
 ## [0.41.0] - 2026-03-18
 ### Added
 - **Multi-Boss Support**: Quest cards now support multiple bosses (e.g., "Boss A & Boss B"). Each name is automatically split and turned into an independent clickable link that opens the monster detail modal.
