@@ -673,33 +673,32 @@ window.ToramSheets = (function () {
 
   function renderQuests(rows, container) {
     container.innerHTML = '';
-    if (!rows.length) {
-      showError(container, 'No quest data found. Check your Sheet ID and column headers (Name, Icon, Type, MinLevel, Reward, Description).');
+    if (!rows || !rows.length) {
+      showError(container, 'No quest data found. Check your Sheet ID and tab name (Quests).');
       return;
     }
     rows.forEach(function (row) {
-      // Robust column mapping
-      var name    = esc(row['Name'] || '');
+      // Robust column mapping with fallbacks
+      var name    = esc(row['Name'] || 'Unknown Quest');
       var icon    = esc(row['Icon'] || '');
       var imgURL  = (row['ImageURL'] || '').trim();
-      var type    = (row['Type'] || 'Main Story').trim();
+      var typeRaw = (row['Type'] || 'Main Story').trim();
       var ch      = esc(row['Chapter'] || '');
       var reward  = esc(row['Reward'] || '');
       var minlv   = esc(row['MinLevel'] || '');
       var desc    = esc(row['Description'] || '');
       
+      var tLower = typeRaw.toLowerCase();
       // Heuristic for MQ to show calculator link
-      var isMQ = type.toLowerCase().indexOf('main') !== -1 || type.toLowerCase().indexOf('mq') !== -1;
+      var isMQ = tLower.indexOf('main') !== -1 || tLower.indexOf('mq') !== -1;
 
       var el = document.createElement('article');
       el.className = 'data-card';
-      // Ensure all searchable text is in data-filter for any legacy selectors, 
-      // though main.js now filters the raw data object directly.
-      el.dataset.filter = (name + ' ' + type + ' ' + ch + ' ' + reward + ' ' + desc).toLowerCase();
-      el.dataset.category = (type.toLowerCase().indexOf('main') !== -1 ? 'main' : 
-                            (type.toLowerCase().indexOf('side') !== -1 ? 'side' : 
-                            (type.toLowerCase().indexOf('daily') !== -1 ? 'daily' : 
-                            (type.toLowerCase().indexOf('event') !== -1 ? 'event' : type.toLowerCase().replace(/\s+/g, '-')))));
+      el.dataset.filter = (name + ' ' + typeRaw + ' ' + ch + ' ' + reward + ' ' + desc).toLowerCase();
+      el.dataset.category = (tLower.indexOf('main') !== -1 ? 'main' : 
+                            (tLower.indexOf('side') !== -1 ? 'side' : 
+                            (tLower.indexOf('daily') !== -1 ? 'daily' : 
+                            (tLower.indexOf('event') !== -1 ? 'event' : tLower.replace(/\s+/g, '-')))));
       
       el.innerHTML =
         '<div class="data-card-header">' +
@@ -708,7 +707,7 @@ window.ToramSheets = (function () {
             '<div class="data-card-title">' + 
                (ch ? '<span class="tag-ch">Ch.' + ch + '</span>' : '') + name + 
             '</div>' +
-            '<div class="data-card-subtitle">' + type + (minlv ? ' · Lv.' + minlv + '+' : '') + '</div>' +
+            '<div class="data-card-subtitle">' + typeRaw + (minlv ? ' · Lv.' + minlv + '+' : '') + '</div>' +
           '</div>' +
         '</div>' +
         '<div class="data-card-body">' +

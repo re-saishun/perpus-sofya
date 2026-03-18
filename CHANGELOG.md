@@ -2,6 +2,12 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.36.0] - 2026-03-18
+### Fixed
+- **Quest Page Display**: Resolved the issue where the Quest list was stuck in a loading state (skeletons) by replacing incompatible `.includes()` calls with `.indexOf()` in `main.js`.
+- **Robust Rendering**: Improved `renderQuests` in `sheets.js` to handle missing or undefined data more gracefully, ensuring the database always displays available content.
+- **UI Cleanup**: Removed legacy hardcoded quest cards from `quests.html` to prevent layout flickering and ensure a clean dynamic loading experience.
+
 ## [0.35.0] - 2026-03-18
 ### Fixed
 - **Items Filter Logic**: Updated the filtering for "Drop", "Craft NPC", and "Craft Player" to correctly use the **Rarity** column from Google Sheets, resolving the "No data found" issue.

@@ -175,15 +175,15 @@
     var t = type.toLowerCase().trim();
     
     // --- Quest Categories ---
-    if (t.includes('main')) return 'main';
-    if (t.includes('side')) return 'side';
-    if (t.includes('daily')) return 'daily';
-    if (t.includes('event')) return 'event';
+    if (t.indexOf('main') !== -1) return 'main';
+    if (t.indexOf('side') !== -1) return 'side';
+    if (t.indexOf('daily') !== -1) return 'daily';
+    if (t.indexOf('event') !== -1) return 'event';
 
     // --- Item Categories (from sheets.js) ---
     // Weapons
-    if (t.includes('1h sword') || t === '1h') return '1h-sword';
-    if (t.includes('2h sword') || t === '2h') return '2h-sword';
+    if (t.indexOf('1h sword') !== -1 || t === '1h') return '1h-sword';
+    if (t.indexOf('2h sword') !== -1 || t === '2h') return '2h-sword';
     if (t === 'katana') return 'katana';
     if (t === 'bow') return 'bow';
     if (t === 'bowgun') return 'bowgun';
@@ -194,18 +194,18 @@
     if (t === 'dagger') return 'dagger';
     if (t === 'arrow') return 'arrow';
     // Defense
-    if (t === 'armor' || t.includes('armor') || t.includes('garb')) return 'armor';
+    if (t === 'armor' || t.indexOf('armor') !== -1 || t.indexOf('garb') !== -1) return 'armor';
     if (t === 'shield') return 'shield';
     // Accessories
-    if (t === 'additional' || t.includes('hat') || t.includes('wing')) return 'additional';
-    if (t === 'special' || t === 'ring' || t.includes('charm') || t.includes('spec')) return 'special';
+    if (t === 'additional' || t.indexOf('hat') !== -1 || t.indexOf('wing') !== -1) return 'additional';
+    if (t === 'special' || t === 'ring' || t.indexOf('charm') !== -1 || t.indexOf('spec') !== -1) return 'special';
     if (t === 'ninjutsu scroll' || t === 'scroll') return 'scroll';
     // Crystas
-    if (t.includes('crysta')) {
-      if (t.includes('weapon')) return 'crysta-weapon';
-      if (t.includes('armor')) return 'crysta-armor';
-      if (t.includes('additional') || t.includes('add ')) return 'crysta-add';
-      if (t.includes('ring') || t.includes('special')) return 'crysta-special';
+    if (t.indexOf('crysta') !== -1) {
+      if (t.indexOf('weapon') !== -1) return 'crysta-weapon';
+      if (t.indexOf('armor') !== -1) return 'crysta-armor';
+      if (t.indexOf('additional') !== -1 || t.indexOf('add ') !== -1) return 'crysta-add';
+      if (t.indexOf('ring') !== -1 || t.indexOf('special') !== -1) return 'crysta-special';
       return 'crysta-normal';
     }
     // Materials
