@@ -2,6 +2,10 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.42.1] - 2026-03-18
+### Fixed
+- **Level Cap Constraint**: Removed the hardcoded `LV_CAP` (315) limit within the EXP simulator loop. The calculator can now accurately simulate runs to future target levels (e.g., 330 or 350) without artificially stopping at 315.
+
 ## [0.42.0] - 2026-03-18
 ### Fixed
 - **EXP Calculator Precision**: Fixed a mathematical discrepancy in `calculator.js` where fractional percentages were truncated during simulated runs, ensuring 100% alignment with ToramTools logic.

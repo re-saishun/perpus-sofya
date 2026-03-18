@@ -34,7 +34,7 @@
     } else {
       remainingXP -= XPRequiredNextLv;
       lv = begin + 1;
-      while (lv < LV_CAP && getXP(lv) <= remainingXP) {
+      while (getXP(lv) <= remainingXP) {
         remainingXP -= getXP(lv);
         lv += 1;
       }
@@ -246,14 +246,14 @@
         }
         
         const row = document.createElement('tr');
-        row.innerHTML = `<td>${runs}</td><td>${lastQName}</td><td>${curLv} (${curLv >= LV_CAP ? 0 : curPct}%)</td>`;
+        row.innerHTML = `<td>${runs}</td><td>${lastQName}</td><td>${curLv} (${curPct}%)</td>`;
         tableBody.appendChild(row);
         break;
       } else {
         [curLv, curPct] = addXP(curLv, curPct, questXP);
         const untilText = document.getElementById('mqUntil').options[document.getElementById('mqUntil').selectedIndex].text;
         const row = document.createElement('tr');
-        row.innerHTML = `<td>${runs}</td><td>${untilText}</td><td>${curLv} (${curLv >= LV_CAP ? 0 : curPct}%)</td>`;
+        row.innerHTML = `<td>${runs}</td><td>${untilText}</td><td>${curLv} (${curPct}%)</td>`;
         tableBody.appendChild(row);
       }
     }
