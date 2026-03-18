@@ -670,6 +670,15 @@ ul { list-style: none; }
   line-height: 1;
 }
 
+.tag-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
 .tag.legendary { background: rgba(184,134,11,.1); color: var(--rarity-legendary); border-color: rgba(184,134,11,.2); }
 .tag.epic { background: rgba(124,58,237,.1); color: var(--rarity-epic); border-color: rgba(124,58,237,.2); }
 

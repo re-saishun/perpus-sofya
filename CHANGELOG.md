@@ -2,6 +2,11 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.39.0] - 2026-03-18
+### Fixed
+- **Item Badge Layout**: Resolved the issue where item badges (Rarity, Drop, Stats) were stacked vertically. Implemented a horizontal `.tag-row` container to ensure cards look cleaner and badges are aligned 'Event | Drop' style.
+- **Homepage Polish**: Applied the horizontal tag logic to the "Featured Item" section on the homepage for visual consistency.
+
 ## [0.38.0] - 2026-03-18
 ### Fixed
 - **Popular Monsters UI**: Refined monster cards on the homepage to match the detail modal aesthetic. Added "HP " prefix, improved tag padding, and increased font weight for a premium look.

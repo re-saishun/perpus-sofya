@@ -400,8 +400,10 @@ window.ToramSheets = (function () {
           '</div>' +
         '</div>' +
         '<div class="data-card-body">' +
-          (stats  ? '<span class="tag">Base: '   + stats  + '</span>' : '') +
-          rarityHTML +
+          '<div class="tag-row">' +
+            (stats  ? '<span class="tag">Base: '   + stats  + '</span>' : '') +
+            rarityHTML +
+          '</div>' +
           (source ? '<p class="mt-1">Source: ' + source + '</p>' : '') +
         '</div>';
       container.appendChild(el);
@@ -998,11 +1000,11 @@ window.ToramSheets = (function () {
               '<div class="spotlight-icon">' + spotIcon + '</div>' +
               '<div class="spotlight-info">' +
                 '<p class="title">' + (flevel ? 'Lv.' + flevel + ' ' : '') + fname + '</p>' +
-                '<p class="meta">' +
+                '<div class="tag-row" style="margin-bottom:0.5rem">' +
                   frarityHTML +
                   (ftype   ? '<span class="tag">' + ftype + '</span>' : '') +
                   (fstats  ? '<span class="tag green">' + fstats + '</span>' : '') +
-                '</p>' +
+                '</div>' +
                 (fdesc ? '<p class="text-muted" style="font-size:.875rem">' + fdesc + '</p>' : '') +
                 '<div class="mt-2">' +
                   '<a href="' + esc(flink) + '" class="btn btn-outline" style="font-size:.85rem;padding:.45rem 1rem">View Details →</a>' +
