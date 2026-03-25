@@ -2,6 +2,14 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.51.0] - 2026-03-25
+### Fixed
+- **Featured Stats Parsing (v3.21)**: 
+  - Fixed issue where pre-escaping caused `>` to be treated as `&gt;`, breaking conditional logic.
+  - Fixed `&gt;` text displaying inside badges.
+  - Refined `Lv.` display to correctly hide when level is "0" or empty.
+  - Improved negative stat detection by checking raw strings before escaping.
+
 ## [0.50.0] - 2026-03-25
 ### Added
 - **Advanced Featured Stats (v3.20)**: 

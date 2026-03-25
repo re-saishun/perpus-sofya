@@ -972,9 +972,9 @@ window.ToramSheets = (function () {
               var ficon   = f['Icon']              || '🗡️';
               var fimgURL = (f['ImageURL']         || '').trim();
               var ftype   = esc(f['Type']          || '');
-              var flevel  = esc(f['Level']         || '');
-              var frarity = esc(f['Rarity']        || '');
-              var fstats  = esc(f['Stats']         || '');
+              var flevel  = (f['Level']         || '').trim();
+              var frarity = (f['Rarity']        || '').trim();
+              var fstats  = (f['Stats']         || '').trim();
               var fdesc   = esc(f['Description']   || '');
               var flink   = f['Link']              || 'pages/items.html';
 
@@ -1014,6 +1014,7 @@ window.ToramSheets = (function () {
 
                   // Determine color: Red for negative stats
                   var colorClass = ' green';
+                  // Check raw string before escaping for negative sign
                   if (displayStat.indexOf(':-') !== -1 || (displayStat.indexOf(':') === -1 && displayStat.indexOf('-') === 0)) {
                     colorClass = ' red';
                   }
@@ -1030,7 +1031,7 @@ window.ToramSheets = (function () {
                 '<div class="data-card-header">' +
                   '<div class="data-card-icon" style="background:rgba(184,134,11,.1);font-size:1.8rem">' + spotIcon + '</div>' +
                   '<div>' +
-                    '<div class="data-card-title">' + (flevel ? 'Lv.' + flevel + ' ' : '') + fname + '</div>' +
+                    '<div class="data-card-title">' + (flevel && flevel !== '0' ? 'Lv.' + esc(flevel) + ' ' : '') + fname + '</div>' +
                     '<div class="tag-row" style="margin-top:4px">' +
                       frarityHTML +
                       (ftype ? '<span class="tag">' + ftype + '</span>' : '') +
