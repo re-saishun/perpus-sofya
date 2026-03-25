@@ -294,33 +294,64 @@ window.ItemModal = (function () {
     var statsEl = document.getElementById('modalStats');
     if (stats) {
       var html = '';
-      stats.split(';').forEach(function (part) {
+      var normalRows = [];
+      var condGroups = {};
+      var noSectionCond = [];
+
+      // Improved split: handle missing semicolons before '>'
+      stats.split(/;|(?=>)/).forEach(function (part) {
         part = part.trim();
         if (!part) return;
+
         if (part.charAt(0) === '>') {
-          var ci = part.indexOf(':');
+          var content = part.substring(1).trim();
+          var ci = content.indexOf(':');
           if (ci > 0) {
-            var label = part.substring(1, ci).trim();
-            var rest = part.substring(ci + 1).trim();
-            html += '<div class="stat-section-label">' + esc(label) + ':</div>';
+            var label = content.substring(0, ci).trim();
+            var rest = content.substring(ci + 1).trim();
             var sci = rest.indexOf(':');
             if (sci > 0) {
               var sn = rest.substring(0, sci).trim();
               var sv = rest.substring(sci + 1).trim();
-              var cls = sv.charAt(0) === '+' ? ' positive' : sv.charAt(0) === '-' ? ' negative' : '';
-              html += '<div class="stat-row" style="padding-left:1rem"><span class="stat-name">' + esc(sn) + '</span><span class="stat-value' + cls + '">' + esc(sv) + '</span></div>';
+              if (!condGroups[label]) condGroups[label] = [];
+              condGroups[label].push({ name: sn, value: sv });
+            } else {
+              // Level:Value?
+              noSectionCond.push({ name: label, value: rest });
             }
+          } else {
+            noSectionCond.push({ name: content, value: '' });
           }
-          return;
-        }
-        var ci2 = part.indexOf(':');
-        if (ci2 > 0) {
-          var sName = part.substring(0, ci2).trim();
-          var sVal = part.substring(ci2 + 1).trim();
-          var valCls = sVal.charAt(0) === '+' ? ' positive' : sVal.charAt(0) === '-' ? ' negative' : '';
-          html += '<div class="stat-row"><span class="stat-name">' + esc(sName) + '</span><span class="stat-value' + valCls + '">' + esc(sVal) + '</span></div>';
+        } else {
+          var ci2 = part.indexOf(':');
+          if (ci2 > 0) {
+            normalRows.push({ name: part.substring(0, ci2).trim(), value: part.substring(ci2 + 1).trim() });
+          }
         }
       });
+
+      // 1. Render Normal Stats
+      normalRows.forEach(function(r) {
+        var cls = r.value.charAt(0) === '+' ? ' positive' : r.value.charAt(0) === '-' ? ' negative' : '';
+        html += '<div class="stat-row"><span class="stat-name">' + esc(r.name) + '</span><span class="stat-value' + cls + '">' + esc(r.value) + '</span></div>';
+      });
+
+      // 2. Render Grouped Conditional Stats
+      Object.keys(condGroups).forEach(function(label) {
+        html += '<div class="stat-section-label">' + esc(label) + ':</div>';
+        condGroups[label].forEach(function(item) {
+          var cls = item.value.charAt(0) === '+' ? ' positive' : item.value.charAt(0) === '-' ? ' negative' : '';
+          html += '<div class="stat-row" style="padding-left:1rem"><span class="stat-name">' + esc(item.name) + '</span><span class="stat-value' + cls + '">' + esc(item.value) + '</span></div>';
+        });
+      });
+
+      // 3. Render No-Section Conditionals
+      noSectionCond.forEach(function(item) {
+        var cls = item.value.charAt(0) === '+' ? ' positive' : item.value.charAt(0) === '-' ? ' negative' : '';
+        html += '<div class="stat-row" style="padding-left:1rem"><span class="stat-name">' + esc(item.name) + '</span>' + 
+                (item.value ? '<span class="stat-value' + cls + '">' + esc(item.value) + '</span>' : '') + '</div>';
+      });
+
       statsEl.innerHTML = html || '<p class="text-muted">No stats available.</p>';
     } else {
       statsEl.innerHTML = '<p class="text-muted">No stats available for this item.</p>';

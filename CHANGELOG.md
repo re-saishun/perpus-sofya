@@ -2,6 +2,13 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.56.0] - 2026-03-25
+### Fixed
+- **Grouped Modal Stats (v3.26)**: 
+  - Refactored item modal stat rendering to support grouped conditional requirements.
+  - Fixed inconsistent indentation and repeating headers for mastery/bonus sections.
+  - Implemented robust regex-splitting to handle dense spreadsheet data in modals.
+
 ## [0.55.0] - 2026-03-25
 ### Fixed
 - **Robust Featured Stats Parsing (v3.25)**: 
