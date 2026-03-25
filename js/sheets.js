@@ -1033,6 +1033,12 @@ window.ToramSheets = (function () {
               var label = esc(s['Name']  || '');
               var count = parseInt(s['Count'] || '0', 10);
               var suffix = esc(s['Icon'] || '+');  // reuse Icon col as suffix
+
+              // v3.17: Store Level Cap for Calculator
+              if (label.toLowerCase().indexOf('level cap') !== -1 && count > 200) {
+                try { localStorage.setItem('toram_level_cap', count); } catch(e){}
+              }
+
               var div = document.createElement('div');
               div.className = 'stat';
               div.innerHTML =
@@ -1118,6 +1124,9 @@ window.ToramSheets = (function () {
     loadLatest   : loadLatest,
     loadHomepage : loadHomepage,
     fetchSheet   : fetchSheet,
+    getLevelCap:    function() { 
+      return parseInt(localStorage.getItem('toram_level_cap') || '315', 10); 
+    },
     parseCSV     : parseCSV,
     esc          : esc,
     resolveIcon  : resolveIcon,

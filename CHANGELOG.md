@@ -2,6 +2,12 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.47.0] - 2026-03-25
+### Added
+- **Dynamic Level Cap (MQ Calculator)**: The calculator now automatically fetches the latest Level Cap from the Google Sheets `Homepage` tab (Section: `stat`, Name: `Level Cap`).
+- **Auto-Sync Persistence**: Once the Homepage is loaded, the Level Cap is stored in `localStorage` to ensure the calculator remains updated even on direct visits.
+- **UI Synchronization**: The "Target Level" input in the calculator now dynamically adjusts its maximum value and default setting based on the current in-game cap.
+
 ## [0.46.0] - 2026-03-25
 ### Added
 - **Custom Icon Assets**: Integrated official `quest_ico.png`, `pets_ico.png`, and `fee_ico.png` across the entire platform.

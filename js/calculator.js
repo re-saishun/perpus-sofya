@@ -6,7 +6,10 @@
 (function() {
   'use strict';
 
-  const LV_CAP = 315;
+  let LV_CAP = 315;
+  if (window.ToramSheets && typeof window.ToramSheets.getLevelCap === 'function') {
+    LV_CAP = window.ToramSheets.getLevelCap();
+  }
   let cachedQuestData = [];
 
   // Formula Reference: https://toramtools.github.io/xp.html
@@ -44,6 +47,15 @@
   }
 
   function initCalculator() {
+    // Sync UI with dynamic cap
+    const targetInp = document.getElementById('targetLvl');
+    const currentInp = document.getElementById('currentLvl');
+    if (targetInp) {
+        targetInp.max = LV_CAP;
+        if (parseInt(targetInp.value) === 315 || !targetInp.value) targetInp.value = LV_CAP;
+    }
+    if (currentInp) currentInp.max = LV_CAP;
+
     // Event listeners
     const inputs = ['currentLvl', 'currentPct', 'targetLvl', 'mqFrom', 'mqUntil', 'skipVenena', 'multipleMq'];
     inputs.forEach(id => {
