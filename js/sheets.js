@@ -766,6 +766,10 @@ window.ToramSheets = (function () {
       card.dataset.petAct5    = (get(['Act5', 'Act 5'])).trim();
       card.dataset.petColor   = (get(['ColorInfo', 'Color Info'])).trim();
 
+      // Event detection for specialty highlighting
+      var isEvent = spawnAt.toLowerCase().includes('event');
+      var locationHTML = '<span class="tag ' + (isEvent ? 'event' : 'info') + '">📍 ' + esc(spawnAt) + '</span>';
+
       card.innerHTML =
         '<div class="data-card-header">' +
           '<div class="data-card-icon">' + avatarHTML + '</div>' +
@@ -775,7 +779,9 @@ window.ToramSheets = (function () {
           '</div>' +
         '</div>' +
         '<div class="data-card-body">' +
-          '<div class="info-item" style="font-size:0.85rem;color:var(--text-secondary)">📍 ' + esc(spawnAt) + '</div>' +
+          '<div class="tag-row">' +
+            locationHTML +
+          '</div>' +
         '</div>';
 
       container.appendChild(card);
