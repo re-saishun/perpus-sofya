@@ -768,9 +768,11 @@ window.ToramSheets = (function () {
 
       // Event detection for specialty highlighting
       var isEvent = spawnAt.toLowerCase().includes('event');
-      // Grey/Greyish for non-event Map (standard tag in ToramDB is often info/cyan, but grey/muted fits 'grey' request)
-      var tagClass = isEvent ? 'tag event' : 'tag';
-      var tagStyle = !isEvent ? 'background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0;' : '';
+      // Style override for consistency
+      var tagClass = 'tag';
+      var tagStyle = isEvent 
+        ? 'background: rgba(212, 122, 10, 0.12); color: #b45309; border: 1px solid rgba(212, 122, 10, 0.2);' 
+        : 'background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0;';
 
       card.title = "Click for details";
       card.innerHTML =

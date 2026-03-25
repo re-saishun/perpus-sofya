@@ -2,6 +2,10 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.44.1] - 2026-03-25
+### Fixed
+- **Pet Event Highlighting**: Forced the "Spawn At" tags to display as **Orange** for events and **Grey** for standard maps using direct inline styling, ensuring a consistent premium look regardless of CSS caching.
+
 ## [0.44.0] - 2026-03-25
 ### Added
 - **Pet Database Modernization**: Completely overhauled the Pet page from a legacy table to a modern, responsive **Data Grid** layout.
