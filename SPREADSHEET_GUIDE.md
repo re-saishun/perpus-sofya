@@ -398,7 +398,7 @@ Item spotlight/unggulan yang ditampilkan di homepage.
 | Type        | Jenis item (Sword, Boss, dll)                            |
 | Level       | Level item. **Kosongkan jika tidak ingin menampilkan label "Lv."** |
 | Rarity      | `Event` (Emas/Oranye) atau `Non-Event` (Abu-abu).        |
-| Stats       | Stat item. **Pemisah `;`**. <br>🔹 Gunata `>` untuk stat kondisional (misal: `>Staff:MATK+10%`). <br>🔹 Otomatis menjadi **Merah** jika stat negatif (misal: `Dodge:-10`). |
+| Stats       | Stat item. **Pemisah `;`**. <br>🔹 Gunakan `>` untuk stat kondisional (Modal-Style). <br>🔹 **Format:** `>Kategori:Stat:Value` (misal: `>Staff:MATK:+10%`). <br>🔹 **Grouping:** Sistem otomatis mengelompokkan stat dengan kategori sama di bawah satu judul (misal: `Staff: MATK+10, AGI+10`). <br>🔹 **Robust:** Marker `>` otomatis dideteksi meskipun lupa titik koma. <br>🔹 Otomatis menjadi **Merah** jika stat negatif (misal: `Dodge:-10`). |
 | Description | Deskripsi singkat                                        |
 
 #### 🔹 Section: `stat`

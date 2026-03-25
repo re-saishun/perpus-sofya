@@ -48,6 +48,10 @@ Developed by **No! I'm Failing!**
 - ✅ **Search Debouncing** — Pencarian responsif tanpa lag (jeda 300ms) untuk database besar
 - ✅ **Monster Compare** — Tabel perbandingan stats (HP/Element) untuk semua tingkat kesulitan di dalam satu popup
 - ✅ **Linked Drops** — Item drop di modal monster bisa diklik untuk langsung melihat detail item tersebut
+- ✅ **Modernized Featured Showcase** — Spotlight item dengan grouping stat kondisional, limit badge otomatis (`+X more`), dan layout premium.
+- ✅ **Grouped Modal Stats** — Detail item di modal kini terorganisir per kategori (Mastery/Requirement) dengan indentasi rapi.
+- ✅ **Robust Stat Parsing** — Deteksi marker stat pintar yang toleran terhadap kesalahan pengetikan di spreadsheet.
+- ✅ **Mobile UI Optimization** — Menu navigasi dan icon quest/pet yang lebih konsisten di tampilan mobile.
 - ✅ Animated counter stats di hero
 - ✅ Soft gray-white light theme — zero external CSS dependency
 - ✅ **Detail modal untuk Pets** — klik baris pet untuk lihat detail lengkap (Normal Magic, Support, Act 1–5, Color Info)
