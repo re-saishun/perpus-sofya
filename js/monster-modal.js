@@ -232,15 +232,20 @@ window.MonsterModal = (function () {
     try {
       var overlay = document.getElementById('monsterModal');
       if (!overlay) return;
-      buildModalHTML();
+      
+      // Only build HTML if it's missing or we're starting fresh
+      if (!document.getElementById('monModalName')) {
+        buildModalHTML();
+      }
+      
       overlay.classList.add('open');
       document.body.style.overflow = 'hidden';
 
       var group = initialGroup || [];
       
-      // If no initial group, try searching in existing state
+      // If no initial group, try searching in existing state — ONLY IF we are on the monsters page!
       if (!group.length) {
-        if (window.ToramSheets && window.ToramSheets.dataState && window.ToramSheets.dataState.fullData) {
+        if (window.ToramSheets && window.ToramSheets.dataState && window.ToramSheets.dataState.fullData && window.ToramSheets.dataState.pageType === 'monsters') {
           var data = window.ToramSheets.dataState.fullData;
           group = data.filter(function(r) { 
             var rname = (r['Name'] || '').trim().toLowerCase();
