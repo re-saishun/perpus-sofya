@@ -2,6 +2,13 @@
 
 Semua perubahan penting pada proyek ToramDB dicatat di sini.
 
+## [0.54.0] - 2026-03-25
+### Added
+- **Grouped Conditional Stats (v3.24)**: 
+  - Added support for grouping multiple stats under the same section label (e.g., Staff: Stat1, Stat2).
+  - Implemented multi-group support (e.g., separate sections for Staff and Knuckle in the same card).
+  - Cleaned up rendering to avoid repeating category names for every line.
+
 ## [0.53.0] - 2026-03-25
 ### Added
 - **Modal-Style Conditional Stats (v3.23)**: 

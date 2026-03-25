@@ -1026,39 +1026,47 @@ window.ToramSheets = (function () {
                     '</div>';
                 }
 
-                // 2. Conditional Stats Section (Modal Style)
+                // 2. Conditional Stats Section (Modal Style) - Grouped
                 if (condBadges.length) {
-                  var condHTML = '';
+                  var groups = {};
+                  var noSection = [];
+                  
                   condBadges.forEach(function(cb) {
                     var parts = cb.split(':');
                     if (parts.length >= 3) {
-                      // >Section:Name:Value
-                      var section = parts[0].trim();
-                      var sName   = parts[1].trim();
-                      var sValue  = parts[2].trim();
-                      var color   = (sValue.charAt(0) === '-' || sValue.indexOf(':-') !== -1) ? 'negative' : 'positive';
-                      
-                      condHTML += '<div class="f-cond-group">' +
-                        '<div class="f-cond-label">' + esc(section) + ':</div>' +
-                        '<div class="f-cond-row">' +
-                          '<span>' + esc(sName) + '</span>' +
-                          '<span class="f-cond-value ' + color + '">' + esc(sValue) + '</span>' +
-                        '</div>' +
-                      '</div>';
+                      var sec = parts[0].trim();
+                      if (!groups[sec]) groups[sec] = [];
+                      groups[sec].push({ name: parts[1].trim(), value: parts[2].trim() });
                     } else if (parts.length === 2) {
-                      // >Name:Value
-                      var sName  = parts[0].trim();
-                      var sValue = parts[1].trim();
-                      var color  = (sValue.charAt(0) === '-' || sValue.indexOf(':-') !== -1) ? 'negative' : 'positive';
-                      
-                      condHTML += '<div class="f-cond-row">' +
-                        '<span>' + esc(sName) + '</span>' +
-                        '<span class="f-cond-value ' + color + '">' + esc(sValue) + '</span>' +
-                      '</div>';
+                      noSection.push({ name: parts[0].trim(), value: parts[1].trim() });
                     } else {
-                      condHTML += '<div class="f-cond-row"><span>' + esc(cb) + '</span></div>';
+                      noSection.push({ name: cb, value: '' });
                     }
                   });
+
+                  var condHTML = '';
+                  // Render Grouped Sections
+                  Object.keys(groups).forEach(function(sec) {
+                    condHTML += '<div class="f-cond-group">' +
+                      '<div class="f-cond-label">' + esc(sec) + ':</div>';
+                    groups[sec].forEach(function(item) {
+                      var color = (item.value.charAt(0) === '-' || item.value.indexOf(':-') !== -1) ? 'negative' : 'positive';
+                      condHTML += '<div class="f-cond-row">' +
+                        '<span>' + esc(item.name) + '</span>' +
+                        '<span class="f-cond-value ' + color + '">' + esc(item.value) + '</span>' +
+                      '</div>';
+                    });
+                    condHTML += '</div>';
+                  });
+                  // Render ungrouped stats
+                  noSection.forEach(function(item) {
+                    var color = (item.value.charAt(0) === '-' || item.value.indexOf(':-') !== -1) ? 'negative' : 'positive';
+                    condHTML += '<div class="f-cond-row">' +
+                      '<span>' + esc(item.name) + '</span>' +
+                      (item.value ? '<span class="f-cond-value ' + color + '">' + esc(item.value) + '</span>' : '') +
+                    '</div>';
+                  });
+
                   fstatsHTML += '<div class="conditional-section">' + condHTML + '</div>';
                 }
               }
