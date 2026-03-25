@@ -768,20 +768,25 @@ window.ToramSheets = (function () {
 
       // Event detection for specialty highlighting
       var isEvent = spawnAt.toLowerCase().includes('event');
-      var locationHTML = '<span class="tag ' + (isEvent ? 'event' : 'info') + '">📍 ' + esc(spawnAt) + '</span>';
+      // Grey/Greyish for non-event Map (standard tag in ToramDB is often info/cyan, but grey/muted fits 'grey' request)
+      var tagClass = isEvent ? 'tag event' : 'tag';
+      var tagStyle = !isEvent ? 'background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0;' : '';
 
+      card.title = "Click for details";
       card.innerHTML =
         '<div class="data-card-header">' +
           '<div class="data-card-icon">' + avatarHTML + '</div>' +
           '<div>' +
             '<div class="data-card-title">' + esc(name) + '</div>' +
-            '<div class="data-card-subtitle">Lv.' + esc(level) + '</div>' +
+            '<div class="data-card-subtitle">Lv. ' + esc(level) + '</div>' +
           '</div>' +
         '</div>' +
         '<div class="data-card-body">' +
+          '<div style="font-size:0.75rem; margin-bottom:4px; opacity:0.7; font-weight:600">Spawn At :</div>' +
           '<div class="tag-row">' +
-            locationHTML +
+            '<span class="' + tagClass + '" style="' + tagStyle + '">' + esc(spawnAt) + '</span>' +
           '</div>' +
+          '<div style="font-size:0.7rem; margin-top:10px; opacity:0.5; font-style:italic">Click for details</div>' +
         '</div>';
 
       container.appendChild(card);
