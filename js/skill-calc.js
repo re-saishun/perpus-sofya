@@ -198,29 +198,36 @@
         const svg = document.getElementById(`svg-${treeId}`);
         if (!svg) return;
 
-        // Half of node size (60px) to draw lines from center of each node
-        const OFFSET = 30;
+        // Node is 64x64 with CSS transform: translate(-50%, -50%)
+        // So the node's visual center is at (x, y)
+        // Top edge center = (x, y - 32)
+        // Bottom edge center = (x, y + 32)
 
         svg.innerHTML = '';
         tree.skills.forEach(skill => {
             skill.reqIds.forEach(reqId => {
                 const parent = tree.skills.find(s => s.id === reqId);
-                if (parent) {
-                    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                if (!parent) return;
 
-                    // Center coordinates
-                    const x1 = parent.x + OFFSET;
-                    const y1 = parent.y + OFFSET;
-                    const x2 = skill.x + OFFSET;
-                    const y2 = skill.y + OFFSET;
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-                    // Elbow (L-shape): Horizontal first, then Vertical
-                    const d = `M ${x1} ${y1} L ${x2} ${y1} L ${x2} ${y2}`;
+                // Parent: start from bottom edge center
+                const x1 = parent.x;
+                const y1 = parent.y + 32;
 
-                    path.setAttribute("d", d);
-                    path.setAttribute("class", (levels[skill.id] || 0) > 0 ? 'path-active' : 'path-inactive');
-                    svg.appendChild(path);
-                }
+                // Child: end at top edge center
+                const x2 = skill.x;
+                const y2 = skill.y - 32;
+
+                // Midpoint Y for the horizontal segment
+                const midY = y1 + (y2 - y1) / 2;
+
+                // Path: Down from parent → Horizontal → Down to child
+                const d = `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`;
+
+                path.setAttribute("d", d);
+                path.setAttribute("class", (levels[skill.id] || 0) > 0 ? 'path-active' : 'path-inactive');
+                svg.appendChild(path);
             });
         });
     }
