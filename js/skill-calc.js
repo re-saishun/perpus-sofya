@@ -198,15 +198,25 @@
         const svg = document.getElementById(`svg-${treeId}`);
         if (!svg) return;
 
+        // Half of node size (60px) to draw lines from center of each node
+        const OFFSET = 30;
+
         svg.innerHTML = '';
         tree.skills.forEach(skill => {
             skill.reqIds.forEach(reqId => {
                 const parent = tree.skills.find(s => s.id === reqId);
                 if (parent) {
                     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                    // Elbow logic: Vertical then Horizontal or Horizontal then Vertical.
-                    // For Toram game style, it usually goes Horizontal then Vertical (L-shape).
-                    const d = `M ${parent.x} ${parent.y} L ${skill.x} ${parent.y} L ${skill.x} ${skill.y}`;
+
+                    // Center coordinates
+                    const x1 = parent.x + OFFSET;
+                    const y1 = parent.y + OFFSET;
+                    const x2 = skill.x + OFFSET;
+                    const y2 = skill.y + OFFSET;
+
+                    // Elbow (L-shape): Horizontal first, then Vertical
+                    const d = `M ${x1} ${y1} L ${x2} ${y1} L ${x2} ${y2}`;
+
                     path.setAttribute("d", d);
                     path.setAttribute("class", (levels[skill.id] || 0) > 0 ? 'path-active' : 'path-inactive');
                     svg.appendChild(path);
