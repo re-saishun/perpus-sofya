@@ -191,19 +191,20 @@ body {
 .node-icon-wrapper {
     width: 60px;
     height: 60px;
-    background: #ffffff;
-    border: 2px solid var(--border-color);
+    /* Dark background like game style (Image 3) */
+    background: radial-gradient(circle, #333333 0%, #0a0a0a 100%);
+    border: 2px solid #555555;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
 .skill-node.active .node-icon-wrapper {
     border-color: var(--accent-gold);
-    box-shadow: 0 0 15px rgba(176, 141, 35, 0.15);
+    box-shadow: 0 0 15px rgba(176, 141, 35, 0.4);
 }
 
 .node-icon {
@@ -220,6 +221,9 @@ body {
     color: var(--text-muted);
     font-weight: 800;
     font-size: 13px;
+    background: var(--bg-card); /* Add small bg for readability over lines */
+    padding: 0 4px;
+    border-radius: 4px;
 }
 
 .skill-node.active .node-level {
@@ -228,13 +232,18 @@ body {
 
 .node-label {
     position: absolute;
-    top: -24px;
+    top: -32px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--text-main);
-    white-space: nowrap;
+    width: 120px; /* Allow wide label */
+    line-height: 1.2;
+    text-align: center;
+    /* Fix overlapping for long names (Image 2) */
+    white-space: normal; 
+    word-wrap: break-word;
 }
 
 /* --- SVG Connections --- */
@@ -309,5 +318,12 @@ body {
 .hidden { display: none; }
 @media (max-width: 600px) {
     .level-controls { width: 95%; justify-content: space-around; }
-    .sp-title { display: none; }
+    /* Fix missing text on mobile (Image 1) */
+    .sp-title { 
+        display: block !important; 
+        font-size: 0.8rem;
+    }
+    .sp-global-header {
+        padding: 8px 12px;
+    }
 }
