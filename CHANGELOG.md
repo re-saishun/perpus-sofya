@@ -1,6 +1,15 @@
 # ToramDB Skill Simulator Changelog
 
-### v0.63.1 (Latest)
+### v0.64.0 (Latest)
+- **File Restructuring**: Renamed all `skill-calc` files to `skill-simulator` (`skill-simulator.html`, `skill-simulator.js`, `skill-simulator.css`).
+- **Beta Data Integration**: Data source moved to `js/skill-simulator-data.js` (copied from `beta/skill_simulator_data.js`).
+- **Connection Lines Fixed**: Ported exact elbow logic from beta simulator — Vertical first, then Horizontal. Color changed to cyan `#00FFFF` (inactive) and gold `#FFD700` (active).
+- **Event Skills Hidden**: Trees with `visible: false` (Event Skills) are now automatically skipped.
+- **Navigation Updated**: All 10 pages updated with Skill Simulator link in "Other Tools" dropdown + mobile menu.
+- **Calculator Footer**: Added missing footer section to `calculator.html`.
+- **Terms Nav Updated**: Added "Other Tools" dropdown to `terms.html`.
+
+### v0.63.1
 - **Dynamic Height Logic**: Skill tree containers now automatically adjust their height based on the vertical position of skills, eliminating excessive whitespace at the bottom.
 - **Added Spreadsheet Guide**: Created `SKILL_TREE_GUIDE.md` with detailed instructions on formatting data for the simulator.
 - **Improved Alignment**: Refined pixel offsets for node labels and levels.
