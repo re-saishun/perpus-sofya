@@ -275,6 +275,10 @@
                 return;
             }
 
+            // Grouping logic
+            const treeMap = {};
+            const parsedTrees = [];
+
             // Helper to find column values safely (ignoring header typos like trailing spaces)
             const getVal = (row, keys) => {
                 for (let k of keys) {
