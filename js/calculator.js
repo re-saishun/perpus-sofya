@@ -148,7 +148,7 @@
           let total = parseInt((val || '0').toString().replace(/,/g, ''));
           const name = (q['Name'] || q['name'] || '').toLowerCase();
           const boss = (q['Boss'] || q['boss'] || '').toLowerCase();
-          if ((name.includes('the battle to recapture eldenbaum') || boss.includes('venena meta coenubia')) && !skipVenena) {
+          if ((name.indexOf('the battle to recapture eldenbaum') !== -1 || boss.indexOf('venena meta coenubia') !== -1) && !skipVenena) {
             total += 12500000;
           }
           return total;
@@ -239,7 +239,7 @@
           let exp = parseInt((val || '0').toString().replace(/,/g, ''));
           const name = (q['Name'] || q['name'] || '').toLowerCase();
           const boss = (q['Boss'] || q['boss'] || '').toLowerCase();
-          if ((name.includes('the battle to recapture eldenbaum') || boss.includes('venena meta coenubia')) && !skipVenena) {
+          if ((name.indexOf('the battle to recapture eldenbaum') !== -1 || boss.indexOf('venena meta coenubia') !== -1) && !skipVenena) {
             exp += 12500000;
           }
           

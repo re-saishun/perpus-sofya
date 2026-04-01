@@ -685,20 +685,17 @@ window.ToramSheets = (function () {
               if (!boss || boss === '-') return '<span style="opacity:0.6;">-</span>';
               // Split by &, comma, or "and" (case-insensitive)
               var parts = boss.split(/&|,|\band\b/i);
-              return parts.map(function(p, i) {
+              var validParts = [];
+              parts.forEach(function(p) {
                 var name = p.trim();
-                if (!name) return '';
-                var link = '<a href="javascript:void(0)" class="boss-link" data-boss-name="' + name + '">' + name + '</a>';
-                // Add separator if not the last item
-                var sep = '';
-                if (i < parts.length - 1) {
-                  // Try to preserve original separator if it was '&' or ','
-                  if (boss.includes('&')) sep = ' & ';
-                  else if (boss.includes(',')) sep = ', ';
-                  else sep = ' & ';
-                }
-                return link + sep;
-              }).join('');
+                if (name) validParts.push(name);
+              });
+              
+              var htmlParts = validParts.map(function(name) {
+                return '<a href="javascript:void(0)" class="boss-link" data-boss-name="' + name + '">' + name + '</a>';
+              });
+              
+              return htmlParts.join(' <span style="opacity:0.6; margin:0 2px;">&amp;</span> ');
             })() +
           '</div>' +
           (desc && desc !== '-' ? 
@@ -771,7 +768,7 @@ window.ToramSheets = (function () {
       card.dataset.petColor   = (get(['ColorInfo', 'Color Info'])).trim();
 
       // Event detection for specialty highlighting
-      var isEvent = spawnAt.toLowerCase().includes('event');
+      var isEvent = spawnAt.toLowerCase().indexOf('event') !== -1;
       // Style override for consistency
       var tagClass = 'tag';
       var tagStyle = isEvent 
