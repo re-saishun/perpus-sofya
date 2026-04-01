@@ -265,6 +265,12 @@ window.MonsterModal = (function () {
       }
 
       if (!group.length) {
+        // Guard clause: If we've already fetched the sheet and it's still not found, STOP to prevent infinite loop crash!
+        if (sheetsCache) {
+            populate(null);
+            return;
+        }
+        
         // Last attempt: fetch sheet
         var sheetName = (window.ToramSheets && window.ToramSheets.CONFIG.SHEETS.monsters) || 'Monsters';
         if (window.ToramSheets && window.ToramSheets.fetchSheet) {
