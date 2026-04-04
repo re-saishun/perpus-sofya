@@ -1,6 +1,10 @@
 # ToramDB Skill Simulator Changelog
 
-### v0.66.2 (Latest)
+### v0.66.3 (Latest)
+- **Universal Branching Support**: Removed media query restrictions for enhancement paths. Mobile users can now see the same professional branching tree layout as desktop users, with built-in horizontal scrolling for wide paths.
+- **Mobile Usability Refinement**: Added smooth-scrolling containers for mobile trees, ensuring that complex connections remain neat and architectural without breaking the page layout on narrow screens.
+
+### v0.66.2
 - **Ultra-Robust Visual Connectors**: Overhauled the branching tree CSS to use a child-relative layout. Horizontal lines now perfectly align with the center of each item card regardless of text length or quantity, ensuring a flawless professional look at any resolution.
 - **Modal Popup Expansion**: Integrated the branching enhancement logic into the Item Detail Modal. Users can now view complex, non-linear upgrade trees directly within the search result popups.
 - **Enhanced Data Normalization**: Upgraded the regex-based parser to handle various delimiter types (standard and full-width semicolons `；`) and bracket formats, making the database more resilient to spreadsheet formatting variations.
