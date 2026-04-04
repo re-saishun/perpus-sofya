@@ -255,16 +255,29 @@
           '</div>';
       };
 
-      // DETECTION: Check for square brackets [Path 1] [Path 2] first, then fall back to pipes
+      // SUPER ROBUST DETECTION & NORMALIZATION
+      // 1. Convert all variations to standard chars
+      var cleanRec = rec.replace(/[｜｜]/g, '|')
+                        .replace(/[［［]/g, '[')
+                        .replace(/[］］]/g, ']')
+                        .replace(/&lbrack;/g, '[')
+                        .replace(/&rbrack;/g, ']')
+                        .replace(/&#91;/g, '[')
+                        .replace(/&#93;/g, ']');
+
       var rawPaths = [];
-      var bracketMatches = rec.match(/\[([^\]]+)\]/g);
-      
-      if (bracketMatches && bracketMatches.length > 1) {
-        rawPaths = bracketMatches.map(function(m) {
-          return m.replace(/[\[\]]/g, '').trim();
+      // 2. Bracket Split: look for the gap between brackets: ] [ or ][
+      if (cleanRec.indexOf('[') !== -1 && cleanRec.indexOf(']') !== -1) {
+        rawPaths = cleanRec.split(/\]\s*\[/).map(function(p) {
+          return p.replace(/[\[\]]/g, '').trim(); 
         }).filter(Boolean);
-      } else {
-        rawPaths = rec.split(/[|｜]/).map(function (s) { return s.trim(); }).filter(Boolean);
+      } 
+      
+      // 3. Fallback to Pipe Split:
+      if (rawPaths.length <= 1) {
+        rawPaths = cleanRec.split(/[|｜]/).map(function (s) { 
+          return s.replace(/[\[\]]/g, '').trim(); 
+        }).filter(Boolean);
       }
 
       var pathHTML = '<div class="enhancement-tree">';
@@ -273,21 +286,20 @@
         // BRANCHING LOGIC
         // 1. Parse all paths into arrays of steps
         var processedPaths = rawPaths.map(function(p) {
-          return p.split(/[>;;]/).map(function(s) { return s.trim(); }).filter(Boolean);
+          return p.split(/[>;;]/).map(function(s) { 
+            return s.replace(/[\[\]]/g, '').trim(); 
+          }).filter(Boolean);
         });
 
         // 2. Identify common root (assume first item of first path as root candidate)
-        var rootName = processedPaths[0][0];
-        var allShareRoot = processedPaths.every(function(p) { 
+        var rootName = (processedPaths[0] && processedPaths[0][0]) || '';
+        var allShareRoot = rootName && processedPaths.every(function(p) { 
           return p.length > 0 && p[0].toLowerCase() === rootName.toLowerCase(); 
         });
 
         if (allShareRoot) {
-          // Render Shared Root Node
           pathHTML += renderNode(rootName, 'base', name);
           pathHTML += '<div class="enhancement-arrow">↓</div>';
-          
-          // Remove root from each path for branching display
           processedPaths.forEach(function(p) { p.shift(); });
         }
 
@@ -298,9 +310,7 @@
             pathHTML += '<div class="enhancement-branch">';
             steps.forEach(function(sName, idx) {
               var rank = (idx === steps.length - 1) ? 'max' : 'up';
-              // If we didn't have a shared root, the first item of each branch might be 'base'
               if (!allShareRoot && idx === 0) rank = 'base';
-
               pathHTML += renderNode(sName, rank, name);
               if (idx < steps.length - 1) pathHTML += '<div class="enhancement-arrow">↓</div>';
             });
@@ -310,12 +320,13 @@
         pathHTML += '</div>';
       } else {
         // LINEAR LOGIC
-        var steps = rec.split(/[>;|｜]/).map(function (s) { return s.trim(); }).filter(Boolean);
+        var steps = cleanRec.split(/[>;|｜]/).map(function (s) { 
+          return s.replace(/[\[\]]/g, '').trim(); 
+        }).filter(Boolean);
         steps.forEach(function (stepName, idx) {
           var rank = "up";
           if (idx === 0) rank = "base";
           else if (idx === steps.length - 1 && steps.length > 1) rank = "max";
-          
           pathHTML += renderNode(stepName, rank, name);
           if (idx < steps.length - 1) pathHTML += '<div class="enhancement-arrow">↓</div>';
         });
