@@ -1009,20 +1009,26 @@ window.ToramSheets = (function () {
                   if (st.charAt(0) === '>') {
                     condBadges.push(st.substring(1).trim());
                   } else {
-                    var colorClass = (st.indexOf(':-') !== -1 || (st.indexOf(':') === -1 && st.indexOf('-') === 0)) ? ' red' : ' green';
-                    normalBadges.push('<span class="tag' + colorClass + '">' + esc(st) + '</span>');
+                    normalBadges.push(st);
                   }
                 });
 
-                // 1. Normal Stats with limit
-                var maxNormal = 6;
-                var shownNormal = normalBadges.slice(0, maxNormal);
-                var overflow = normalBadges.length - maxNormal;
-                
-                if (shownNormal.length) {
-                  fstatsHTML += '<div class="tag-row mb-1">' + shownNormal.join('') + 
-                    (overflow > 0 ? '<span class="stats-more">+' + overflow + ' more</span>' : '') + 
-                    '</div>';
+                // 1. Normal Stats List
+                if (normalBadges.length) {
+                  var listHTML = '';
+                  normalBadges.forEach(function(stRaw) {
+                    // stRaw matches the string from the split, e.g. "ATK:+350"
+                    var parts = stRaw.split(':');
+                    var label = parts[0].trim();
+                    var value = parts.length > 1 ? parts.slice(1).join(':').trim() : '';
+                    var color = (value.charAt(0) === '-' || value.indexOf('-') === 0) ? 'negative' : 'positive';
+                    
+                    listHTML += '<div class="f-stat-row">' +
+                      '<span class="f-stat-label">' + esc(label) + '</span>' +
+                      (value ? '<span class="f-stat-value ' + color + '">' + esc(value) + '</span>' : '') +
+                      '</div>';
+                  });
+                  fstatsHTML += '<div class="f-stats-list mb-2">' + listHTML + '</div>';
                 }
 
                 // 2. Conditional Stats Section (Modal Style) - Grouped
