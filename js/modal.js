@@ -503,26 +503,41 @@ window.ItemModal = (function () {
           }).filter(Boolean);
         });
 
-        var rootName = (processedPaths[0] && processedPaths[0][0]) || '';
-        var allShareRoot = rootName && processedPaths.every(function(p) { 
-          return p.length > 0 && p[0].toLowerCase() === rootName.toLowerCase(); 
-        });
-
-        if (allShareRoot) {
-          pathHTML += renderNodeLocal(rootName, 'base', name);
-          pathHTML += '<div class="enhancement-arrow" style="margin-bottom:-0.2rem">↓</div>';
-          processedPaths.forEach(function(p) { p.shift(); });
+        // Longest Common Prefix (LCP) Stem Merging
+        var sharedPrefix = [];
+        while (processedPaths.length > 0 && processedPaths[0].length > 0) {
+          var candidate = processedPaths[0][0];
+          var allMatch = processedPaths.every(function(p) {
+            return p.length > 0 && p[0].toLowerCase() === candidate.toLowerCase();
+          });
+          if (allMatch) {
+            sharedPrefix.push(candidate);
+            processedPaths.forEach(function(p) { p.shift(); });
+          } else {
+            break;
+          }
         }
+
+        // Render Merged Stem
+        sharedPrefix.forEach(function(sName, idx) {
+          var rank = (idx === 0) ? 'base' : 'up';
+          pathHTML += renderNodeLocal(sName, rank, name);
+          pathHTML += '<div class="enhancement-arrow" style="margin-bottom:-0.2rem">↓</div>';
+        });
 
         pathHTML += '<div class="enhancement-branches">';
         processedPaths.forEach(function(pSteps) {
           if (pSteps.length > 0) {
             pathHTML += '<div class="enhancement-branch">';
             pSteps.forEach(function(sName, idx) {
-              var rank = (idx === pSteps.length - 1) ? 'max' : 'up';
-              if (!allShareRoot && idx === 0) rank = 'base';
+              // If we have a shared prefix, everything here is at least 'up' rank (or 'max')
+              // If NO shared prefix, the first element of each branch is 'base'
+              var isLast = (idx === pSteps.length - 1);
+              var rank = isLast ? 'max' : 'up';
+              if (sharedPrefix.length === 0 && idx === 0) rank = 'base';
+              
               pathHTML += renderNodeLocal(sName, rank, name);
-              if (idx < pSteps.length - 1) pathHTML += '<div class="enhancement-arrow">↓</div>';
+              if (!isLast) pathHTML += '<div class="enhancement-arrow">↓</div>';
             });
             pathHTML += '</div>';
           }

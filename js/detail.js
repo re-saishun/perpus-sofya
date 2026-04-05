@@ -291,28 +291,39 @@
           }).filter(Boolean);
         });
 
-        // 2. Identify common root (assume first item of first path as root candidate)
-        var rootName = (processedPaths[0] && processedPaths[0][0]) || '';
-        var allShareRoot = rootName && processedPaths.every(function(p) { 
-          return p.length > 0 && p[0].toLowerCase() === rootName.toLowerCase(); 
-        });
-
-        if (allShareRoot) {
-          pathHTML += renderNode(rootName, 'base', name);
-          pathHTML += '<div class="enhancement-arrow">↓</div>';
-          processedPaths.forEach(function(p) { p.shift(); });
+        // 2. Longest Common Prefix (LCP) Stem Merging
+        var sharedPrefix = [];
+        while (processedPaths.length > 0 && processedPaths[0].length > 0) {
+          var candidate = processedPaths[0][0];
+          var allMatch = processedPaths.every(function(p) {
+            return p.length > 0 && p[0].toLowerCase() === candidate.toLowerCase();
+          });
+          if (allMatch) {
+            sharedPrefix.push(candidate);
+            processedPaths.forEach(function(p) { p.shift(); });
+          } else {
+            break;
+          }
         }
 
-        // 3. Render Branching Container
+        // 3. Render Merged Stem
+        sharedPrefix.forEach(function(sName, idx) {
+          var rank = (idx === 0) ? 'base' : 'up';
+          pathHTML += renderNode(sName, rank, name);
+          pathHTML += '<div class="enhancement-arrow">↓</div>';
+        });
+
+        // 4. Render Branching Container
         pathHTML += '<div class="enhancement-branches">';
         processedPaths.forEach(function(steps) {
           if (steps.length > 0) {
             pathHTML += '<div class="enhancement-branch">';
             steps.forEach(function(sName, idx) {
-              var rank = (idx === steps.length - 1) ? 'max' : 'up';
-              if (!allShareRoot && idx === 0) rank = 'base';
+              var isLast = (idx === steps.length - 1);
+              var rank = isLast ? 'max' : 'up';
+              if (sharedPrefix.length === 0 && idx === 0) rank = 'base';
               pathHTML += renderNode(sName, rank, name);
-              if (idx < steps.length - 1) pathHTML += '<div class="enhancement-arrow">↓</div>';
+              if (!isLast) pathHTML += '<div class="enhancement-arrow">↓</div>';
             });
             pathHTML += '</div>';
           }

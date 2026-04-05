@@ -1,6 +1,9 @@
 # ToramDB Skill Simulator Changelog
 
-### v0.66.4 (Latest)
+### v0.66.5 (Latest)
+- **Enhancement Tree Optimization**: Implemented Longest Common Prefix (LCP) algorithm for multi-level stem merging. This ensures that upgrade paths sharing multiple common preceding steps (e.g., Grass Dragon Yelb -> Wandering Wheel) are rendered as a single vertical path before branching, eliminating visual clutter and duplicate nodes.
+
+### v0.66.4
 - **Skill Simulator Icon Modernization**: Replaced generic control buttons with premium custom icons (`reset_ico` and `collapse_ico`), specifically optimized for the Toram Online aesthetic.
 - **Precision Icon Mapping**: Enhanced the keyword detection engine with case-insensitive word boundaries. This fixes a visual bug where items with "Cores" in their name were incorrectly identified as "Ore".
 - **Localized Blacksmith Icon**: Moved the craft penmanship/anvil icon from global item cards solely to the **Obtain** tab in the detail modal. This restores the original equipment icons in the main list while providing accurate visual indicators in the popups.
