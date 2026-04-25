@@ -6,145 +6,85 @@
   <title>Contribute Data — Perpus Sofya</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="icon" type="image/x-icon" href="../img/icons/favicon.ico" />
+  <style>
+    .contribute-form-container { max-width: 768px; margin: 2rem auto; }
+    .form-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .form-tab-button { padding: 0.75rem 1.25rem; font-size: 0.9rem; font-weight: 600; background: none; border: none; cursor: pointer; color: var(--text-secondary); border-bottom: 3px solid transparent; transition: all 0.2s; }
+    .form-tab-button.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .contribution-form { display: none; background: var(--bg-card); padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius-md); }
+    .contribution-form.active { display: block; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.35rem; font-size: 0.85rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-base); color: var(--text-primary); font-size: 0.9rem; }
+  </style>
 </head>
 <body>
 
-  <!-- ==================== NAVBAR ==================== -->
+  <!-- ==================== NAVBAR (Synced) ==================== -->
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <a href="../index.html" class="nav-brand">
-      <span class="brand-icon"><img src="../img/icons/brand_ico.png" alt="Perpus Sofya" width="28" height="28"></span>
+      <img src="../img/icons/brand_ico.png" alt="Perpus Sofya Logo" width="28" height="28">
       <span>Perpus<span class="brand-highlight">Sofya</span></span>
     </a>
+    <div class="nav-search" style="margin-left: 1rem;"></div>
     <ul class="nav-links" role="list">
-      <li><a href="../index.html">Home</a></li>
-      <li><a href="items.html">Items</a></li>
-      <li><a href="monsters.html">Monsters</a></li>
-      <li><a href="skills.html">Skills</a></li>
+      <li><a href="../index.html" class="nav-link">Home</a></li>
+      <li><a href="items.html" class="nav-link">Items</a></li>
+      <li><a href="monsters.html" class="nav-link">Monsters</a></li>
+      <li><a href="skills.html" class="nav-link">Skills</a></li>
       <li class="nav-dropdown">
-        <a href="javascript:void(0)">Other Tools</a>
+        <a href="javascript:void(0)" class="nav-link">Other Tools</a>
         <div class="nav-dropdown-content">
           <a href="calculator.html">🧮 Exp MQ Calculator</a>
           <a href="skill-simulator.html">⚔️ Skill Simulator</a>
         </div>
       </li>
     </ul>
-    <div class="nav-search">
-      <a href="contribute.html" class="nav-link active">Contribute</a>
-    </div>
+    <a href="contribute.html" class="nav-link active" style="margin-left: auto;">Contribute</a>
     <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- ==================== PAGE HERO ==================== -->
+  <!-- Mobile Menu (Synced) -->
+  <div class="mobile-menu" id="mobileMenu" role="menu">
+    <a href="../index.html" role="menuitem"><span class="menu-icon">🏠</span> Home</a>
+    <a href="items.html" role="menuitem"><img src="../img/icons/items_ico.png" class="menu-icon" alt=""> Items</a>
+    <a href="monsters.html" role="menuitem"><img src="../img/icons/monsters_ico.png" class="menu-icon" alt=""> Monsters</a>
+    <a href="skills.html" role="menuitem"><img src="../img/icons/skills_ico.png" class="menu-icon" alt=""> Skills</a>
+    <a href="skill-simulator.html" role="menuitem"><span class="menu-icon">⚔️</span> Skill Simulator</a>
+    <a href="calculator.html" role="menuitem"><span class="menu-icon">🧮</span> Exp MQ Calculator</a>
+  </div>
+
   <header class="page-hero">
     <h1>📝 Contribute to the Database</h1>
-    <p>Help us grow by submitting new or updated data.</p>
+    <p>Help us grow by submitting new or updated data. Your help is appreciated!</p>
   </header>
 
-  <!-- ==================== MAIN CONTENT ==================== -->
   <main class="section">
     <div class="contribute-form-container">
-      <p class="text-center text-muted">
-        Your contribution will be reviewed by an administrator before being published. Thank you for your support!
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        All contributions are reviewed before being published.
       </p>
-      
-      <div id="contribution-notification" class="notification-bar" style="display: none;">
-        <span id="contribution-count"></span> new contributions pending review.
-        <span class="notification-icon">🔔</span>
-      </div>
 
-      <div class="form-tabs">
-        <button class="form-tab-button active" data-form="item-form">Items</button>
-        <button class="form-tab-button" data-form="monster-form">Monsters</button>
-        <button class="form-tab-button" data-form="skill-form">Skills</button>
-        <button class="form-tab-button" data-form="other-form">Other</button>
-      </div>
+      <!-- Form tabs will go here -->
 
       <!-- Item Submission Form -->
       <form id="item-form" class="contribution-form active">
         <h3>Item Submission</h3>
         <div class="form-grid">
-          <div class="form-group">
-            <label for="item-name">Item Name</label>
-            <input type="text" id="item-name" name="item-name" required>
-          </div>
-          <div class="form-group">
-            <label for="item-type">Item Type</label>
-            <input type="text" id="item-type" name="item-type" placeholder="e.g., One-Hand Sword, Additional, Crysta">
-          </div>
+          <div class="form-group"><label for="item-name">Item Name</label><input type="text" id="item-name" required></div>
+          <div class="form-group"><label for="item-type">Item Type</label><input type="text" id="item-type" placeholder="e.g., One-Hand Sword"></div>
         </div>
-        <div class="form-group">
-          <label for="item-stats">Stats / Description</label>
-          <textarea id="item-stats" name="item-stats" rows="4" required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="item-source">How to Obtain</label>
-          <input type="text" id="item-source" name="item-source" placeholder="e.g., Dropped by Ifrit, NPC Blacksmith">
-        </div>
+        <div class="form-group"><label for="item-stats">Stats / Description</label><textarea id="item-stats" rows="4" required></textarea></div>
+        <div class="form-group"><label for="item-source">How to Obtain</label><input type="text" id="item-source" placeholder="e.g., Dropped by Boss Roga"></div>
         <button type="submit" class="btn btn-primary">Submit Item</button>
-      </form>
-
-      <!-- Monster Submission Form -->
-      <form id="monster-form" class="contribution-form">
-        <h3>Monster Submission</h3>
-        <!-- Monster fields here -->
-        <p>Monster form coming soon!</p>
-      </form>
-
-      <!-- Skill Submission Form -->
-      <form id="skill-form" class="contribution-form">
-        <h3>Skill Submission</h3>
-        <!-- Skill fields here -->
-        <p>Skill form coming soon!</p>
-      </form>
-
-      <!-- Other Submission Form -->
-      <form id="other-form" class="contribution-form">
-        <h3>Other Data Submission</h3>
-        <p>For other data types, please describe them clearly.</p>
-        <div class="form-group">
-          <label for="other-data">Data Details</label>
-          <textarea id="other-data" name="other-data" rows="5" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit Data</button>
       </form>
     </div>
   </main>
-  
-  <style>
-    .contribute-form-container { max-width: 768px; margin: 0 auto; }
-    .form-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-    .form-tab-button { padding: 0.75rem 1.25rem; font-size: 0.9rem; font-weight: 600; background: none; border: none; cursor: pointer; color: var(--text-secondary); border-bottom: 3px solid transparent; transition: all 0.2s; }
-    .form-tab-button.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .contribution-form { display: none; }
-    .contribution-form.active { display: block; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; font-weight: 600; margin-bottom: 0.35rem; font-size: 0.85rem; }
-    .form-group input, .form-group textarea { width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-base); color: var(--text-primary); font-size: 0.9rem; }
-    .notification-bar { background-color: var(--accent); color: white; padding: 1rem; text-align: center; font-weight: 600; border-radius: var(--radius-md); margin: 1.5rem 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-    .notification-icon { font-size: 1.2rem; }
-  </style>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const tabs = document.querySelectorAll('.form-tab-button');
-      const forms = document.querySelectorAll('.contribution-form');
-
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          // Deactivate all
-          tabs.forEach(t => t.classList.remove('active'));
-          forms.forEach(f => f.classList.remove('active'));
-
-          // Activate clicked
-          this.classList.add('active');
-          document.getElementById(this.dataset.form).classList.add('active');
-        });
-      });
-    });
-  </script>
-
+  <!-- Footer, FABs, etc. -->
+  <script src="../js/main.js?v=3.19"></script>
 </body>
 </html>

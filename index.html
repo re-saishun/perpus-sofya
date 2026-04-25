@@ -6,25 +6,26 @@
   <meta name="description" content="Perpus Sofya — The most complete fan-made database for Toram Online. Find items, monsters, skills, maps, and quests." />
   <title>Perpus Sofya — The Fan-made Toram Online Database</title>
   <link rel="stylesheet" href="css/style.css" />
-  <!-- Favicon placeholder -->
   <link rel="icon" type="image/x-icon" href="img/icons/favicon.ico" />
 </head>
 <body>
 
-  <!-- ==================== NAVBAR ==================== -->
+  <!-- ==================== NAVBAR (Restored Structure) ==================== -->
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <a href="index.html" class="nav-brand">
-      <span class="brand-icon"><img src="img/icons/brand_ico.png" alt="Perpus Sofya" width="28" height="28"></span>
+      <img src="img/icons/brand_ico.png" alt="Perpus Sofya Logo" width="28" height="28">
       <span>Perpus<span class="brand-highlight">Sofya</span></span>
     </a>
+    
+    <div class="nav-search" style="margin-left: 1rem;"></div>
 
     <ul class="nav-links" role="list">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="pages/items.html">Items</a></li>
-      <li><a href="pages/monsters.html">Monsters</a></li>
-      <li><a href="pages/skills.html">Skills</a></li>
+      <li><a href="index.html" class="nav-link active">Home</a></li>
+      <li><a href="pages/items.html" class="nav-link">Items</a></li>
+      <li><a href="pages/monsters.html" class="nav-link">Monsters</a></li>
+      <li><a href="pages/skills.html" class="nav-link">Skills</a></li>
       <li class="nav-dropdown">
-        <a href="javascript:void(0)">Other Tools</a>
+        <a href="javascript:void(0)" class="nav-link">Other Tools</a>
         <div class="nav-dropdown-content">
           <a href="pages/calculator.html">🧮 Exp MQ Calculator</a>
           <a href="pages/skill-simulator.html">⚔️ Skill Simulator</a>
@@ -32,22 +33,14 @@
       </li>
     </ul>
 
-    <div class="nav-search">
-      <a href="pages/contribute.html" class="nav-link">Contribute</a>
-    </div>
+    <a href="pages/contribute.html" class="nav-link" style="margin-left: auto;">Contribute</a>
 
-    <button
-      class="hamburger"
-      id="hamburger"
-      aria-label="Toggle menu"
-      aria-expanded="false"
-      aria-controls="mobileMenu"
-    >
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- Mobile Menu -->
+  <!-- Mobile Menu (Restored) -->
   <div class="mobile-menu" id="mobileMenu" role="menu">
     <a href="index.html" role="menuitem"><span class="menu-icon">🏠</span> Home</a>
     <a href="pages/items.html" role="menuitem"><img src="img/icons/items_ico.png" class="menu-icon" alt=""> Items</a>
@@ -60,84 +53,34 @@
   <!-- ==================== HERO ==================== -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-badge">Toram Online · Fan Database</div>
-    <h1 id="hero-title">
-      The Complete<br />
-      <span>Toram Online</span> Database
-    </h1>
-    <p>
-      Find items, monsters, skills, and quests — fast and easy.
-      Works great on desktop and mobile.
-    </p>
+    <h1 id="hero-title">The Complete<br><span>Toram Online</span> Database</h1>
+    <p>Find items, monsters, skills, and quests — fast and easy.</p>
 
     <form class="hero-search" id="heroSearchForm" role="search">
-      <select id="heroSearchCategory" aria-label="Search category">
-        <option value="items">Items</option>
-        <option value="monsters">Monsters</option>
-        <option value="skills">Skills</option>
-      </select>
-      <input
-        type="search"
-        id="heroSearchInput"
-        class="search-sync"
-        placeholder="Search item, monster, or skill name…"
-        aria-label="Hero search"
-        autocomplete="off"
-      />
+      <select id="heroSearchCategory" aria-label="Search category"><option value="items">Items</option><option value="monsters">Monsters</option><option value="skills">Skills</option></select>
+      <input type="search" id="heroSearchInput" placeholder="Search anything…" aria-label="Hero search" autocomplete="off" />
       <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
     <div class="hero-stats" id="heroStats" aria-label="Database statistics">
-      <div class="stat">
-        <span class="stat-num" data-count="1200" data-suffix="+">0</span>
-        <span class="stat-label">Items</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num" data-count="540" data-suffix="+">0</span>
-        <span class="stat-label">Monsters</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num" data-count="320" data-suffix="+">0</span>
-        <span class="stat-label">Skills</span>
-      </div>
+      <div class="stat"><span class="stat-num" data-count="1200" data-suffix="+">0</span><span class="stat-label">Items</span></div>
+      <div class="stat"><span class="stat-num" data-count="540" data-suffix="+">0</span><span class="stat-label">Monsters</span></div>
+      <div class="stat"><span class="stat-num" data-count="320" data-suffix="+">0</span><span class="stat-label">Skills</span></div>
     </div>
   </section>
 
   <!-- ==================== CATEGORIES ==================== -->
-  <main>
-    <div class="section">
-      <div class="section-header" style="text-align: center;">
-        <h2 class="section-title"><span class="icon">📂</span>Database Categories</h2>
-      </div>
-      <div class="categories-grid" id="categoriesGrid">
-        <a href="pages/items.html" class="cat-card" aria-label="Items database">
-          <span class="cat-icon"><img src="img/icons/items_ico.png" alt="Items"></span>
-          <span class="cat-name">Items</span>
-          <span class="cat-count">1200+ entries</span>
-        </a>
-        <a href="pages/monsters.html" class="cat-card" aria-label="Monsters database">
-          <span class="cat-icon"><img src="img/icons/monsters_ico.png" alt="Monsters"></span>
-          <span class="cat-name">Monsters</span>
-          <span class="cat-count">540+ entries</span>
-        </a>
-        <a href="pages/skills.html" class="cat-card" aria-label="Skills database">
-          <span class="cat-icon"><img src="img/icons/skills_ico.png" alt="Skills"></span>
-          <span class="cat-name">Skills</span>
-          <span class="cat-count">320+ entries</span>
-        </a>
-      </div>
-    </div>
+  <main class="section">
+    <h2 class="section-title text-center" style="margin-bottom: 1.5rem;">Database Categories</h2>
+    <div class="categories-grid" id="categoriesGrid"></div>
   </main>
 
   <!-- ==================== FOOTER ==================== -->
   <footer>
     <div class="footer-grid">
       <div>
-        <div class="footer-brand"><img src="img/icons/brand_ico.png" class="menu-icon" alt=""> Perpus<span class="brand-highlight">Sofya</span></div>
-        <p class="footer-desc">
-          Perpus Sofya is an independent fan-made project.
-          Content is updated gradually and may take time to reflect
-          the latest game updates.
-        </p>
+        <div class="footer-brand"><img src="img/icons/brand_ico.png" class="menu-icon" alt=""> PerpusSofya</div>
+        <p class="footer-desc">Independent fan-made project. Content is updated gradually.</p>
       </div>
       <div class="footer-col">
         <h4>Database</h4>
@@ -148,11 +91,12 @@
       <div class="footer-col">
         <h4>Info</h4>
         <a href="https://github.com/ut053082686/toramcodex.github.io" target="_blank" rel="noopener">GitHub</a>
+        <a href="pages/contribute.html">Contribute</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 Perpus Sofya · Fan-made, not affiliated with Asobimo</span>
-      <span>Developed by No! I'm Failing! · Toram Online™ is a trademark of Asobimo, Inc.</span>
+      <span>© 2025 Perpus Sofya. Not affiliated with Asobimo.</span>
+      <span>Toram Online™ is a trademark of Asobimo, Inc.</span>
     </div>
   </footer>
 
@@ -161,18 +105,25 @@
     <button id="backToTop" title="Back to Top">↑</button>
   </div>
 
-  <!-- Item detail modal -->
+  <!-- Modals -->
   <div id="itemModal"></div>
-  <!-- Monster detail modal -->
   <div id="monsterModal"></div>
 
-  <script src="js/sheets.js?v=3.18"></script>
-  <script src="js/main.js?v=3.18"></script>
-  <script src="js/modal.js?v=3.18"></script>
-  <script src="js/monster-modal.js?v=3.18"></script>
+  <script src="js/sheets.js?v=3.19"></script>
+  <script src="js/main.js?v=3.19"></script>
+  <script src="js/modal.js?v=3.19"></script>
+  <script src="js/monster-modal.js?v=3.19"></script>
   <script>
-    // Load homepage sections from Google Sheets (categories, featured, stats)
-    ToramSheets.loadHomepage();
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load homepage data from sheets.js if ToramSheets is available
+      if (window.ToramSheets && typeof window.ToramSheets.loadHomepage === 'function') {
+        window.ToramSheets.loadHomepage();
+      }
+       // Initialize counters
+       if(typeof window.animateCounters === 'function'){
+           window.animateCounters();
+       }
+    });
   </script>
 </body>
 </html>
