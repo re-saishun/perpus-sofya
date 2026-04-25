@@ -23,9 +23,6 @@
       <li><a href="pages/items.html">Items</a></li>
       <li><a href="pages/monsters.html">Monsters</a></li>
       <li><a href="pages/skills.html">Skills</a></li>
-      <li><a href="pages/maps.html">Maps</a></li>
-      <li><a href="pages/quests.html">Quests</a></li>
-      <li><a href="pages/pets.html">Pets</a></li>
       <li class="nav-dropdown">
         <a href="javascript:void(0)">Other Tools</a>
         <div class="nav-dropdown-content">
@@ -36,14 +33,7 @@
     </ul>
 
     <div class="nav-search">
-      <span class="search-icon">🔍</span>
-      <input
-        type="search"
-        class="search-sync"
-        placeholder="Search items, monsters…"
-        aria-label="Search"
-        id="navSearchInput"
-      />
+      <a href="pages/contribute.html" class="nav-link">Contribute</a>
     </div>
 
     <button
@@ -63,20 +53,8 @@
     <a href="pages/items.html" role="menuitem"><img src="img/icons/items_ico.png" class="menu-icon" alt=""> Items</a>
     <a href="pages/monsters.html" role="menuitem"><img src="img/icons/monsters_ico.png" class="menu-icon" alt=""> Monsters</a>
     <a href="pages/skills.html" role="menuitem"><img src="img/icons/skills_ico.png" class="menu-icon" alt=""> Skills</a>
-    <a href="pages/maps.html" role="menuitem"><img src="img/icons/maps_ico.png" class="menu-icon" alt=""> Maps</a>
-    <a href="pages/quests.html" role="menuitem"><img src="img/icons/quest_ico.png" class="menu-icon" alt=""> Quests</a>
-    <a href="pages/pets.html" role="menuitem"><img src="img/icons/pets_ico.png" class="menu-icon" alt=""> Pets</a>
     <a href="pages/skill-simulator.html" role="menuitem"><span class="menu-icon">⚔️</span> Skill Simulator</a>
     <a href="pages/calculator.html" role="menuitem"><span class="menu-icon">🧮</span> Exp MQ Calculator</a>
-    <div class="mobile-search">
-      <span class="search-icon">🔍</span>
-      <input
-        type="search"
-        class="search-sync"
-        placeholder="Search items, monsters…"
-        aria-label="Mobile search"
-      />
-    </div>
   </div>
 
   <!-- ==================== HERO ==================== -->
@@ -96,9 +74,6 @@
         <option value="items">Items</option>
         <option value="monsters">Monsters</option>
         <option value="skills">Skills</option>
-        <option value="maps">Maps</option>
-        <option value="quests">Quests</option>
-        <option value="pets">Pets</option>
       </select>
       <input
         type="search"
@@ -124,17 +99,13 @@
         <span class="stat-num" data-count="320" data-suffix="+">0</span>
         <span class="stat-label">Skills</span>
       </div>
-      <div class="stat">
-        <span class="stat-num" data-count="80" data-suffix="+">0</span>
-        <span class="stat-label">Maps</span>
-      </div>
     </div>
   </section>
 
   <!-- ==================== CATEGORIES ==================== -->
   <main>
     <div class="section">
-      <div class="section-header">
+      <div class="section-header" style="text-align: center;">
         <h2 class="section-title"><span class="icon">📂</span>Database Categories</h2>
       </div>
       <div class="categories-grid" id="categoriesGrid">
@@ -153,145 +124,6 @@
           <span class="cat-name">Skills</span>
           <span class="cat-count">320+ entries</span>
         </a>
-        <a href="pages/maps.html" class="cat-card" aria-label="Maps database">
-          <span class="cat-icon"><img src="img/icons/maps_ico.png" alt="Maps"></span>
-          <span class="cat-name">Maps</span>
-          <span class="cat-count">80+ areas</span>
-        </a>
-        <a href="pages/quests.html" class="cat-card" aria-label="Quests database">
-          <span class="cat-icon"><img src="img/icons/quest_ico.png" alt="Quests"></span>
-          <span class="cat-name">Quests</span>
-          <span class="cat-count">600+ quests</span>
-        </a>
-        <a href="pages/pets.html" class="cat-card" aria-label="Pets database">
-          <span class="cat-icon"><img src="img/icons/pets_ico.png" alt="Pets"></span>
-          <span class="cat-name">Pets</span>
-          <span class="cat-count">100+ pets</span>
-        </a>
-      </div>
-    </div>
-
-    <hr class="divider" />
-
-    <!-- ==================== SPOTLIGHT: FEATURED ITEM ==================== -->
-    <div class="section">
-      <div class="section-header">
-        <h2 class="section-title"><span class="icon">⭐</span>Featured</h2>
-      </div>
-
-      <div class="data-grid" id="spotlightGrid"></div>
-    </div>
-
-    <hr class="divider" />
-
-    <!-- ==================== LATEST ITEMS ==================== -->
-    <div class="section">
-      <div class="section-header">
-        <h2 class="section-title"><span class="icon">🆕</span>Latest Items</h2>
-        <a href="pages/items.html" class="section-link">View all →</a>
-      </div>
-      <div class="data-grid" id="latestItemsGrid">
-
-        <article class="data-card" data-name="Shadow Blade" style="cursor:pointer">
-          <div class="data-card-header">
-            <div class="data-card-icon">🗡️</div>
-            <div>
-              <div class="data-card-title">Shadow Blade</div>
-              <div class="data-card-subtitle">One-Hand Sword · Lv.200</div>
-            </div>
-          </div>
-          <div class="data-card-body">
-            <span class="tag">ATK +350</span>
-            <span class="tag non-event">Non-Event</span>
-          </div>
-        </article>
-
-        <article class="data-card" data-name="Windrunner Bow" style="cursor:pointer">
-          <div class="data-card-header">
-            <div class="data-card-icon">🏹</div>
-            <div>
-              <div class="data-card-title">Windrunner Bow</div>
-              <div class="data-card-subtitle">Bow · Lv.220</div>
-            </div>
-          </div>
-          <div class="data-card-body">
-            <span class="tag">ATK +410</span>
-            <span class="tag non-event">Non-Event</span>
-          </div>
-        </article>
-
-        <article class="data-card" data-name="Arcane Staff" style="cursor:pointer">
-          <div class="data-card-header">
-            <div class="data-card-icon">🔮</div>
-            <div>
-              <div class="data-card-title">Arcane Staff</div>
-              <div class="data-card-subtitle">Staff · Lv.230</div>
-            </div>
-          </div>
-          <div class="data-card-body">
-            <span class="tag">MATK +480</span>
-            <span class="tag non-event">Non-Event</span>
-          </div>
-        </article>
-
-      </div>
-    </div>
-
-    <hr class="divider" />
-
-    <!-- ==================== FEATURED MONSTERS ==================== -->
-    <div class="section">
-      <div class="section-header">
-        <h2 class="section-title"><span class="icon">👾</span>Popular Monsters</h2>
-        <a href="pages/monsters.html" class="section-link">View all →</a>
-      </div>
-      <div class="data-grid" id="popularMonstersGrid">
-
-        <article class="data-card" data-name="Ifrit Rex" style="cursor:pointer">
-          <div class="data-card-header">
-            <div class="data-card-icon">🐉</div>
-            <div>
-              <div class="data-card-title">Ifrit Rex</div>
-              <div class="data-card-subtitle">Boss · Volcano Summit</div>
-            </div>
-          </div>
-          <div class="data-card-body">
-            <span class="tag red">Fire</span>
-            <span class="tag">HP 2.4M</span>
-            <span class="tag legendary">Lv.250</span>
-          </div>
-        </article>
-
-        <article class="data-card" data-name="Crystal Spider Queen" style="cursor:pointer">
-          <div class="data-card-header">
-            <div class="data-card-icon">🕷️</div>
-            <div>
-              <div class="data-card-title">Crystal Spider Queen</div>
-              <div class="data-card-subtitle">Boss · Crystal Cave</div>
-            </div>
-          </div>
-          <div class="data-card-body">
-            <span class="tag ice">Ice</span>
-            <span class="tag">HP 1.8M</span>
-            <span class="tag legendary">Lv.235</span>
-          </div>
-        </article>
-
-        <article class="data-card" data-name="Fenrir Shadow" style="cursor:pointer">
-          <div class="data-card-header">
-            <div class="data-card-icon">🐺</div>
-            <div>
-              <div class="data-card-title">Fenrir Shadow</div>
-              <div class="data-card-subtitle">Mini-Boss · Frozen Tundra</div>
-            </div>
-          </div>
-          <div class="data-card-body">
-            <span class="tag dark">Dark</span>
-            <span class="tag">HP 900K</span>
-            <span class="tag legendary">Lv.210</span>
-          </div>
-        </article>
-
       </div>
     </div>
   </main>
@@ -312,13 +144,9 @@
         <a href="pages/items.html">Items</a>
         <a href="pages/monsters.html">Monsters</a>
         <a href="pages/skills.html">Skills</a>
-        <a href="pages/maps.html">Maps</a>
-        <a href="pages/quests.html">Quests</a>
-        <a href="pages/pets.html">Pets</a>
       </div>
       <div class="footer-col">
         <h4>Info</h4>
-        <a href="pages/terms.html">Terms & Disclaimer</a>
         <a href="https://github.com/ut053082686/toramcodex.github.io" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
@@ -328,7 +156,10 @@
     </div>
   </footer>
 
-  <button id="backToTop" aria-label="Back to top" title="Back to top">↑</button>
+  <div class="floating-action-buttons">
+    <button id="theme-toggle" title="Toggle dark mode">🌙</button>
+    <button id="backToTop" title="Back to Top">↑</button>
+  </div>
 
   <!-- Item detail modal -->
   <div id="itemModal"></div>
@@ -342,21 +173,6 @@
   <script>
     // Load homepage sections from Google Sheets (categories, featured, stats)
     ToramSheets.loadHomepage();
-
-    // Load latest data from Sheets (if configured), else keep static HTML
-    ToramSheets.loadLatest('items', 'latestItemsGrid', 3);
-
-    // Make Latest Items cards clickable → popup modal
-    document.getElementById('latestItemsGrid').addEventListener('click', function (e) {
-      var card = e.target.closest('[data-name]');
-      if (card) ItemModal.open(card.dataset.name, card.dataset.itemIndex);
-    });
-
-    // Make Popular Monsters cards clickable → monster popup modal
-    document.getElementById('popularMonstersGrid').addEventListener('click', function (e) {
-      var card = e.target.closest('[data-name]');
-      if (card) MonsterModal.open(card.dataset.name);
-    });
   </script>
 </body>
 </html>
