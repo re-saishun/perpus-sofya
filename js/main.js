@@ -1,132 +1,94 @@
 // ============================================================
-// ToramDB — main.js
+// ToramDB — main.js (Fixed Null Reference)
 // ============================================================
 
 (function () {
   'use strict';
 
-  // Helper: debounce
+  // Helper: debounce (if needed, otherwise can be removed)
   function debounce(func, wait) {
-    var timeout;
-    return function() {
-      var context = this, args = arguments;
+    let timeout;
+    return function(...args) {
       clearTimeout(timeout);
-      timeout = setTimeout(function() {
-        func.apply(context, args);
-      }, wait);
+      timeout = setTimeout(() => func.apply(this, args), wait);
     };
   }
 
   /* ---------- Hamburger / Mobile Menu ---------- */
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
-
   if (hamburger && mobileMenu) {
     hamburger.addEventListener('click', function () {
       this.classList.toggle('open');
       mobileMenu.classList.toggle('open');
-      this.setAttribute('aria-expanded', mobileMenu.classList.contains('open'));
+      this.setAttribute('aria-expanded', this.classList.contains('open'));
     });
   }
 
   /* ---------- Theme Toggle (Dark Mode) ---------- */
   const themeToggle = document.getElementById('theme-toggle');
-  const body = document.body;
-
   if (themeToggle) {
-    // Check for saved theme in localStorage
+    const body = document.body;
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       body.classList.add('dark-mode');
       themeToggle.textContent = '☀️';
     }
-
     themeToggle.addEventListener('click', function() {
       body.classList.toggle('dark-mode');
-      if (body.classList.contains('dark-mode')) {
-        localStorage.setItem('theme', 'dark');
-        themeToggle.textContent = '☀️';
-      } else {
-        localStorage.setItem('theme', 'light');
-        themeToggle.textContent = '🌙';
-      }
+      const isDarkMode = body.classList.contains('dark-mode');
+      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+      themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
     });
   }
 
-  /* ---------- Back-to-top ---------- */
-  const backToTop = document.getElementById('backToTop');
-  if (backToTop) {
-      const fabContainer = document.querySelector('.floating-action-buttons');
-      window.addEventListener('scroll', function () {
-          if (window.scrollY > 300) {
-              fabContainer.style.display = 'flex';
-          } else {
-              fabContainer.style.display = 'none';
-          }
+  /* ---------- Back-to-top & Floating Action Buttons ---------- */
+  const fabContainer = document.querySelector('.floating-action-buttons');
+  // **THE FIX IS HERE:** Check if the container actually exists on the page.
+  if (fabContainer) {
+    const backToTop = document.getElementById('backToTop');
+    
+    // Only show the button container on scroll
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        fabContainer.style.display = 'flex';
+      } else {
+        fabContainer.style.display = 'none';
+      }
+    });
+
+    // Ensure the backToTop button exists before adding its event listener
+    if (backToTop) {
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
-      backToTop.addEventListener('click', function () {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+    }
   }
 
   /* ---------- Hero search redirect ---------- */
-  var heroSearchForm = document.getElementById('heroSearchForm');
+  const heroSearchForm = document.getElementById('heroSearchForm');
   if (heroSearchForm) {
     heroSearchForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      var q = document.getElementById('heroSearchInput').value.trim();
-      var cat = document.getElementById('heroSearchCategory');
-      var page = cat ? cat.value : 'items';
-      if (q) {
-        window.location.href = 'pages/' + page + '.html?q=' + encodeURIComponent(q);
+      const q = document.getElementById('heroSearchInput').value.trim();
+      const cat = document.getElementById('heroSearchCategory');
+      if (q && cat) {
+        window.location.href = `pages/${cat.value}.html?q=${encodeURIComponent(q)}`;
       }
     });
   }
 
   /* ---------- Active nav link ---------- */
-  var activePage = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(function (link) {
-    var href = link.getAttribute('href') || '';
-    if (href.endsWith(activePage)) {
-      link.classList.add('active');
-    }
-  });
-
-  /* ---------- Animate numbers in hero stats ---------- */
-  function setupCounters() {
-    var statNums = document.querySelectorAll('[data-count]');
-    if (statNums.length === 0) return;
-    
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animateCount(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
-
-    statNums.forEach(function (el) { observer.observe(el); });
+  try {
+    const activePage = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if (href.endsWith(activePage)) {
+        link.classList.add('active');
+      }
+    });
+  } catch (e) {
+    console.warn('Could not set active nav link', e);
   }
 
-  setupCounters();
-
-  // Expose globally so sheets.js can re-trigger after loading stats from Sheet
-  window.animateCounters = setupCounters;
-
-  function animateCount(el) {
-    var target   = parseInt(el.dataset.count, 10);
-    var suffix   = el.dataset.suffix || '';
-    var duration = 1200;
-    var start    = performance.now();
-
-    function step(now) {
-      var progress = Math.min((now - start) / duration, 1);
-      var eased    = 1 - Math.pow(1 - progress, 3); // Ease out cubic
-      el.textContent = Math.round(eased * target).toLocaleString() + suffix;
-      if (progress < 1) requestAnimationFrame(step);
-    }
-
-    requestAnimationFrame(step);
-  }
 }());
